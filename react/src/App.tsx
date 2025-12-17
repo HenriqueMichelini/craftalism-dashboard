@@ -1,8 +1,12 @@
 import "./App.css";
-import Navbar from "./pages/Dashboard/components/Navbar.tsx";
+import DashboardLayout from "./layouts/DashboardLayout.tsx";
 
 function App() {
-  return <Navbar />;
+  return (
+    <DashboardLayout>
+      <h1 className="text-2xl font-bold text-default">Dashboard</h1>
+    </DashboardLayout>
+  );
 }
 
 export default App;
