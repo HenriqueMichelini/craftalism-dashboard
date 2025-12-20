@@ -7,7 +7,7 @@ export default {
         sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
       },
       fontSize: {
-        navbar: "30px",
+        navbar: "24px",
       },
       colors: {
         primary: {

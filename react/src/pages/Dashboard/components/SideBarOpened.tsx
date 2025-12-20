@@ -6,9 +6,9 @@ type SideBarItemProps = {
   label: string;
 };
 
-function SideBar() {
+function SideBarOpened() {
   return (
-    <nav className="flex h-full w-20 flex-col items-center gap-6 bg-gradient-to-br from-primary-500 to-primary-400 py-6">
+    <nav className="flex h-full w-64 flex-col gap-6 bg-gradient-to-br from-primary-500 to-primary-400 p-6">
       <SideBarItem icon={Database} label="Database" />
       <SideBarItem icon={AlignEndVertical} label="Analytics" />
       <SideBarItem icon={Box} label="Products" />
@@ -21,16 +21,17 @@ function SideBarItem({ icon: Icon, label }: SideBarItemProps) {
     <button
       title={label}
       className="
-      flex size-10
-      items-center justify-center
-      rounded-md
-      text-default
-      hover:bg-primary-400 shadow-md hover:shadow-lg
+        flex w-full items-center gap-3
+        rounded-md px-3 py-2
+        text-default
+        hover:bg-primary-400 shadow-md hover:shadow-lg
+        transition-colors
       "
     >
-      <Icon className="size-6" />
+      <Icon className="size-6 shrink-0" />
+      <span className="text-sm font-medium">{label}</span>
     </button>
   );
 }
 
-export default SideBar;
+export default SideBarOpened;

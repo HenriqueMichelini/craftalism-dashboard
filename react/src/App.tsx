@@ -1,10 +1,10 @@
-import "./App.css";
 import DashboardLayout from "./layouts/DashboardLayout.tsx";
+import Table from "./pages/Dashboard/components/Table.tsx";
 
 function App() {
   return (
     <DashboardLayout>
-      <h1 className="text-2xl font-bold text-default">Dashboard</h1>
+      <Table />
     </DashboardLayout>
   );
 }
