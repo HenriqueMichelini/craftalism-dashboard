@@ -8,6 +8,7 @@ export default {
       },
       fontSize: {
         navbar: "24px",
+        table_title: "32px",
       },
       colors: {
         primary: {

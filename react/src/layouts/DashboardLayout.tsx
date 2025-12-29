@@ -7,7 +7,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
       <Navbar />
       <div className="flex flex-1">
         <SideBar isOpen={false} />
-        <main className="flex-1 bg-primary-200 p-6">{children}</main>
+        <main className="flex-1 space-y-4 bg-primary-200 p-6">{children}</main>
       </div>
     </div>
   );
