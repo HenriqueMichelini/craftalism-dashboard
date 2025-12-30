@@ -24,6 +24,7 @@ function SideBarButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
+      aria-label="Toggle sidebar"
       className="flex size-10 items-center justify-center rounded-md hover:bg-primary-300"
     >
       <Menu className="size-6 text-default" />
