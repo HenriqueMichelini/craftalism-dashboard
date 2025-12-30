@@ -13,7 +13,11 @@ type SideBarItemProps = {
 function SideBar({ isOpen }: SideBarState) {
   return (
     <nav
-      className={`flex h-full flex-col items-center gap-6 bg-gradient-to-br from-primary-500 to-primary-400 py-6 transition-all ${isOpen ? "w-64" : "w-20"}`}
+      className={`flex h-full flex-col items-center
+        gap-6
+        bg-gradient-to-br from-primary-500 to-primary-400 py-6
+        transition-all
+        ${isOpen ? "w-64" : "w-20"}`}
     >
       <SideBarItem icon={Database} label="Database" isOpen={isOpen} />
       <SideBarItem icon={AlignEndVertical} label="Analytics" isOpen={isOpen} />
