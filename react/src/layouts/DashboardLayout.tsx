@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Navbar from "../components/Navbar";
-import SideBar from "../components/SideBar";
+import Navbar from "../components/layout/Navbar";
+import SideBar from "../components/layout/SideBar";
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

@@ -1,35 +1,60 @@
-import { useState, useEffect } from "react";
-import { api, type TableRow } from "../api/api";
+import { useState, useEffect, useCallback } from "react";
+import type { TableState } from "../types/table.types";
 
-type UseTableDataReturn = {
-  data: TableRow[];
-  loading: boolean;
-  error: string | null;
-  refetch: () => Promise<void>;
-};
+export function useTableData<T>(fetchFn: () => Promise<T[]>) {
+  const [state, setState] = useState<TableState<T>>({
+    data: [],
+    loading: true,
+    error: null,
+  });
 
-export function useTableData(): UseTableDataReturn {
-  const [data, setData] = useState<TableRow[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const fetchData = useCallback(async () => {
+    setState((prev) => ({ ...prev, loading: true, error: null }));
 
-  const fetchData = async () => {
     try {
-      setLoading(true);
-      setError(null);
-      const result = await api.getTableData();
-      setData(result);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch data");
-      setData([]);
-    } finally {
-      setLoading(false);
+      const data = await fetchFn();
+      setState({ data, loading: false, error: null });
+    } catch (error) {
+      setState({
+        data: [],
+        loading: false,
+        error: error instanceof Error ? error.message : "Failed to fetch data",
+      });
     }
-  };
+  }, [fetchFn]);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    let cancelled = false;
 
-  return { data, loading, error, refetch: fetchData };
+    const load = async () => {
+      setState((prev) => ({ ...prev, loading: true, error: null }));
+
+      try {
+        const data = await fetchFn();
+        if (!cancelled) {
+          setState({ data, loading: false, error: null });
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setState({
+            data: [],
+            loading: false,
+            error:
+              error instanceof Error ? error.message : "Failed to fetch data",
+          });
+        }
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchFn]);
+
+  return {
+    ...state,
+    refetch: fetchData,
+  };
 }
