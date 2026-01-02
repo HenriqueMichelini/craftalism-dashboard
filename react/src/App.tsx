@@ -1,12 +1,10 @@
-import DashboardLayout from "./layouts/DashboardLayout.tsx";
-import Table from "./pages/Dashboard/components/Table.tsx";
-import TableDescription from "./pages/Dashboard/components/TableDescription.tsx";
+import DashboardLayout from "./layouts/DashboardLayout";
+import { DashboardPage } from "./pages/Dashboard/DashboardPage";
 
 function App() {
   return (
     <DashboardLayout>
-      <TableDescription />
-      <Table />
+      <DashboardPage />
     </DashboardLayout>
   );
 }

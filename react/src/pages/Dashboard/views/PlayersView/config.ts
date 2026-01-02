@@ -1,5 +1,5 @@
-import { TableConfig } from "../../../../types/table.types";
-import { Player } from "../../../../types/models/player.types";
+import type { TableConfig } from "../../../../types/table.types";
+import type { Player } from "../../../../types/models/player.types";
 import { formatters } from "../../../../utils";
 
 export const playersTableConfig: TableConfig<Player> = {
@@ -15,9 +15,9 @@ export const playersTableConfig: TableConfig<Player> = {
       className: "font-medium text-default",
     },
     {
-      key: "createdAt",
+      key: "created_at",
       label: "Created at",
-      render: (value) => formatters.date(value),
+      render: (value) => formatters.date(value as string),
       className: "text-sm text-muted",
     },
   ],
