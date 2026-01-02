@@ -1,4 +1,4 @@
-import { TableConfig } from "../../../types/table.types";
+import type { TableConfig, ColumnDefinition } from "../../../types/table.types";
 import { LoadingState, ErrorState, EmptyState } from "./TableStates";
 
 type DynamicTableProps<T> = {
@@ -11,7 +11,7 @@ type DynamicTableProps<T> = {
   className?: string;
 };
 
-export function DynamicTable<T extends Record<string, any>>({
+export function DynamicTable<T extends Record<string, unknown>>({
   data,
   loading,
   error,
@@ -24,9 +24,21 @@ export function DynamicTable<T extends Record<string, any>>({
   if (error) return <ErrorState error={error} onRetry={onRetry} />;
   if (data.length === 0) return <EmptyState message={emptyMessage} />;
 
-  const getCellValue = (row: T, column: any) => {
+  const getCellValue = (
+    row: T,
+    column: ColumnDefinition<T>,
+  ): React.ReactNode => {
     const value = row[column.key as keyof T];
-    return column.render ? column.render(value, row) : value;
+
+    if (column.render) {
+      return column.render(value, row);
+    }
+
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    return String(value);
   };
 
   return (

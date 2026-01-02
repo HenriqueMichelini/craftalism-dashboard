@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 type TableRow = {
   uuid: string;
   name: string;
-  createdAt: string;
+  created_at: string;
 };
 
 type TableState = {
@@ -121,7 +121,7 @@ function Table() {
               </td>
               <td className="px-4 py-3 font-medium text-default">{row.name}</td>
               <td className="px-4 py-3 text-sm text-muted">
-                {formatDate(row.createdAt)}
+                {formatDate(row.created_at)}
               </td>
             </tr>
           ))}
