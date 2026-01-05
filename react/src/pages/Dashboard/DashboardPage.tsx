@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PlayersView } from "./views";
+import { PlayersView, BalancesView } from "./views";
 
 type ViewType = "overview" | "players" | "transactions" | "balances";
 
@@ -23,11 +23,7 @@ export function DashboardPage() {
           </div>
         );
       case "balances":
-        return (
-          <div className="flex items-center justify-center p-12">
-            <p className="text-muted">Balances - Coming soon</p>
-          </div>
-        );
+        return <BalancesView />;
       default:
         return <PlayersView />;
     }
