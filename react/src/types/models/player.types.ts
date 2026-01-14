@@ -1,6 +1,6 @@
 export type Player = {
   uuid: string;
   name: string;
-  created_at: string;
+  createdAt: string;
   status?: "active" | "inactive";
 };

@@ -11,7 +11,7 @@ export const balancesTableConfig: TableConfig<Balance> = {
     {
       key: "amount",
       label: "Amount",
-      className: "font-medium text-default",
+      className: "font-mono text-sm text-default",
     },
   ],
   rowKey: "uuid",

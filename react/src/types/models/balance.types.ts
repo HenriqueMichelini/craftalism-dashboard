@@ -1,5 +1,5 @@
 export type Balance = {
   uuid: string;
-  name: number;
+  amount: number;
   status?: "active" | "inactive";
 };

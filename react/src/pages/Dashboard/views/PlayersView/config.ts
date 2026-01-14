@@ -12,13 +12,13 @@ export const playersTableConfig: TableConfig<Player> = {
     {
       key: "name",
       label: "Name",
-      className: "font-medium text-default",
+      className: "font-mono text-sm text-default",
     },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Created at",
       render: (value) => formatters.date(value as string),
-      className: "text-sm text-muted",
+      className: "font-mono text-sm text-default",
     },
   ],
   rowKey: "uuid",

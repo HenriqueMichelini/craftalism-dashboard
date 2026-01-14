@@ -1,8 +1,8 @@
 export type Transaction = {
   id: string;
-  from_player_uuid: string;
+  fromPlayerUuid: string;
   amount: number;
-  to_player_uuid: string;
-  created_at: string;
+  toPlayerUuid: string;
+  createdAt: string;
   status?: "active" | "inactive";
 };
