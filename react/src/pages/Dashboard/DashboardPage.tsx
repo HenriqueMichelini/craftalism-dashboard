@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PlayersView, BalancesView } from "./views";
+import { PlayersView, BalancesView, TransactionsView } from "./views";
 
 type ViewType = "overview" | "players" | "transactions" | "balances";
 
@@ -10,18 +10,8 @@ export function DashboardPage() {
     switch (activeView) {
       case "players":
         return <PlayersView />;
-      case "overview":
-        return (
-          <div className="flex items-center justify-center p-12">
-            <p className="text-muted">Overview - Coming soon</p>
-          </div>
-        );
       case "transactions":
-        return (
-          <div className="flex items-center justify-center p-12">
-            <p className="text-muted">Transactions - Coming soon</p>
-          </div>
-        );
+        return <TransactionsView />;
       case "balances":
         return <BalancesView />;
       default:
