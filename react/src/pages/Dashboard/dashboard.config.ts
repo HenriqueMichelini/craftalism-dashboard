@@ -1,8 +1,7 @@
 export const dashboardViews = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'balances', label: 'Balances' },
-    { id: 'transactions', label: 'Transactions' },
-    { id: 'users', label: 'Users' },
+  { id: "balances", label: "Balances" },
+  { id: "transactions", label: "Transactions" },
+  { id: "players", label: "Players" },
 ] as const;
 
-export type DashboardView = typeof dashboardViews[number]['id'];
+export type DashboardView = (typeof dashboardViews)[number]["id"];

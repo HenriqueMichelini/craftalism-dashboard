@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PlayersView, BalancesView, TransactionsView } from "./views";
 
-type ViewType = "overview" | "players" | "transactions" | "balances";
+type ViewType = "players" | "transactions" | "balances";
 
 export function DashboardPage() {
   const [activeView, setActiveView] = useState<ViewType>("players");
@@ -22,9 +22,7 @@ export function DashboardPage() {
   return (
     <div>
       <nav className="mb-6 flex gap-4 border-b border-primary-400">
-        {(
-          ["players", "overview", "transactions", "balances"] as ViewType[]
-        ).map((view) => (
+        {(["players", "transactions", "balances"] as ViewType[]).map((view) => (
           <button
             key={view}
             onClick={() => setActiveView(view)}
