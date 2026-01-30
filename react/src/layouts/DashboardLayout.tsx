@@ -11,7 +11,9 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
 
       <div className="flex flex-1">
         <SideBar isOpen={isSidebarOpen} />
-        <main className="flex-1 space-y-4 bg-primary-200 p-6">{children}</main>
+        <main className="flex-1 space-y-4 bg-gradient-to-br from-primary-300 to-primary-400 p-6 transition-all">
+          {children}
+        </main>
       </div>
     </div>
   );
