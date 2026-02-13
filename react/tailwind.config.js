@@ -15,7 +15,7 @@ export default {
           100: "#555555", // Lighter gray
           200: "#454545", // Medium light gray
           300: "#353535", // Medium gray
-          400: "#303030",
+          400: "#272727",
           500: "#252525", // Main primary color
         },
       },
