@@ -1,6 +1,28 @@
 import { config } from "../config/runtime";
 
-const BASE_URL = config.apiUrl || "http://localhost:8080";
+const DEFAULT_BASE_URL = "/api";
+
+function getBaseUrl(): string {
+  const configuredBaseUrl = config.apiUrl || DEFAULT_BASE_URL;
+
+  if (typeof window === "undefined") {
+    return configuredBaseUrl;
+  }
+
+  try {
+    const parsedUrl = new URL(configuredBaseUrl, window.location.origin);
+    const isLocalHost =
+      parsedUrl.hostname === "localhost" || parsedUrl.hostname === "127.0.0.1";
+
+    if (isLocalHost && parsedUrl.origin !== window.location.origin) {
+      return "/api";
+    }
+  } catch {
+    // Keep configured base URL when it cannot be parsed.
+  }
+
+  return configuredBaseUrl;
+}
 
 function buildUrl(baseUrl: string, endpoint: string): string {
   const normalizedBase = baseUrl.replace(/\/$/, "");
@@ -54,7 +76,7 @@ export async function apiClient<T>(
   endpoint: string,
   options?: RequestInit,
 ): Promise<T> {
-  const url = buildUrl(BASE_URL, endpoint);
+  const url = buildUrl(getBaseUrl(), endpoint);
 
   try {
     const response = await fetch(url, {

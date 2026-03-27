@@ -27,7 +27,7 @@ function Table() {
     try {
       setState((prev) => ({ ...prev, loading: true, error: null }));
 
-      const response = await fetch("http://localhost:8080/api/players");
+      const response = await fetch("/api/players");
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

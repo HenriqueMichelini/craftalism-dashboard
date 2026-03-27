@@ -14,6 +14,35 @@ declare global {
   }
 }
 
+function normalizeApiUrl(rawUrl: string): string {
+  const trimmedUrl = rawUrl.trim();
+
+  if (!trimmedUrl) {
+    return "/api";
+  }
+
+  if (typeof window === "undefined") {
+    return trimmedUrl;
+  }
+
+  try {
+    const parsedUrl = new URL(trimmedUrl, window.location.origin);
+    const isLocalHost =
+      parsedUrl.hostname === "localhost" || parsedUrl.hostname === "127.0.0.1";
+
+    if (
+      isLocalHost &&
+      parsedUrl.origin !== window.location.origin
+    ) {
+      return "/api";
+    }
+
+    return trimmedUrl;
+  } catch {
+    return trimmedUrl;
+  }
+}
+
 /**
  * Get configuration value with fallback to build-time env var
  * This allows the same code to work in both development and production
@@ -42,13 +71,13 @@ export function getRuntimeConfig<K extends keyof RuntimeConfig>(
  * Convenience function to get API URL
  */
 export function getApiUrl(): string {
-  return (
+  const configuredApiUrl =
     window.__RUNTIME_CONFIG__?.VITE_API_URL ||
     window.__RUNTIME_CONFIG__?.VITE_API_BASE_URL ||
     import.meta.env.VITE_API_URL ||
-    import.meta.env.VITE_API_BASE_URL ||
-    "http://localhost:8080"
-  );
+    import.meta.env.VITE_API_BASE_URL;
+
+  return normalizeApiUrl(configuredApiUrl || "/api");
 }
 
 /**
