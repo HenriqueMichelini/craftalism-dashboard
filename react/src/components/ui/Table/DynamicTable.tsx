@@ -1,5 +1,6 @@
 import type { TableConfig, ColumnDefinition } from "../../../types/table.types";
 import { LoadingState, ErrorState, EmptyState } from "./TableStates";
+import type { ReactNode } from "react";
 
 type DynamicTableProps<T> = {
   data: T[];
@@ -8,6 +9,7 @@ type DynamicTableProps<T> = {
   config: TableConfig<T>;
   onRetry?: () => void;
   emptyMessage?: string;
+  caption?: string;
   className?: string;
 };
 
@@ -18,17 +20,15 @@ export function DynamicTable<T extends Record<string, unknown>>({
   config,
   onRetry,
   emptyMessage = "No data available.",
+  caption,
   className = "",
 }: DynamicTableProps<T>) {
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} onRetry={onRetry} />;
   if (data.length === 0) return <EmptyState message={emptyMessage} />;
 
-  const getCellValue = (
-    row: T,
-    column: ColumnDefinition<T>,
-  ): React.ReactNode => {
-    const value = row[column.key as keyof T];
+  const getCellValue = (row: T, column: ColumnDefinition<T>): ReactNode => {
+    const value = row[column.key];
 
     if (column.render) {
       return column.render(value, row);
@@ -45,12 +45,14 @@ export function DynamicTable<T extends Record<string, unknown>>({
     <div
       className={`overflow-hidden rounded-lg border border-primary-400 ${className}`}
     >
-      <table className="w-full border-collapse text-left">
+      <table aria-busy={loading} className="w-full border-collapse text-left">
+        {caption ? <caption className="sr-only">{caption}</caption> : null}
         <thead className="bg-primary-400">
           <tr>
             {config.columns.map((column) => (
               <th
                 key={String(column.key)}
+                scope="col"
                 className={`px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted ${
                   column.className || ""
                 }`}

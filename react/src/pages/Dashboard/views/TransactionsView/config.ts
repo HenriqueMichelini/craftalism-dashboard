@@ -2,34 +2,36 @@ import type { TableConfig } from "../../../../types/table.types";
 import type { Transaction } from "../../../../types/models/transaction.types";
 import { formatters } from "../../../../utils";
 
+const monoCellClassName = "font-mono text-sm text-default";
+
 export const transactionsTableConfig: TableConfig<Transaction> = {
   columns: [
     {
       key: "id",
       label: "Id",
-      className: "font-mono text-sm text-default",
+      className: monoCellClassName,
     },
     {
       key: "fromPlayerUuid",
       label: "From",
-      className: "font-mono text-sm text-default",
+      className: monoCellClassName,
     },
     {
       key: "amount",
       label: "Amount",
       render: (value) => formatters.currency(value as number),
-      className: "font-mono text-sm text-default",
+      className: monoCellClassName,
     },
     {
       key: "toPlayerUuid",
       label: "To",
-      className: "font-mono text-sm text-default",
+      className: monoCellClassName,
     },
     {
       key: "createdAt",
       label: "Created at",
       render: (value) => formatters.date(value as string),
-      className: "font-mono text-sm text-default",
+      className: monoCellClassName,
     },
   ],
   rowKey: "id",

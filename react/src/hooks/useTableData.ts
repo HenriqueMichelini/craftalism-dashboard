@@ -13,6 +13,7 @@ export function useTableData<T>(fetchFn: () => Promise<T[]>) {
 
     try {
       const data = await fetchFn();
+
       setState({ data, loading: false, error: null });
     } catch (error) {
       setState({
@@ -26,11 +27,10 @@ export function useTableData<T>(fetchFn: () => Promise<T[]>) {
   useEffect(() => {
     let cancelled = false;
 
-    const load = async () => {
-      setState((prev) => ({ ...prev, loading: true, error: null }));
-
+    const loadInitialData = async () => {
       try {
         const data = await fetchFn();
+
         if (!cancelled) {
           setState({ data, loading: false, error: null });
         }
@@ -46,7 +46,7 @@ export function useTableData<T>(fetchFn: () => Promise<T[]>) {
       }
     };
 
-    load();
+    void loadInitialData();
 
     return () => {
       cancelled = true;
