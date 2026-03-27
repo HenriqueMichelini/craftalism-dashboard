@@ -6,7 +6,8 @@
 set -e
 
 # Default API upstream for nginx reverse-proxy (Docker network service name)
-: "${API_UPSTREAM_URL:=http://craftalism-api:8080}"
+# Must be exported so envsubst (a child process) can read it
+export API_UPSTREAM_URL="${API_UPSTREAM_URL:-http://craftalism-api:8080}"
 
 # If runtime API URL points to localhost, force same-origin /api to prevent browser CORS issues.
 case "${VITE_API_URL:-}" in
