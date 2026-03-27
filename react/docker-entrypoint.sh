@@ -5,6 +5,21 @@
 
 set -e
 
+# Default API upstream for nginx reverse-proxy (Docker network service name)
+: "${API_UPSTREAM_URL:=http://craftalism-api:8080}"
+
+# If runtime API URL points to localhost, force same-origin /api to prevent browser CORS issues.
+case "${VITE_API_URL:-}" in
+  http://localhost*|https://localhost*|http://127.0.0.1*|https://127.0.0.1*)
+    VITE_API_URL="/api"
+    ;;
+esac
+
+# Render nginx config template with API upstream target.
+envsubst '${API_UPSTREAM_URL}' \
+  < /etc/nginx/templates/default.conf.template \
+  > /etc/nginx/conf.d/default.conf
+
 # Define environment variables that should be available in the app
 # Add any VITE_ prefixed variables you want to inject at runtime
 ENV_VARS="VITE_API_URL VITE_API_TIMEOUT"
