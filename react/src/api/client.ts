@@ -1,4 +1,6 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+import { config } from "../config/runtime";
+
+const BASE_URL = config.apiUrl || "http://localhost:8080";
 
 export class ApiError extends Error {
   public status: number;

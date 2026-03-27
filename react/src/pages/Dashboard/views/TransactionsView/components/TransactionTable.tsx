@@ -10,12 +10,13 @@ export function TransactionTable() {
 
   return (
     <DynamicTable
+      caption="Transactions table"
       data={data}
       loading={loading}
       error={error}
       config={transactionsTableConfig}
       onRetry={refetch}
-      emptyMessage="No players found."
+      emptyMessage="No transactions found."
     />
   );
 }

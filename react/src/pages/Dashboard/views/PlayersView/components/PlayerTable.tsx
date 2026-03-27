@@ -8,6 +8,7 @@ export function PlayerTable() {
 
   return (
     <DynamicTable
+      caption="Players table"
       data={data}
       loading={loading}
       error={error}

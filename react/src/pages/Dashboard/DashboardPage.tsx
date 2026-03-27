@@ -3,6 +3,12 @@ import { PlayersView, BalancesView, TransactionsView } from "./views";
 
 type ViewType = "players" | "transactions" | "balances";
 
+const views: ReadonlyArray<{ key: ViewType; label: string }> = [
+  { key: "players", label: "Players" },
+  { key: "transactions", label: "Transactions" },
+  { key: "balances", label: "Balances" },
+];
+
 export function DashboardPage() {
   const [activeView, setActiveView] = useState<ViewType>("players");
 
@@ -21,22 +27,37 @@ export function DashboardPage() {
 
   return (
     <div>
-      <nav className="mb-6 flex gap-4 border-b border-primary-400">
-        {(["players", "transactions", "balances"] as ViewType[]).map((view) => (
+      <nav
+        aria-label="Dashboard sections"
+        className="mb-6 flex gap-2 border-b border-primary-400"
+        role="tablist"
+      >
+        {views.map((view) => (
           <button
-            key={view}
-            onClick={() => setActiveView(view)}
-            className={`px-4 py-2 capitalize ${
-              activeView === view
+            key={view.key}
+            aria-controls={`${view.key}-panel`}
+            aria-selected={activeView === view.key}
+            id={`${view.key}-tab`}
+            onClick={() => setActiveView(view.key)}
+            role="tab"
+            className={`rounded-t-md px-4 py-2 text-sm font-medium ${
+              activeView === view.key
                 ? "border-b-2 border-primary-300 text-default"
-                : "text-muted"
+                : "text-muted hover:text-default"
             }`}
           >
-            {view}
+            {view.label}
           </button>
         ))}
       </nav>
-      {renderView()}
+
+      <section
+        aria-labelledby={`${activeView}-tab`}
+        id={`${activeView}-panel`}
+        role="tabpanel"
+      >
+        {renderView()}
+      </section>
     </div>
   );
 }
