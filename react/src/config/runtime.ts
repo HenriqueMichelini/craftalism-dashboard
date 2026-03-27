@@ -3,6 +3,7 @@
 
 interface RuntimeConfig {
   VITE_API_URL?: string;
+  VITE_API_BASE_URL?: string;
   VITE_API_TIMEOUT?: string;
 }
 
@@ -41,7 +42,13 @@ export function getRuntimeConfig<K extends keyof RuntimeConfig>(
  * Convenience function to get API URL
  */
 export function getApiUrl(): string {
-  return getRuntimeConfig('VITE_API_URL') || 'http://localhost:3000';
+  return (
+    window.__RUNTIME_CONFIG__?.VITE_API_URL ||
+    window.__RUNTIME_CONFIG__?.VITE_API_BASE_URL ||
+    import.meta.env.VITE_API_URL ||
+    import.meta.env.VITE_API_BASE_URL ||
+    ""
+  );
 }
 
 /**

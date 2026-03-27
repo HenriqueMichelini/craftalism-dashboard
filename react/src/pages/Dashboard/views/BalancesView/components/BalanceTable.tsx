@@ -8,6 +8,7 @@ export function BalanceTable() {
 
   return (
     <DynamicTable
+      caption="Balances table"
       data={data}
       loading={loading}
       error={error}
