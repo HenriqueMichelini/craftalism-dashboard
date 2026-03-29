@@ -87,7 +87,7 @@ function Table() {
 
   if (state.data.length === 0) {
     return (
-      <div className="flex justify-center items-center text-center">
+      <div className="flex items-center justify-center text-center">
         <h3>No data available.</h3>
       </div>
     );

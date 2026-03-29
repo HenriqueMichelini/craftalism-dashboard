@@ -1,3 +1,5 @@
+const AMOUNT_SCALE = Number(import.meta.env.VITE_AMOUNT_SCALE) || 10000;
+
 export const formatters = {
   date: (dateString: string) => {
     return new Date(dateString).toLocaleString("en-US", {
@@ -15,10 +17,12 @@ export const formatters = {
   },
 
   currency: (value: number, currency = "USD") => {
+    if (value == null) return "-";
+
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency,
-    }).format(value);
+    }).format(value / AMOUNT_SCALE);
   },
 
   number: (value: number) => {
