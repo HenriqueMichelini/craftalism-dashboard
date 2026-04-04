@@ -7,7 +7,7 @@ export const transactionsApi = {
   getById: (id: string) =>
     apiClient<Transaction>(getTransactionDetailEndpoint(id)),
   getByToUuid: (uuid: string) =>
-    apiClient<Transaction[]>(`/api/transactions/to/${uuid}`),
+    apiClient<Transaction[]>(getTransactionsByToUuidEndpoint(uuid)),
   getByFromUuid: (uuid: string) =>
-    apiClient<Transaction[]>(`/api/transactions/from/${uuid}`),
+    apiClient<Transaction[]>(getTransactionsByFromUuidEndpoint(uuid)),
 };
