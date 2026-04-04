@@ -132,7 +132,17 @@ The dashboard consumes the following Craftalism API endpoints. All requests are 
 
 ## Testing
 
-No automated test suite is currently configured.
+A minimal automated harness is available for dashboard data access behavior:
+
+```bash
+cd react
+npm run test
+```
+
+Current coverage focuses on:
+
+- transaction API client route contract (`/api/transactions/:id`)
+- table data loading abstraction used by the dashboard hook (`loadTableData`)
 
 ---
 
@@ -174,8 +184,7 @@ react/
 - No authentication or authorization — the dashboard is open to anyone who can reach it.
 - Create, update, and delete flows are not implemented; action buttons are UI placeholders only.
 - Sidebar navigation items are presentational and not backed by routing.
-- No automated tests exist for the API client, hooks, or table components.
-- `react/README.md` is the default Vite scaffold and is not authoritative for this project.
+- Test coverage is intentionally minimal and currently focused on core data-fetching behavior.
 
 ---
 
