@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import type { TableState } from "../types/table.types";
+import { loadTableData } from "./tableDataState";
+
+export { loadTableData } from "./tableDataState";
 
 export function useTableData<T>(fetchFn: () => Promise<T[]>) {
   const [state, setState] = useState<TableState<T>>({
@@ -10,39 +13,18 @@ export function useTableData<T>(fetchFn: () => Promise<T[]>) {
 
   const fetchData = useCallback(async () => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
-
-    try {
-      const data = await fetchFn();
-
-      setState({ data, loading: false, error: null });
-    } catch (error) {
-      setState({
-        data: [],
-        loading: false,
-        error: error instanceof Error ? error.message : "Failed to fetch data",
-      });
-    }
+    const nextState = await loadTableData(fetchFn);
+    setState(nextState);
   }, [fetchFn]);
 
   useEffect(() => {
     let cancelled = false;
 
     const loadInitialData = async () => {
-      try {
-        const data = await fetchFn();
+      const nextState = await loadTableData(fetchFn);
 
-        if (!cancelled) {
-          setState({ data, loading: false, error: null });
-        }
-      } catch (error) {
-        if (!cancelled) {
-          setState({
-            data: [],
-            loading: false,
-            error:
-              error instanceof Error ? error.message : "Failed to fetch data",
-          });
-        }
+      if (!cancelled) {
+        setState(nextState);
       }
     };
 
