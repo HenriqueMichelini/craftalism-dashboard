@@ -1,14 +1,9 @@
 import { apiClient } from "../client";
 import type { Transaction } from "../../types/models/transaction.types";
-import {
-  getTransactionsEndpoint,
-  getTransactionDetailEndpoint,
-  getTransactionsByToUuidEndpoint,
-  getTransactionsByFromUuidEndpoint,
-} from "./transactionPaths";
+import { getTransactionDetailEndpoint } from "./transactionPaths";
 
 export const transactionsApi = {
-  getAll: () => apiClient<Transaction[]>(getTransactionsEndpoint()),
+  getAll: () => apiClient<Transaction[]>("/api/transactions"),
   getById: (id: string) =>
     apiClient<Transaction>(getTransactionDetailEndpoint(id)),
   getByToUuid: (uuid: string) =>
