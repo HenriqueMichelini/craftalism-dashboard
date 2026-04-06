@@ -18,21 +18,46 @@
 - `error-semantics`
   - Reflect API failures appropriately where client behavior depends on them
 - `auth-issuer`
-  - Align with the ecosystem auth/access strategy if dashboard auth is introduced
+  - Align with the ecosystem auth/access strategy only if dashboard-authenticated access is in scope
 - `ci-cd`
   - Meet frontend quality-gate expectations
 - `testing`
   - Meet minimum dashboard testing expectations
 - `documentation`
   - Keep docs accurate, coherent, and non-conflicting
+- `security-access-control`
+  - Keep dashboard access posture explicit and avoid implying protection that does not exist
 
-## Current Priority Areas
-- Verify all API client paths use canonical routes
-- Verify dashboard behavior matches current backend reality
-- Establish or improve a minimal automated test harness
-- Clean up scaffold or misleading docs
-- Improve CI/CD quality gates if missing or weak
-- Keep frontend runtime config behavior clear and deployment-friendly
+## Current Phase Objective
+This phase is limited to:
+- verifying dashboard conformance to consumed contracts that are actually relevant now
+- correcting route/client behavior where it clearly violates shared contracts
+- establishing or correcting minimal frontend quality signals where required standards are clearly violated
+- correcting documentation drift directly related to actual dashboard behavior
+
+This phase is not for broad product expansion or speculative auth rollout.
+
+## Required This Phase
+- Verify each relevant consumed contract and classify it as:
+  - already compliant
+  - partially compliant
+  - missing
+  - incorrectly implemented
+- Implement only confirmed dashboard-local conformance gaps
+- Verify canonical route usage in API client behavior
+- Verify dashboard docs accurately describe current access posture
+- Fix documentation only where it directly contradicts actual dashboard behavior
+- Fix CI/CD or testing only where:
+  - required standards are clearly violated, and
+  - the gap materially weakens confidence in this repo
+
+## Not Required This Phase
+- Dashboard authentication rollout unless explicitly in scope
+- API route alias implementation
+- Server-side transfer logic
+- Server-side error semantics ownership
+- Incident persistence model
+- Broad frontend redesign unrelated to contract consumption
 
 ## Local Requirements
 - Keep API client/path logic centralized and understandable
@@ -42,7 +67,7 @@
 - Keep recruiter-facing docs coherent and honest
 
 ## Governance Requirements
-- Comply with shared `ci-cd`, `testing`, and `documentation` standards
+- Comply with shared `ci-cd`, `testing`, `documentation`, and `security-access-control` standards
 - Treat backend contracts as authoritative
 - Do not redefine backend ownership locally
 
@@ -57,13 +82,13 @@
 ## Audit Questions
 - Does the dashboard use canonical API routes correctly?
 - Are client assumptions aligned with real backend behavior?
+- Is dashboard access posture documented accurately and aligned with the shared security/access-control standard?
 - Is there a minimal but meaningful test foundation?
-- Are docs coherent and free from scaffold drift?
-- Are CI/CD checks real enough for a frontend consumer repo?
+- Are CI/CD checks sufficient for this phase?
 
 ## Success Criteria
 - Dashboard is a clean and trustworthy contract consumer
 - API client behavior matches canonical routes and semantics
+- Dashboard docs accurately describe current access posture
 - Minimal tests provide useful confidence
-- Docs are coherent and recruiter-friendly
-- CI/CD provides meaningful branch-level quality signals
+- CI/CD meets minimum required confidence for this phase
