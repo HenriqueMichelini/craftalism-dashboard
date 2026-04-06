@@ -141,8 +141,10 @@ npm run test
 
 Current coverage focuses on:
 
-- transaction API client route contract (`/api/transactions/:id`)
+- transaction API client route contracts (`/api/transactions/:id`, `/api/transactions/to/:uuid`, `/api/transactions/from/:uuid`)
 - table data loading abstraction used by the dashboard hook (`loadTableData`)
+
+GitHub Actions quality gates run lint, test, and build on pull requests and pushes to `main`.
 
 ---
 
@@ -194,7 +196,6 @@ react/
 - Implement create/update/delete flows for players, balances, and transactions.
 - Add query, filter, sort, and pagination support for large datasets.
 - Add unit and integration tests for the API client, hooks, and table rendering.
-- Add CI checks (lint, typecheck, build, test).
 
 ---
 
