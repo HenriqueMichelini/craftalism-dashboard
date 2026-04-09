@@ -98,7 +98,7 @@ The app is available at the URL printed by Vite (typically `http://localhost:517
 
 ```bash
 cd react
-docker build -t craftalism-dashboard -f dockerfile .
+docker build -t craftalism-dashboard -f Dockerfile .
 docker run --rm -p 8080:80 \
   -e API_UPSTREAM_URL=http://host.docker.internal:3000 \
   -e VITE_API_TIMEOUT=10000 \
@@ -173,7 +173,7 @@ react/
 │   │       └── BalancesView/
 │   ├── types/
 │   └── utils/
-├── dockerfile
+├── Dockerfile
 ├── docker-entrypoint.sh
 ├── nginx.conf
 └── package.json
