@@ -80,7 +80,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./react # <-- Root context for dashboard
-          file: ./react/dockerfile # <-- Dockerfile at root
+          file: ./react/Dockerfile # <-- Dockerfile at root
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
