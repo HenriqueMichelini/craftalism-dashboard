@@ -183,7 +183,7 @@ react/
 
 ## Known Limitations
 
-- No authentication or authorization — the dashboard is open to anyone who can reach it.
+- The standalone dashboard container has no built-in auth. Production deployments should front it with HTTPS and access control at the edge proxy.
 - Create, update, and delete flows are not implemented; action buttons are UI placeholders only.
 - Sidebar navigation items are presentational and not backed by routing.
 - Test coverage is intentionally minimal and currently focused on core data-fetching behavior.
