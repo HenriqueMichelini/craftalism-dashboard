@@ -1,7 +1,7 @@
-import { DynamicTable } from "../../../../../components/ui/Table";
-import { useTableData } from "../../../../../hooks/useTableData";
-import { balancesApi } from "../../../../../api";
-import { balancesTableConfig } from "../config";
+import { DynamicTable } from "../../../../../components/ui/Table/DynamicTable.js";
+import { useTableData } from "../../../../../hooks/useTableData.js";
+import { balancesApi } from "../../../../../api/endpoints/balances.js";
+import { balancesTableConfig } from "../config.js";
 
 export function BalanceTable() {
   const { data, loading, error, refetch } = useTableData(balancesApi.getAll);

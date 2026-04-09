@@ -9,7 +9,7 @@
     "build:docker": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "npm run test:compile && node --test .tmp-tests/tests/**/*.test.js",
+    "test": "npm run test:compile && node --experimental-specifier-resolution=node --test .tmp-tests/tests/**/*.test.js",
     "test:compile": "node -e \"require('fs').rmSync('.tmp-tests',{ recursive:true, force:true })\" && tsc -p tsconfig.test.json"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-import type { TableState } from "../types/table.types";
+import type { TableState } from "../types/table.types.js";
 
 function toErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Failed to fetch data";

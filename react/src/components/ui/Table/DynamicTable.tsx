@@ -1,5 +1,5 @@
-import type { TableConfig, ColumnDefinition } from "../../../types/table.types";
-import { LoadingState, ErrorState, EmptyState } from "./TableStates";
+import type { TableConfig, ColumnDefinition } from "../../../types/table.types.js";
+import { LoadingState, ErrorState, EmptyState } from "./TableStates.js";
 import type { ReactNode } from "react";
 
 type DynamicTableProps<T> = {

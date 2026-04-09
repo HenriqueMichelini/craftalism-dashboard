@@ -1,5 +1,5 @@
-import { TransactionTable } from "./components/TransactionTable";
-import { PageHeader } from "../../../../components/shared/PageHeader/PageHeader";
+import { TransactionTable } from "./components/TransactionTable.js";
+import { PageHeader } from "../../../../components/shared/PageHeader/PageHeader.js";
 
 export function TransactionsView() {
   return (

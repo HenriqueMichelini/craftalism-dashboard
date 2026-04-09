@@ -7,7 +7,8 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "types": [
-      "node"
+      "node",
+      "vite/client"
     ],
     "allowImportingTsExtensions": false,
     "verbatimModuleSyntax": true,
@@ -15,8 +16,15 @@
   },
   "include": [
     "tests/**/*.ts",
-    "src/api/endpoints/transactionPaths.ts",
-    "src/hooks/tableDataState.ts",
-    "src/types/table.types.ts"
+    "tests/**/*.tsx",
+    "src/api/**/*.ts",
+    "src/components/shared/**/*.tsx",
+    "src/components/ui/**/*.tsx",
+    "src/config/runtime.ts",
+    "src/hooks/**/*.ts",
+    "src/pages/Dashboard/**/*.ts",
+    "src/pages/Dashboard/**/*.tsx",
+    "src/types/**/*.ts",
+    "src/utils/**/*.ts"
   ]
 }

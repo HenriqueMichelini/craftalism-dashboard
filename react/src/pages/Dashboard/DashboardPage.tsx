@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { PlayersView, BalancesView, TransactionsView } from "./views";
+import { PlayersView } from "./views/PlayersView/PlayersView.js";
+import { BalancesView } from "./views/BalancesView/BalancesView.js";
+import { TransactionsView } from "./views/TransactionsView/TransactionsView.js";
 
 type ViewType = "players" | "transactions" | "balances";
 

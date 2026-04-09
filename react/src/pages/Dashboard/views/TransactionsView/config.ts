@@ -1,6 +1,6 @@
-import type { TableConfig } from "../../../../types/table.types";
-import type { Transaction } from "../../../../types/models/transaction.types";
-import { formatters } from "../../../../utils";
+import type { TableConfig } from "../../../../types/table.types.js";
+import type { Transaction } from "../../../../types/models/transaction.types.js";
+import { formatters } from "../../../../utils/formatters.js";
 
 const monoCellClassName = "font-mono text-sm text-default";
 

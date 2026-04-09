@@ -1,4 +1,6 @@
-const AMOUNT_SCALE = Number(import.meta.env.VITE_AMOUNT_SCALE) || 10000;
+const AMOUNT_SCALE =
+  Number((import.meta as ImportMeta & { env?: { VITE_AMOUNT_SCALE?: string } }).env?.VITE_AMOUNT_SCALE) ||
+  10000;
 
 export const formatters = {
   date: (dateString: string) => {

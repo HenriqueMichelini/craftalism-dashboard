@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import type { TableState } from "../types/table.types";
-import { loadTableData } from "./tableDataState";
+import type { TableState } from "../types/table.types.js";
+import { loadTableData } from "./tableDataState.js";
 
-export { loadTableData } from "./tableDataState";
+export { loadTableData } from "./tableDataState.js";
 
 export function useTableData<T>(fetchFn: () => Promise<T[]>) {
   const [state, setState] = useState<TableState<T>>({

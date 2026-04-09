@@ -1,5 +1,5 @@
-import { apiClient } from "../client";
-import type { Player } from "../../types/models/player.types";
+import { apiClient } from "../client.js";
+import type { Player } from "../../types/models/player.types.js";
 
 export const playersApi = {
   getAll: () => apiClient<Player[]>("/api/players"),

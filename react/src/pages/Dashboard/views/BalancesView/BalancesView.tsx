@@ -1,5 +1,5 @@
-import { BalanceTable } from "./components/BalanceTable";
-import { PageHeader } from "../../../../components/shared/PageHeader/PageHeader";
+import { BalanceTable } from "./components/BalanceTable.js";
+import { PageHeader } from "../../../../components/shared/PageHeader/PageHeader.js";
 
 export function BalancesView() {
   return (

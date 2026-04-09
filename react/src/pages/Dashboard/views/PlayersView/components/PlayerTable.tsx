@@ -1,7 +1,7 @@
-import { DynamicTable } from "../../../../../components/ui/Table";
-import { useTableData } from "../../../../../hooks/useTableData";
-import { playersApi } from "../../../../../api";
-import { playersTableConfig } from "../config";
+import { DynamicTable } from "../../../../../components/ui/Table/DynamicTable.js";
+import { useTableData } from "../../../../../hooks/useTableData.js";
+import { playersApi } from "../../../../../api/endpoints/players.js";
+import { playersTableConfig } from "../config.js";
 
 export function PlayerTable() {
   const { data, loading, error, refetch } = useTableData(playersApi.getAll);

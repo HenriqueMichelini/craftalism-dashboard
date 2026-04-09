@@ -1,6 +1,6 @@
-import type { TableConfig } from "../../../../types/table.types";
-import type { Balance } from "../../../../types/models/balance.types";
-import { formatters } from "../../../../utils";
+import type { TableConfig } from "../../../../types/table.types.js";
+import type { Balance } from "../../../../types/models/balance.types.js";
+import { formatters } from "../../../../utils/formatters.js";
 
 const monoCellClassName = "font-mono text-sm text-default";
 

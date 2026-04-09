@@ -1,4 +1,4 @@
-import { config } from "../config/runtime";
+import { config } from "../config/runtime.js";
 
 const DEFAULT_BASE_URL = "/api";
 

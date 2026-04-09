@@ -7,6 +7,10 @@ interface RuntimeConfig {
   VITE_API_TIMEOUT?: string;
 }
 
+type ImportMetaWithOptionalEnv = ImportMeta & {
+  env?: RuntimeConfig;
+};
+
 // Extend Window interface to include runtime config
 declare global {
   interface Window {
@@ -50,14 +54,18 @@ function normalizeApiUrl(rawUrl: string): string {
 export function getRuntimeConfig<K extends keyof RuntimeConfig>(
   key: K
 ): string {
+  const runtimeConfig =
+    typeof window === "undefined" ? undefined : window.__RUNTIME_CONFIG__;
+  const buildTimeEnv = (import.meta as ImportMetaWithOptionalEnv).env;
+
   // First, try runtime config (injected by Docker)
-  const runtimeValue = window.__RUNTIME_CONFIG__?.[key];
+  const runtimeValue = runtimeConfig?.[key];
   if (runtimeValue) {
     return runtimeValue;
   }
 
   // Fallback to build-time environment variable (for local dev)
-  const buildTimeValue = import.meta.env[key];
+  const buildTimeValue = buildTimeEnv?.[key];
   if (buildTimeValue) {
     return buildTimeValue;
   }
@@ -71,11 +79,15 @@ export function getRuntimeConfig<K extends keyof RuntimeConfig>(
  * Convenience function to get API URL
  */
 export function getApiUrl(): string {
+  const runtimeConfig =
+    typeof window === "undefined" ? undefined : window.__RUNTIME_CONFIG__;
+  const buildTimeEnv = (import.meta as ImportMetaWithOptionalEnv).env;
+
   const configuredApiUrl =
-    window.__RUNTIME_CONFIG__?.VITE_API_URL ||
-    window.__RUNTIME_CONFIG__?.VITE_API_BASE_URL ||
-    import.meta.env.VITE_API_URL ||
-    import.meta.env.VITE_API_BASE_URL;
+    runtimeConfig?.VITE_API_URL ||
+    runtimeConfig?.VITE_API_BASE_URL ||
+    buildTimeEnv?.VITE_API_URL ||
+    buildTimeEnv?.VITE_API_BASE_URL;
 
   return normalizeApiUrl(configuredApiUrl || "/api");
 }

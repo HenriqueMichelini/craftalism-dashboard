@@ -1,5 +1,5 @@
-import { PlayerTable } from "./components/PlayerTable";
-import { PageHeader } from "../../../../components/shared/PageHeader/PageHeader";
+import { PlayerTable } from "./components/PlayerTable.js";
+import { PageHeader } from "../../../../components/shared/PageHeader/PageHeader.js";
 
 export function PlayersView() {
   return (
