@@ -118,13 +118,13 @@ The dashboard consumes the following Craftalism API endpoints. All requests are 
 | Method | Path | Description |
 |---|---|---|
 | `GET` | `/api/players` | List all players. |
-| `GET` | `/api/players/:uuid` | Get a single player by UUID. |
+| `GET` | `/api/players/{uuid}` | Get a single player by UUID. |
 | `GET` | `/api/transactions` | List all transactions. |
-| `GET` | `/api/transactions/:id` | Get a single transaction by ID. |
-| `GET` | `/api/transactions/to/:uuid` | List incoming transactions for a player. |
-| `GET` | `/api/transactions/from/:uuid` | List outgoing transactions for a player. |
+| `GET` | `/api/transactions/{id}` | Get a single transaction by ID. |
+| `GET` | `/api/transactions/to/{uuid}` | List incoming transactions for a player. |
+| `GET` | `/api/transactions/from/{uuid}` | List outgoing transactions for a player. |
 | `GET` | `/api/balances` | List all balances. |
-| `GET` | `/api/balances/:uuid` | Get a player's balance by UUID. |
+| `GET` | `/api/balances/{uuid}` | Get a player's balance by UUID. |
 
 > **Note:** The current UI only calls the `getAll` variants. Detail and filter methods exist in the API layer and are ready for use when views are extended.
 
@@ -141,7 +141,7 @@ npm run test
 
 Current coverage focuses on:
 
-- transaction API client route contracts (`/api/transactions/:id`, `/api/transactions/to/:uuid`, `/api/transactions/from/:uuid`)
+- transaction API client route contracts (`/api/transactions/{id}`, `/api/transactions/to/{uuid}`, `/api/transactions/from/{uuid}`)
 - table data loading abstraction used by the dashboard hook (`loadTableData`)
 
 GitHub Actions quality gates run lint, test, and build on pull requests and pushes to `main`.
