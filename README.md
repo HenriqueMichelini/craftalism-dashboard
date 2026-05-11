@@ -151,6 +151,12 @@ GitHub Actions quality gates run lint, test, and build on pull requests and push
 ## Project Structure
 
 ```text
+.
+├── AGENTS.md
+├── AGENT-PROMPT.md
+├── docs/
+└── react/
+
 react/
 ├── src/
 │   ├── api/
@@ -178,6 +184,21 @@ react/
 ├── nginx.conf
 └── package.json
 ```
+
+---
+
+## For AI Agents
+
+This repository uses the Craftalism project-template documentation structure.
+
+Start with:
+
+1. `AGENTS.md`
+2. `docs/index.md`
+3. `docs/context-policy.md`
+4. `docs/workflows/index.md`
+
+Do not scan the full repository by default.
 
 ---
 

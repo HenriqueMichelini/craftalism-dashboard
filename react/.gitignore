@@ -1,25 +1,55 @@
-# Logs
-logs
+# Build artifacts
+build/
+.gradle/
+out/
+bin/
+node_modules/
+dist/
+dist-ssr/
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+
+# Logs / temporary
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
+tmp/
+temp/
+*.tmp
 *.local
+.tmp-tests/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Terraform / infra
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
+tfplan
+
+# Secrets / environment
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.secret
+
+# IDE / editor
+.idea/
+.vscode/
+*.iml
+*.swp
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-.tmp-tests/

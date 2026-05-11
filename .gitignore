@@ -1,3 +1,40 @@
-node_modules
-dist
+# Build artifacts
+build/
+.gradle/
+out/
+bin/
+dist/
+node_modules/
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+
+# Logs / temporary
+*.log
+tmp/
+temp/
+*.tmp
+
+# Terraform / infra
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
+tfplan
+
+# Secrets / environment
 .env
+.env.*
+!.env.example
+*.key
+*.pem
+*.secret
+
+# IDE / editor
+.idea/
+.vscode/
+*.iml
+*.swp
