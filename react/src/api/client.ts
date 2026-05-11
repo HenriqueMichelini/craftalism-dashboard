@@ -1,4 +1,5 @@
 import { config } from "../config/runtime.js";
+import { getApiAuthorizationHeader } from "./auth.js";
 
 const DEFAULT_BASE_URL = "/api";
 
@@ -77,12 +78,16 @@ export async function apiClient<T>(
   options?: RequestInit,
 ): Promise<T> {
   const url = buildUrl(getBaseUrl(), endpoint);
+  const authorizationHeader = getApiAuthorizationHeader();
 
   try {
     const response = await fetch(url, {
       ...options,
       headers: {
         "Content-Type": "application/json",
+        ...(authorizationHeader
+          ? { Authorization: authorizationHeader }
+          : undefined),
         ...options?.headers,
       },
     });

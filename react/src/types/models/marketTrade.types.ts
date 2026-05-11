@@ -8,3 +8,18 @@ export type MarketTrade = {
   totalPrice: number;
   createdAt: string;
 };
+
+export type ApiMarketTradeHistory = {
+  id: number | string;
+  playerUuid: string;
+  itemId: string;
+  side: "BUY" | "SELL" | "buy" | "sell";
+  quantity: number;
+  unitPrice: number | string;
+  totalPrice: number | string;
+  executedAt: string;
+};
+
+export type ApiMarketTradeHistoryPage = {
+  content: ApiMarketTradeHistory[];
+};

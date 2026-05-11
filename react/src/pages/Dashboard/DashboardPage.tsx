@@ -3,6 +3,7 @@ import { PlayersView } from "./views/PlayersView/PlayersView.js";
 import { BalancesView } from "./views/BalancesView/BalancesView.js";
 import { TransactionsView } from "./views/TransactionsView/TransactionsView.js";
 import { MarketTradesView } from "./views/MarketTradesView/MarketTradesView.js";
+import { ApiReadTokenControl } from "./components/ApiReadTokenControl.js";
 
 type ViewType = "players" | "transactions" | "balances" | "market-trades";
 
@@ -15,6 +16,7 @@ const views: ReadonlyArray<{ key: ViewType; label: string }> = [
 
 export function DashboardPage() {
   const [activeView, setActiveView] = useState<ViewType>("players");
+  const [authVersion, setAuthVersion] = useState(0);
 
   const renderView = () => {
     switch (activeView) {
@@ -33,6 +35,8 @@ export function DashboardPage() {
 
   return (
     <div>
+      <ApiReadTokenControl onTokenChange={() => setAuthVersion((v) => v + 1)} />
+
       <nav
         aria-label="Dashboard sections"
         className="mb-6 flex gap-2 border-b border-primary-400"
@@ -60,6 +64,7 @@ export function DashboardPage() {
       <section
         aria-labelledby={`${activeView}-tab`}
         id={`${activeView}-panel`}
+        key={`${activeView}-${authVersion}`}
         role="tabpanel"
       >
         {renderView()}
