@@ -18,6 +18,7 @@ node_modules/
 tmp/
 temp/
 *.tmp
+.tmp-tests/
 
 # Terraform / infra
 .terraform/

@@ -143,6 +143,8 @@ Current coverage focuses on:
 
 - transaction API client route contracts (`/api/transactions/{id}`, `/api/transactions/to/{uuid}`, `/api/transactions/from/{uuid}`)
 - table data loading abstraction used by the dashboard hook (`loadTableData`)
+- dynamic table rendering behavior
+- dashboard view configuration and view selection behavior
 
 GitHub Actions quality gates run lint, test, and build on pull requests and pushes to `main`.
 

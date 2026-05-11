@@ -48,6 +48,8 @@ Do not scan the full governance `docs/` tree.
 | Update documentation | `workflows/update-docs.md` + affected docs only |
 | Refactor code | `workflows/refactor.md` + `conventions.md` + affected source/test files |
 | Change public API usage, permissions, security, or external behavior | `architecture/boundaries.md` + affected feature contract + relevant Craftalism shared contract or standard + explicit scope |
+| Audit a Gradle build | Use the `gradle-audit` skill only when this repository uses Gradle |
+| Prepare a commit message | Use the `commit-standard` skill |
 | Understand project background | `../README.md` first, then routed docs only |
 
 ## Ambiguous Cases

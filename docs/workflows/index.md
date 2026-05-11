@@ -19,6 +19,7 @@ This file is a router only. Workflow rules belong in the selected workflow file.
 | Audit a bounded area | `audit.md` | `audit` |
 | Update documentation only | `update-docs.md` | `update-docs` |
 | Refactor without behavior change | `refactor.md` | `refactor` |
+| Audit a Gradle build | no generic workflow file | `gradle-audit` when this repository uses Gradle |
 | Prepare a commit message | no repo workflow file | `commit-standard` |
 
 ## Ambiguous Cases
