@@ -1,4 +1,3 @@
-export * from "./auth";
 export * from "./client";
 export * from "./endpoints/players";
 export * from "./endpoints/balances";

@@ -4,7 +4,6 @@ import {
   MARKET_TRADES_ENDPOINT,
   marketTradesApi,
 } from "../../src/api/endpoints/marketTrades.js";
-import { clearApiReadToken, setApiReadToken } from "../../src/api/auth.js";
 
 test("MARKET_TRADES_ENDPOINT uses canonical /api/market/trades route", () => {
   assert.equal(MARKET_TRADES_ENDPOINT, "/api/market/trades");
@@ -31,33 +30,6 @@ test("marketTradesApi.getAll fetches the canonical market trades route", async (
   }
 
   assert.deepEqual(requestedUrls, ["/api/market/trades"]);
-});
-
-test("marketTradesApi.getAll sends configured api read bearer token", async () => {
-  const originalFetch = globalThis.fetch;
-  let authorization: string | null = null;
-
-  setApiReadToken("read-token");
-
-  globalThis.fetch = ((_input: RequestInfo | URL, init?: RequestInit) => {
-    const headers = new Headers(init?.headers);
-    authorization = headers.get("Authorization");
-
-    return Promise.resolve(
-      new Response(JSON.stringify({ content: [] }), {
-        headers: { "content-type": "application/json" },
-      }),
-    );
-  }) as typeof fetch;
-
-  try {
-    await marketTradesApi.getAll();
-  } finally {
-    clearApiReadToken();
-    globalThis.fetch = originalFetch;
-  }
-
-  assert.equal(authorization, "Bearer read-token");
 });
 
 test("marketTradesApi.getAll maps API trade history page into table rows", async () => {
