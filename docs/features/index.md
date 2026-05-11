@@ -16,6 +16,7 @@ Feature-local `index.md` is required only for multi-card features and optional o
 | Feature | Status | Purpose |
 |---|---|---|
 | `dashboard-client` | active | Read-oriented frontend client for players, balances, transactions, runtime config, and dashboard UI state |
+| `market-trades` | planned | Display buy and sell market trade operations consumed from the Craftalism API. |
 
 ## Feature Documentation Rules
 
