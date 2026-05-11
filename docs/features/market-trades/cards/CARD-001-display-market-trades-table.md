@@ -1,7 +1,7 @@
 ---
 id: CARD-001
 feature: market-trades
-status: planned
+status: implemented
 depends_on: []
 parallel_safe: true
 ---
@@ -10,7 +10,7 @@ parallel_safe: true
 
 ## Status
 
-planned
+implemented
 
 ## Objective
 
@@ -84,3 +84,4 @@ If the full validation path is unavailable, run the largest available subset and
 
 ## Completion Notes
 
+Implemented the market trades model, API endpoint, dashboard tab, read-only table view, route assumption test, and dashboard view wiring test.

@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { DashboardPage } from "../../src/pages/Dashboard/DashboardPage.js";
 import { BalancesView } from "../../src/pages/Dashboard/views/BalancesView/BalancesView.js";
+import { MarketTradesView } from "../../src/pages/Dashboard/views/MarketTradesView/MarketTradesView.js";
 import { PlayersView } from "../../src/pages/Dashboard/views/PlayersView/PlayersView.js";
 import { TransactionsView } from "../../src/pages/Dashboard/views/TransactionsView/TransactionsView.js";
 
@@ -11,6 +12,7 @@ test("DashboardPage defaults to the players view and exposes all tabs", () => {
 
   assert.match(markup, /Players/);
   assert.match(markup, /Transactions/);
+  assert.match(markup, /Market Trades/);
   assert.match(markup, /Balances/);
   assert.match(markup, /Manage and view all registered players in your system\./);
   assert.doesNotMatch(
@@ -39,6 +41,16 @@ test("TransactionsView renders its header and loading table state", () => {
   assert.match(
     markup,
     /Manage and view all registered transactions in the server\./,
+  );
+  assert.match(markup, /Loading data\.\.\./);
+});
+
+test("MarketTradesView renders its header and loading table state", () => {
+  const markup = renderToStaticMarkup(<MarketTradesView />);
+
+  assert.match(
+    markup,
+    /View buy and sell market trade operations in the server\./,
   );
   assert.match(markup, /Loading data\.\.\./);
 });
