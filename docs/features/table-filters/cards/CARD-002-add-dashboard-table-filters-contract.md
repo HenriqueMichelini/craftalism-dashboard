@@ -1,7 +1,7 @@
 ---
 id: CARD-002
 feature: table-filters
-status: planned
+status: reverified
 depends_on:
   - CARD-001
 parallel_safe: false
@@ -11,7 +11,7 @@ parallel_safe: false
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -76,3 +76,4 @@ If broader documentation validation exists later, run it and record the command.
 
 ## Completion Notes
 
+Dashboard-owned table filter behavior is documented in `docs/features/table-filters/contract.md`, with API query semantics explicitly consumed from the confirmed `craftalism-api` table filter contract evidence.

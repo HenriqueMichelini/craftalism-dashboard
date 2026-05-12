@@ -1,7 +1,7 @@
 ---
 id: CARD-004
 feature: table-filters
-status: planned
+status: reverified
 depends_on:
   - CARD-002
 parallel_safe: true
@@ -11,7 +11,7 @@ parallel_safe: true
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -79,3 +79,10 @@ If the full validation path is unavailable, run the largest available subset and
 
 ## Completion Notes
 
+Added reusable table filter controls for text, enum, number range, date range, match mode, explicit Apply, and Reset workflows. Field edits remain draft-only inside the control until Apply is submitted, and Reset clears local draft criteria while notifying the parent view.
+
+Validation:
+
+- `npm run lint`: passed with pre-existing Tailwind warnings outside the new filter files.
+- `npm run test`: passed.
+- `npm run build`: passed.

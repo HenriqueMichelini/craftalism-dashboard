@@ -1,7 +1,7 @@
 ---
 id: CARD-005
 feature: table-filters
-status: planned
+status: reverified
 depends_on:
   - CARD-003
   - CARD-004
@@ -12,7 +12,7 @@ parallel_safe: true
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -79,3 +79,10 @@ If the full validation path is unavailable, run the largest available subset and
 
 ## Completion Notes
 
+Wired Transactions view filters for player UUIDs, match mode, amount range, and created range through reusable draft controls and typed API request construction. Apply activates API-backed requests, Reset returns to the unfiltered request, and filtered empty state text differs from the unfiltered empty state.
+
+Validation:
+
+- `npm run lint`: passed with pre-existing Tailwind warnings.
+- `npm run test`: passed.
+- `npm run build`: passed.

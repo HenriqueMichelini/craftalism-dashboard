@@ -38,6 +38,8 @@ The dashboard must not invent filter query semantics locally. Dashboard implemen
 - `/api/transactions`
 - `/api/market/trades`
 
+Confirmed API filter semantics are consumed from `../craftalism-api/docs/features/table-filters/contract.md`.
+
 ## Filter Behavior
 
 - Filters use explicit `Apply` and `Reset` controls.
@@ -71,6 +73,8 @@ The first slice supports:
 - `maxTotalPrice`
 - `createdFrom`
 - `createdTo`
+
+Dashboard `type` maps to the canonical API `side` query parameter with `BUY` and `SELL` values. Date range controls map to canonical API execution-time bounds.
 
 ## Out of Scope
 

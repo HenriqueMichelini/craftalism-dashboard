@@ -57,15 +57,16 @@ type MarketTrade = {
 - `type` is rendered as a small visual label: `Buy` in green and `Sell` in gold.
 - The table preserves backend result order.
 - The empty state says `No market trades found.`
+- When table filters are active through `table-filters`, the filtered empty state says `No records match the selected filters.`
 - The table reuses existing dashboard loading, error, empty, and retry states.
+- API-backed table filters are provided by `docs/features/table-filters/contract.md` and consume backend-owned query semantics.
 
 ## Out of Scope
 
 - Backend route implementation or aliases
 - Backend market trade semantics
 - Create, update, or delete flows
-- Filtering
+- Defining backend filtering semantics locally
 - Sorting
 - Detail page behavior
 - Inferring buy or sell operations from transactions
-

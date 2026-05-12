@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import * as assert from "node:assert/strict";
 import {
+  getMarketTradesEndpoint,
   MARKET_TRADES_ENDPOINT,
   marketTradesApi,
 } from "../../src/api/endpoints/marketTrades.js";
@@ -30,6 +31,60 @@ test("marketTradesApi.getAll fetches the canonical market trades route", async (
   }
 
   assert.deepEqual(requestedUrls, ["/api/market/trades"]);
+});
+
+test("getMarketTradesEndpoint builds canonical filtered market trade query", () => {
+  assert.equal(
+    getMarketTradesEndpoint({
+      type: "buy",
+      playerUuid: "550e8400",
+      itemId: "wheat",
+      matchMode: "exact",
+      minTotalPrice: 1000,
+      maxTotalPrice: "50000",
+      createdFrom: "2026-05-01T00:00:00Z",
+      createdTo: "2026-05-12T23:59:59Z",
+    }),
+    "/api/market/trades?side=BUY&playerUuid=550e8400&playerUuidMatch=exact&itemId=wheat&itemIdMatch=exact&minTotalPrice=1000&maxTotalPrice=50000&executedFrom=2026-05-01T00%3A00%3A00Z&executedTo=2026-05-12T23%3A59%3A59Z",
+  );
+});
+
+test("getMarketTradesEndpoint omits empty and reset filter values", () => {
+  assert.equal(
+    getMarketTradesEndpoint({
+      playerUuid: " ",
+      itemId: "",
+      matchMode: "exact",
+      minTotalPrice: undefined,
+      maxTotalPrice: null,
+    }),
+    "/api/market/trades",
+  );
+});
+
+test("marketTradesApi.getAll sends filtered market trade requests", async () => {
+  const originalFetch = globalThis.fetch;
+  const requestedUrls: string[] = [];
+
+  globalThis.fetch = ((input: RequestInfo | URL) => {
+    requestedUrls.push(String(input));
+
+    return Promise.resolve(
+      new Response(JSON.stringify({ content: [] }), {
+        headers: { "content-type": "application/json" },
+      }),
+    );
+  }) as typeof fetch;
+
+  try {
+    await marketTradesApi.getAll({ type: "sell", itemId: "diamond" });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  assert.deepEqual(requestedUrls, [
+    "/api/market/trades?side=SELL&itemId=diamond&itemIdMatch=contains",
+  ]);
 });
 
 test("marketTradesApi.getAll maps API trade history page into table rows", async () => {

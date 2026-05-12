@@ -1,7 +1,7 @@
 ---
 id: CARD-001
 feature: table-filters
-status: blocked
+status: reverified
 depends_on: []
 parallel_safe: false
 ---
@@ -10,7 +10,7 @@ parallel_safe: false
 
 ## Status
 
-blocked
+reverified
 
 ## Objective
 
@@ -88,3 +88,7 @@ If upstream validation is unavailable, record the missing validation evidence be
 - Should transaction list responses remain arrays or adopt a paged response shape?
 
 ## Completion Notes
+
+Confirmed for dashboard consumption from `../craftalism-api/docs/features/table-filters/contract.md` after user approval. The API evidence defines filter query semantics for `GET /api/transactions` and `GET /api/market/trades`, filters-before-pagination behavior, per-field `contains`/`exact` match modes, inclusive numeric and instant ranges, canonical market trade `side` values, empty `Page<T>` response shapes, and invalid filter `ProblemDetail` behavior.
+
+The dashboard remains a consumer of API semantics and does not redefine backend filter behavior locally.

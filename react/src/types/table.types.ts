@@ -16,3 +16,53 @@ export type TableState<T> = {
   loading: boolean;
   error: string | null;
 };
+
+export type TableFilterOption = {
+  label: string;
+  value: string;
+};
+
+export type TextTableFilterField = {
+  kind: "text";
+  key: string;
+  label: string;
+  placeholder?: string;
+};
+
+export type EnumTableFilterField = {
+  kind: "enum";
+  key: string;
+  label: string;
+  options: TableFilterOption[];
+};
+
+export type MatchModeTableFilterField = {
+  kind: "matchMode";
+  key: string;
+  label: string;
+};
+
+export type NumberRangeTableFilterField = {
+  kind: "numberRange";
+  minKey: string;
+  maxKey: string;
+  label: string;
+  minLabel?: string;
+  maxLabel?: string;
+};
+
+export type DateRangeTableFilterField = {
+  kind: "dateRange";
+  fromKey: string;
+  toKey: string;
+  label: string;
+  fromLabel?: string;
+  toLabel?: string;
+};
+
+export type TableFilterField =
+  | TextTableFilterField
+  | EnumTableFilterField
+  | MatchModeTableFilterField
+  | NumberRangeTableFilterField
+  | DateRangeTableFilterField;

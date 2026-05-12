@@ -103,3 +103,31 @@ export async function apiClient<T>(
     );
   }
 }
+
+type QueryValue = string | number | null | undefined;
+
+export function buildEndpointWithQuery(
+  endpoint: string,
+  query: Record<string, QueryValue>,
+): string {
+  const params = new URLSearchParams();
+
+  Object.entries(query).forEach(([key, value]) => {
+    if (value === null || value === undefined) {
+      return;
+    }
+
+    const normalizedValue =
+      typeof value === "string" ? value.trim() : String(value);
+
+    if (!normalizedValue) {
+      return;
+    }
+
+    params.set(key, normalizedValue);
+  });
+
+  const queryString = params.toString();
+
+  return queryString ? `${endpoint}?${queryString}` : endpoint;
+}

@@ -1,7 +1,7 @@
 ---
 id: CARD-006
 feature: table-filters
-status: planned
+status: reverified
 depends_on:
   - CARD-003
   - CARD-004
@@ -12,7 +12,7 @@ parallel_safe: true
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -81,3 +81,10 @@ If the full validation path is unavailable, run the largest available subset and
 
 ## Completion Notes
 
+Wired Market Trades view filters for type, player UUID, item ID, match mode, total price range, and created range through reusable draft controls and typed API request construction. Dashboard `type` maps to API `side` via the API client. Apply activates API-backed requests, Reset returns to the unfiltered request, and filtered empty state text differs from the unfiltered empty state.
+
+Validation:
+
+- `npm run lint`: passed with pre-existing Tailwind warnings after rerun; the first lint attempt raced with `npm run test` recreating `.tmp-tests`.
+- `npm run test`: passed.
+- `npm run build`: passed.

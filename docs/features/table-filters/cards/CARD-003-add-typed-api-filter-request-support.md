@@ -1,7 +1,7 @@
 ---
 id: CARD-003
 feature: table-filters
-status: planned
+status: reverified
 depends_on:
   - CARD-001
   - CARD-002
@@ -12,7 +12,7 @@ parallel_safe: false
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -80,3 +80,10 @@ If the full validation path is unavailable, run the largest available subset and
 
 ## Completion Notes
 
+Added typed filter criteria and canonical URL construction for Transactions and Market Trades. Empty, whitespace, `null`, and `undefined` reset values are omitted from query strings. Unfiltered `getAll()` requests still call the canonical list routes. Tests cover filtered and reset URL generation plus requested endpoints.
+
+Validation:
+
+- `npm run lint`: passed with pre-existing Tailwind warnings.
+- `npm run test`: passed.
+- `npm run build`: passed.
