@@ -1,6 +1,19 @@
-const AMOUNT_SCALE =
+export const AMOUNT_SCALE =
   Number((import.meta as ImportMeta & { env?: { VITE_AMOUNT_SCALE?: string } }).env?.VITE_AMOUNT_SCALE) ||
   10000;
+
+export function toApiAmount(value: string | undefined): string | undefined {
+  if (!value || value.trim().length === 0) {
+    return undefined;
+  }
+
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) {
+    return value;
+  }
+
+  return String(Math.round(numericValue * AMOUNT_SCALE));
+}
 
 export const formatters = {
   date: (dateString: string) => {

@@ -1,6 +1,7 @@
 import type { MarketTradeFilters } from "../../../../types/models/marketTrade.types.js";
 import type { TableFilterField } from "../../../../types/table.types.js";
 import type { TableFilterValues } from "../../../../components/ui/tableFilterState.js";
+import { toApiAmount } from "../../../../utils/formatters.js";
 
 export const marketTradeFilterFields: TableFilterField[] = [
   {
@@ -76,8 +77,8 @@ export function toMarketTradeApiFilters(
     playerUuid: filters.playerUuid,
     itemId: filters.itemId,
     matchMode: filters.matchMode === "exact" ? "exact" : "contains",
-    minTotalPrice: filters.minTotalPrice,
-    maxTotalPrice: filters.maxTotalPrice,
+    minTotalPrice: toApiAmount(filters.minTotalPrice),
+    maxTotalPrice: toApiAmount(filters.maxTotalPrice),
     createdFrom: toInstant(filters.createdFrom),
     createdTo: toInstant(filters.createdTo),
   };

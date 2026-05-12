@@ -102,14 +102,19 @@ test("market trade filter helpers map dashboard type to API filters", () => {
     "No records match the selected filters.",
   );
   assert.deepEqual(
-    toMarketTradeApiFilters({ type: "sell", itemId: "wheat" }),
+    toMarketTradeApiFilters({
+      type: "sell",
+      itemId: "wheat",
+      minTotalPrice: "80",
+      maxTotalPrice: "90",
+    }),
     {
       type: "sell",
       playerUuid: undefined,
       itemId: "wheat",
       matchMode: "contains",
-      minTotalPrice: undefined,
-      maxTotalPrice: undefined,
+      minTotalPrice: "800000",
+      maxTotalPrice: "900000",
       createdFrom: undefined,
       createdTo: undefined,
     },

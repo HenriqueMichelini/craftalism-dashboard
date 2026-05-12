@@ -49,6 +49,16 @@ test("getMarketTradesEndpoint builds canonical filtered market trade query", () 
   );
 });
 
+test("getMarketTradesEndpoint preserves scaled total price API bounds", () => {
+  assert.equal(
+    getMarketTradesEndpoint({
+      minTotalPrice: "800000",
+      maxTotalPrice: "900000",
+    }),
+    "/api/market/trades?minTotalPrice=800000&maxTotalPrice=900000",
+  );
+});
+
 test("getMarketTradesEndpoint omits empty and reset filter values", () => {
   assert.equal(
     getMarketTradesEndpoint({
