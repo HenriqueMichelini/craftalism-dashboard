@@ -12,7 +12,7 @@ export function PageHeader({ title, description, action }: PageHeaderProps) {
       <div className="space-y-1">
         <h1 className="text-table_title text-default">{title}</h1>
         {description && (
-          <p className="w-full text-muted md:w-2/3 lg:w-1/2">{description}</p>
+          <p className="w-full text-muted md:w-3/4 lg:w-2/3">{description}</p>
         )}
       </div>
 
