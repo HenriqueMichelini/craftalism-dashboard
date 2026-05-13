@@ -35,16 +35,21 @@ function SideBarItem({
     <button
       title={label}
       className={`
-        flex items-center rounded-md text-default
-        hover:bg-primary-400
-        ${isOpen ? "w-full gap-3 px-6 py-2" : "size-10 justify-center"}
+        flex w-full items-center justify-start overflow-hidden rounded-md
+        px-6 py-2 text-default transition-colors hover:bg-primary-400
       `}
     >
       <Icon className="size-6 shrink-0" />
 
-      {isOpen && (
-        <span className="whitespace-nowrap text-sm font-medium">{label}</span>
-      )}
+      <span
+        className={`
+          overflow-hidden whitespace-nowrap text-sm font-medium
+          transition-all duration-200
+          ${isOpen ? "ml-3 max-w-32 opacity-100" : "ml-0 max-w-0 opacity-0"}
+        `}
+      >
+        {label}
+      </span>
     </button>
   );
 }
