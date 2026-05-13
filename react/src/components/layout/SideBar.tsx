@@ -15,7 +15,7 @@ function SideBar({ isOpen }: SideBarState) {
     <nav
       className={`flex h-full flex-col items-center
         gap-6
-        bg-gradient-to-br from-primary-500 to-primary-400 py-6
+        bg-gradient-to-br from-primary-500 to-primary-400 px-1 py-6
         transition-all
         ${isOpen ? "w-64" : "w-20"}`}
     >
