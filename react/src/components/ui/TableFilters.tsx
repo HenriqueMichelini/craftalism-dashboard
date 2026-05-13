@@ -15,6 +15,12 @@ type TableFiltersProps = {
   className?: string;
 };
 
+const fieldFrameClass = "flex min-h-16 flex-col";
+const fieldTitleClass = "text-sm font-medium text-muted";
+const fieldControlsClass = "mt-auto pt-2";
+const controlClass =
+  "h-9 w-full rounded-md border border-primary-300 bg-primary-500 px-3 text-default outline-none focus:border-primary-100";
+
 function compactFilters(filters: TableFilterValues): TableFilterValues {
   return Object.fromEntries(
     Object.entries(filters).filter(([, value]) => value.trim().length > 0),
@@ -65,77 +71,72 @@ export function TableFilters({
         {fields.map((field) => {
           if (field.kind === "text") {
             return (
-              <label
-                key={field.key}
-                className="flex flex-col gap-1 text-sm font-medium text-muted"
-              >
-                {field.label}
-                <input
-                  className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
-                  name={field.key}
-                  placeholder={field.placeholder}
-                  type="text"
-                  value={fieldValue(draft, field.key)}
-                  onChange={handleChange(field.key)}
-                />
+              <label key={field.key} className={fieldFrameClass}>
+                <span className={fieldTitleClass}>{field.label}</span>
+                <span className={fieldControlsClass}>
+                  <input
+                    className={controlClass}
+                    name={field.key}
+                    placeholder={field.placeholder}
+                    type="text"
+                    value={fieldValue(draft, field.key)}
+                    onChange={handleChange(field.key)}
+                  />
+                </span>
               </label>
             );
           }
 
           if (field.kind === "enum") {
             return (
-              <label
-                key={field.key}
-                className="flex flex-col gap-1 text-sm font-medium text-muted"
-              >
-                {field.label}
-                <select
-                  className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
-                  name={field.key}
-                  value={fieldValue(draft, field.key)}
-                  onChange={handleChange(field.key)}
-                >
-                  {field.options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+              <label key={field.key} className={fieldFrameClass}>
+                <span className={fieldTitleClass}>{field.label}</span>
+                <span className={fieldControlsClass}>
+                  <select
+                    className={controlClass}
+                    name={field.key}
+                    value={fieldValue(draft, field.key)}
+                    onChange={handleChange(field.key)}
+                  >
+                    {field.options.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </span>
               </label>
             );
           }
 
           if (field.kind === "matchMode") {
             return (
-              <label
-                key={field.key}
-                className="flex flex-col gap-1 text-sm font-medium text-muted"
-              >
-                {field.label}
-                <select
-                  className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
-                  name={field.key}
-                  value={fieldValue(draft, field.key) || "contains"}
-                  onChange={handleChange(field.key)}
-                >
-                  <option value="contains">Contains</option>
-                  <option value="exact">Exact</option>
-                </select>
+              <label key={field.key} className={fieldFrameClass}>
+                <span className={fieldTitleClass}>{field.label}</span>
+                <span className={fieldControlsClass}>
+                  <select
+                    className={controlClass}
+                    name={field.key}
+                    value={fieldValue(draft, field.key) || "contains"}
+                    onChange={handleChange(field.key)}
+                  >
+                    <option value="contains">Contains</option>
+                    <option value="exact">Exact</option>
+                  </select>
+                </span>
               </label>
             );
           }
 
           if (field.kind === "numberRange") {
             return (
-              <fieldset key={field.label} className="space-y-2">
-                <legend className="text-sm font-medium text-muted">
-                  {field.label}
-                </legend>
-                <div className="grid grid-cols-2 gap-2">
+              <fieldset key={field.label} className={fieldFrameClass}>
+                <legend className={fieldTitleClass}>{field.label}</legend>
+                <div className={`${fieldControlsClass} grid grid-cols-2 gap-2`}>
                   <label className="flex flex-col gap-1 text-xs font-medium text-muted">
                     {field.minLabel ?? "Min"}
                     <input
-                      className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                      className={controlClass}
                       name={field.minKey}
                       type="number"
                       value={fieldValue(draft, field.minKey)}
@@ -145,7 +146,7 @@ export function TableFilters({
                   <label className="flex flex-col gap-1 text-xs font-medium text-muted">
                     {field.maxLabel ?? "Max"}
                     <input
-                      className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                      className={controlClass}
                       name={field.maxKey}
                       type="number"
                       value={fieldValue(draft, field.maxKey)}
@@ -158,15 +159,13 @@ export function TableFilters({
           }
 
           return (
-            <fieldset key={field.label} className="space-y-2">
-              <legend className="text-sm font-medium text-muted">
-                {field.label}
-              </legend>
-              <div className="grid grid-cols-2 gap-2">
+            <fieldset key={field.label} className={fieldFrameClass}>
+              <legend className={fieldTitleClass}>{field.label}</legend>
+              <div className={`${fieldControlsClass} grid grid-cols-2 gap-2`}>
                 <label className="flex flex-col gap-1 text-xs font-medium text-muted">
                   {field.fromLabel ?? "From"}
                   <input
-                    className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                    className={controlClass}
                     name={field.fromKey}
                     type="datetime-local"
                     value={fieldValue(draft, field.fromKey)}
@@ -176,7 +175,7 @@ export function TableFilters({
                 <label className="flex flex-col gap-1 text-xs font-medium text-muted">
                   {field.toLabel ?? "To"}
                   <input
-                    className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                    className={controlClass}
                     name={field.toKey}
                     type="datetime-local"
                     value={fieldValue(draft, field.toKey)}
