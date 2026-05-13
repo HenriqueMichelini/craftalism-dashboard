@@ -58,7 +58,7 @@ export function TableFilters({
 
   return (
     <form
-      className={`rounded-lg border border-primary-400 bg-primary-500 p-4 ${className}`}
+      className={`rounded-lg border border-primary-300 bg-primary-500 p-4 ${className}`}
       onSubmit={handleApply}
     >
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -71,7 +71,7 @@ export function TableFilters({
               >
                 {field.label}
                 <input
-                  className="rounded-md border border-primary-400 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                  className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
                   name={field.key}
                   placeholder={field.placeholder}
                   type="text"
@@ -90,7 +90,7 @@ export function TableFilters({
               >
                 {field.label}
                 <select
-                  className="rounded-md border border-primary-400 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                  className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
                   name={field.key}
                   value={fieldValue(draft, field.key)}
                   onChange={handleChange(field.key)}
@@ -113,7 +113,7 @@ export function TableFilters({
               >
                 {field.label}
                 <select
-                  className="rounded-md border border-primary-400 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                  className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
                   name={field.key}
                   value={fieldValue(draft, field.key) || "contains"}
                   onChange={handleChange(field.key)}
@@ -135,7 +135,7 @@ export function TableFilters({
                   <label className="flex flex-col gap-1 text-xs font-medium text-muted">
                     {field.minLabel ?? "Min"}
                     <input
-                      className="rounded-md border border-primary-400 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                      className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
                       name={field.minKey}
                       type="number"
                       value={fieldValue(draft, field.minKey)}
@@ -145,7 +145,7 @@ export function TableFilters({
                   <label className="flex flex-col gap-1 text-xs font-medium text-muted">
                     {field.maxLabel ?? "Max"}
                     <input
-                      className="rounded-md border border-primary-400 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                      className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
                       name={field.maxKey}
                       type="number"
                       value={fieldValue(draft, field.maxKey)}
@@ -166,7 +166,7 @@ export function TableFilters({
                 <label className="flex flex-col gap-1 text-xs font-medium text-muted">
                   {field.fromLabel ?? "From"}
                   <input
-                    className="rounded-md border border-primary-400 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                    className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
                     name={field.fromKey}
                     type="datetime-local"
                     value={fieldValue(draft, field.fromKey)}
@@ -176,7 +176,7 @@ export function TableFilters({
                 <label className="flex flex-col gap-1 text-xs font-medium text-muted">
                   {field.toLabel ?? "To"}
                   <input
-                    className="rounded-md border border-primary-400 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
+                    className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default outline-none focus:border-primary-100"
                     name={field.toKey}
                     type="datetime-local"
                     value={fieldValue(draft, field.toKey)}
@@ -190,7 +190,7 @@ export function TableFilters({
       </div>
       <div className="mt-4 flex flex-wrap justify-end gap-2">
         <button
-          className="rounded-md border border-primary-400 px-4 py-2 text-sm font-medium text-default hover:bg-primary-400"
+          className="rounded-md border border-primary-300 px-4 py-2 text-sm font-medium text-default hover:bg-primary-400"
           type="button"
           onClick={handleReset}
         >
