@@ -14,15 +14,15 @@ export const playersApi = {
   getAll: () => apiClient<Player[]>("/api/players"),
   getById: (uuid: string) => apiClient<Player>(`/api/players/${uuid}`),
   create: (player: PlayerCreateRequest) =>
-    apiClient<Player>("/api/players", {
+    apiClient<Player>("/api/dashboard/players", {
       method: "POST",
       body: JSON.stringify(player),
     }),
   update: (uuid: string, player: PlayerUpdateRequest) =>
-    apiClient<Player>(`/api/players/${uuid}`, {
+    apiClient<Player>(`/api/dashboard/players/${uuid}`, {
       method: "PATCH",
       body: JSON.stringify(player),
     }),
   delete: (uuid: string) =>
-    apiClient<void>(`/api/players/${uuid}`, { method: "DELETE" }),
+    apiClient<void>(`/api/dashboard/players/${uuid}`, { method: "DELETE" }),
 };

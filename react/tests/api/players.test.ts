@@ -8,7 +8,7 @@ const player = {
   createdAt: "2026-05-01T00:00:00.000Z",
 };
 
-test("playersApi.create sends canonical player create request", async () => {
+test("playersApi.create sends player create request through dashboard BFF", async () => {
   const originalFetch = globalThis.fetch;
   const requests: Array<{ url: string; init?: RequestInit }> = [];
 
@@ -34,7 +34,8 @@ test("playersApi.create sends canonical player create request", async () => {
     globalThis.fetch = originalFetch;
   }
 
-  assert.equal(requests[0]?.url, "/api/players");
+  assert.equal(requests[0]?.url, "/api/dashboard/players");
+  assert.notEqual(requests[0]?.url, "/api/players");
   assert.equal(requests[0]?.init?.method, "POST");
   assert.equal(
     requests[0]?.init?.body,
@@ -42,7 +43,7 @@ test("playersApi.create sends canonical player create request", async () => {
   );
 });
 
-test("playersApi.update and delete use canonical player resource route", async () => {
+test("playersApi.update and delete use dashboard BFF player resource route", async () => {
   const originalFetch = globalThis.fetch;
   const requests: Array<{ url: string; init?: RequestInit }> = [];
 
@@ -66,12 +67,14 @@ test("playersApi.update and delete use canonical player resource route", async (
     globalThis.fetch = originalFetch;
   }
 
-  assert.equal(requests[0]?.url, `/api/players/${player.uuid}`);
+  assert.equal(requests[0]?.url, `/api/dashboard/players/${player.uuid}`);
+  assert.notEqual(requests[0]?.url, `/api/players/${player.uuid}`);
   assert.equal(requests[0]?.init?.method, "PATCH");
   assert.equal(
     requests[0]?.init?.body,
     JSON.stringify({ name: "Ada Lovelace" }),
   );
-  assert.equal(requests[1]?.url, `/api/players/${player.uuid}`);
+  assert.equal(requests[1]?.url, `/api/dashboard/players/${player.uuid}`);
+  assert.notEqual(requests[1]?.url, `/api/players/${player.uuid}`);
   assert.equal(requests[1]?.init?.method, "DELETE");
 });

@@ -7,7 +7,7 @@ const balance = {
   amount: 125000,
 };
 
-test("balancesApi.create sends canonical balance create request", async () => {
+test("balancesApi.create sends balance create request through dashboard BFF", async () => {
   const originalFetch = globalThis.fetch;
   const requests: Array<{ url: string; init?: RequestInit }> = [];
 
@@ -30,12 +30,13 @@ test("balancesApi.create sends canonical balance create request", async () => {
     globalThis.fetch = originalFetch;
   }
 
-  assert.equal(requests[0]?.url, "/api/balances");
+  assert.equal(requests[0]?.url, "/api/dashboard/balances");
+  assert.notEqual(requests[0]?.url, "/api/balances");
   assert.equal(requests[0]?.init?.method, "POST");
   assert.equal(requests[0]?.init?.body, JSON.stringify(balance));
 });
 
-test("balancesApi.update and delete use canonical balance resource route", async () => {
+test("balancesApi.update and delete use dashboard BFF balance resource route", async () => {
   const originalFetch = globalThis.fetch;
   const requests: Array<{ url: string; init?: RequestInit }> = [];
 
@@ -59,9 +60,11 @@ test("balancesApi.update and delete use canonical balance resource route", async
     globalThis.fetch = originalFetch;
   }
 
-  assert.equal(requests[0]?.url, `/api/balances/${balance.uuid}`);
+  assert.equal(requests[0]?.url, `/api/dashboard/balances/${balance.uuid}`);
+  assert.notEqual(requests[0]?.url, `/api/balances/${balance.uuid}`);
   assert.equal(requests[0]?.init?.method, "PATCH");
   assert.equal(requests[0]?.init?.body, JSON.stringify({ amount: 130000 }));
-  assert.equal(requests[1]?.url, `/api/balances/${balance.uuid}`);
+  assert.equal(requests[1]?.url, `/api/dashboard/balances/${balance.uuid}`);
+  assert.notEqual(requests[1]?.url, `/api/balances/${balance.uuid}`);
   assert.equal(requests[1]?.init?.method, "DELETE");
 });
