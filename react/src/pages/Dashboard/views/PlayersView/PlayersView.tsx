@@ -15,27 +15,73 @@ export function PlayersView() {
     playersApi.getAll,
   );
   const [modalState, setModalState] = useState<PlayerModalState | null>(null);
+  const [mutationError, setMutationError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSave = (player: Player) => {
-    setData((currentPlayers) => {
-      if (modalState?.mode === "edit") {
-        return currentPlayers.map((currentPlayer) =>
-          currentPlayer.uuid === modalState.player.uuid ? player : currentPlayer,
-        );
-      }
-
-      return [...currentPlayers, player];
-    });
+  const closeModal = () => {
+    setMutationError(null);
     setModalState(null);
   };
 
-  const handleDelete = (player: Player) => {
-    setData((currentPlayers) =>
-      currentPlayers.filter(
-        (currentPlayer) => currentPlayer.uuid !== player.uuid,
-      ),
+  const handleMutationError = (error: unknown, fallbackMessage: string) => {
+    setMutationError(
+      error instanceof Error ? error.message : fallbackMessage,
     );
-    setModalState(null);
+  };
+
+  const handleSave = async (player: Player) => {
+    if (!modalState) return;
+
+    setSubmitting(true);
+    setMutationError(null);
+
+    try {
+      const savedPlayer =
+        modalState.mode === "edit"
+          ? await playersApi.update(modalState.player.uuid, {
+              name: player.name,
+            })
+          : await playersApi.create({
+              uuid: player.uuid,
+              name: player.name,
+            });
+
+      setData((currentPlayers) => {
+        if (modalState.mode === "edit") {
+          return currentPlayers.map((currentPlayer) =>
+            currentPlayer.uuid === modalState.player.uuid
+              ? savedPlayer
+              : currentPlayer,
+          );
+        }
+
+        return [...currentPlayers, savedPlayer];
+      });
+      closeModal();
+    } catch (error) {
+      handleMutationError(error, "Failed to save player.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (player: Player) => {
+    setSubmitting(true);
+    setMutationError(null);
+
+    try {
+      await playersApi.delete(player.uuid);
+      setData((currentPlayers) =>
+        currentPlayers.filter(
+          (currentPlayer) => currentPlayer.uuid !== player.uuid,
+        ),
+      );
+      closeModal();
+    } catch (error) {
+      handleMutationError(error, "Failed to delete player.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -65,7 +111,9 @@ export function PlayersView() {
           mode={modalState.mode}
           player={modalState.player}
           players={data}
-          onCancel={() => setModalState(null)}
+          actionError={mutationError}
+          submitting={submitting}
+          onCancel={closeModal}
           onDelete={handleDelete}
           onSave={handleSave}
         />

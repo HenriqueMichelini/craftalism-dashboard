@@ -12,6 +12,8 @@ type BalanceModalFormProps = {
   mode: "create" | "edit";
   balance?: Balance;
   playerUuids: string[];
+  actionError?: string | null;
+  submitting?: boolean;
   onCancel: () => void;
   onDelete?: (balance: Balance) => void;
   onSave: (balance: Balance) => void;
@@ -26,6 +28,8 @@ export function BalanceModalForm({
   mode,
   balance,
   playerUuids,
+  actionError = null,
+  submitting = false,
   onCancel,
   onDelete,
   onSave,
@@ -69,6 +73,7 @@ export function BalanceModalForm({
         <>
           <button
             className="rounded-md border border-primary-300 px-4 py-2 text-sm font-medium text-default hover:bg-primary-400"
+            disabled={submitting}
             type="button"
             onClick={onCancel}
           >
@@ -77,6 +82,7 @@ export function BalanceModalForm({
           {mode === "edit" && balance ? (
             <button
               className="rounded-md border border-red-400 px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-500/10"
+              disabled={submitting}
               type="button"
               onClick={() => onDelete?.(balance)}
             >
@@ -85,10 +91,11 @@ export function BalanceModalForm({
           ) : null}
           <button
             className="rounded-md bg-primary-400 px-4 py-2 text-sm font-medium text-default hover:bg-primary-300"
+            disabled={submitting}
             form="balance-modal-form"
             type="submit"
           >
-            Save
+            {submitting ? "Saving..." : "Save"}
           </button>
         </>
       }
@@ -98,6 +105,7 @@ export function BalanceModalForm({
         id="balance-modal-form"
         onSubmit={handleSubmit}
       >
+        {actionError ? <p className={errorClass}>{actionError}</p> : null}
         <label className={labelClass}>
           Player UUID
           <input

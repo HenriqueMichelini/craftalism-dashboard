@@ -11,6 +11,8 @@ type PlayerModalFormProps = {
   mode: "create" | "edit";
   players: Player[];
   player?: Player;
+  actionError?: string | null;
+  submitting?: boolean;
   onCancel: () => void;
   onDelete?: (player: Player) => void;
   onSave: (player: Player) => void;
@@ -25,6 +27,8 @@ export function PlayerModalForm({
   mode,
   players,
   player,
+  actionError = null,
+  submitting = false,
   onCancel,
   onDelete,
   onSave,
@@ -72,6 +76,7 @@ export function PlayerModalForm({
         <>
           <button
             className="rounded-md border border-primary-300 px-4 py-2 text-sm font-medium text-default hover:bg-primary-400"
+            disabled={submitting}
             type="button"
             onClick={onCancel}
           >
@@ -80,6 +85,7 @@ export function PlayerModalForm({
           {mode === "edit" && player ? (
             <button
               className="rounded-md border border-red-400 px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-500/10"
+              disabled={submitting}
               type="button"
               onClick={() => onDelete?.(player)}
             >
@@ -88,15 +94,17 @@ export function PlayerModalForm({
           ) : null}
           <button
             className="rounded-md bg-primary-400 px-4 py-2 text-sm font-medium text-default hover:bg-primary-300"
+            disabled={submitting}
             form="player-modal-form"
             type="submit"
           >
-            Save
+            {submitting ? "Saving..." : "Save"}
           </button>
         </>
       }
     >
       <form className="space-y-4" id="player-modal-form" onSubmit={handleSubmit}>
+        {actionError ? <p className={errorClass}>{actionError}</p> : null}
         <label className={labelClass}>
           Player UUID
           <input

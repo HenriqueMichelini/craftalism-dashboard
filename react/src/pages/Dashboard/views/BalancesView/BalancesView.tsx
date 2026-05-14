@@ -21,30 +21,74 @@ export function BalancesView() {
   } = useTableData(balancesApi.getAll);
   const { data: players } = useTableData(playersApi.getAll);
   const [modalState, setModalState] = useState<BalanceModalState | null>(null);
+  const [mutationError, setMutationError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const playerUuids = players.map((player) => player.uuid);
 
-  const handleSave = (balance: Balance) => {
-    setData((currentBalances) => {
-      if (modalState?.mode === "edit") {
-        return currentBalances.map((currentBalance) =>
-          currentBalance.uuid === modalState.balance.uuid
-            ? balance
-            : currentBalance,
-        );
-      }
-
-      return [...currentBalances, balance];
-    });
+  const closeModal = () => {
+    setMutationError(null);
     setModalState(null);
   };
 
-  const handleDelete = (balance: Balance) => {
-    setData((currentBalances) =>
-      currentBalances.filter(
-        (currentBalance) => currentBalance.uuid !== balance.uuid,
-      ),
+  const handleMutationError = (error: unknown, fallbackMessage: string) => {
+    setMutationError(
+      error instanceof Error ? error.message : fallbackMessage,
     );
-    setModalState(null);
+  };
+
+  const handleSave = async (balance: Balance) => {
+    if (!modalState) return;
+
+    setSubmitting(true);
+    setMutationError(null);
+
+    try {
+      const savedBalance =
+        modalState.mode === "edit"
+          ? await balancesApi.update(modalState.balance.uuid, {
+              amount: balance.amount,
+            })
+          : await balancesApi.create({
+              uuid: balance.uuid,
+              amount: balance.amount,
+            });
+
+      setData((currentBalances) => {
+        if (modalState.mode === "edit") {
+          return currentBalances.map((currentBalance) =>
+            currentBalance.uuid === modalState.balance.uuid
+              ? savedBalance
+              : currentBalance,
+          );
+        }
+
+        return [...currentBalances, savedBalance];
+      });
+      closeModal();
+    } catch (error) {
+      handleMutationError(error, "Failed to save balance.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (balance: Balance) => {
+    setSubmitting(true);
+    setMutationError(null);
+
+    try {
+      await balancesApi.delete(balance.uuid);
+      setData((currentBalances) =>
+        currentBalances.filter(
+          (currentBalance) => currentBalance.uuid !== balance.uuid,
+        ),
+      );
+      closeModal();
+    } catch (error) {
+      handleMutationError(error, "Failed to delete balance.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -74,7 +118,9 @@ export function BalancesView() {
           mode={modalState.mode}
           balance={modalState.balance}
           playerUuids={playerUuids}
-          onCancel={() => setModalState(null)}
+          actionError={mutationError}
+          submitting={submitting}
+          onCancel={closeModal}
           onDelete={handleDelete}
           onSave={handleSave}
         />
