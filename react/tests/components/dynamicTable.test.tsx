@@ -77,3 +77,19 @@ test("DynamicTable renders rows when data is present", () => {
   assert.match(markup, /Alex/);
   assert.match(markup, /row-1/);
 });
+
+test("DynamicTable marks rows as interactive when row clicks are enabled", () => {
+  const markup = renderToStaticMarkup(
+    <DynamicTable
+      caption="Example table"
+      config={tableConfig}
+      data={[{ id: "row-1", name: "Alex" }]}
+      error={null}
+      loading={false}
+      onRowClick={() => {}}
+    />,
+  );
+
+  assert.match(markup, /cursor-pointer/);
+  assert.match(markup, /tabindex="0"/);
+});

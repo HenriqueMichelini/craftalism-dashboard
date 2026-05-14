@@ -1,11 +1,22 @@
 import { DynamicTable } from "../../../../../components/ui/Table/DynamicTable.js";
-import { useTableData } from "../../../../../hooks/useTableData.js";
-import { balancesApi } from "../../../../../api/endpoints/balances.js";
 import { balancesTableConfig } from "../config.js";
+import type { Balance } from "../../../../../types/models/balance.types.js";
 
-export function BalanceTable() {
-  const { data, loading, error, refetch } = useTableData(balancesApi.getAll);
+type BalanceTableProps = {
+  data: Balance[];
+  loading: boolean;
+  error: string | null;
+  onRetry: () => void;
+  onBalanceClick: (balance: Balance) => void;
+};
 
+export function BalanceTable({
+  data,
+  loading,
+  error,
+  onRetry,
+  onBalanceClick,
+}: BalanceTableProps) {
   return (
     <DynamicTable
       caption="Balances table"
@@ -13,7 +24,8 @@ export function BalanceTable() {
       loading={loading}
       error={error}
       config={balancesTableConfig}
-      onRetry={refetch}
+      onRetry={onRetry}
+      onRowClick={onBalanceClick}
       emptyMessage="No balances found."
     />
   );

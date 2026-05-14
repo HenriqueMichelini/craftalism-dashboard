@@ -1,11 +1,22 @@
 import { DynamicTable } from "../../../../../components/ui/Table/DynamicTable.js";
-import { useTableData } from "../../../../../hooks/useTableData.js";
-import { playersApi } from "../../../../../api/endpoints/players.js";
 import { playersTableConfig } from "../config.js";
+import type { Player } from "../../../../../types/models/player.types.js";
 
-export function PlayerTable() {
-  const { data, loading, error, refetch } = useTableData(playersApi.getAll);
+type PlayerTableProps = {
+  data: Player[];
+  loading: boolean;
+  error: string | null;
+  onRetry: () => void;
+  onPlayerClick: (player: Player) => void;
+};
 
+export function PlayerTable({
+  data,
+  loading,
+  error,
+  onRetry,
+  onPlayerClick,
+}: PlayerTableProps) {
   return (
     <DynamicTable
       caption="Players table"
@@ -13,7 +24,8 @@ export function PlayerTable() {
       loading={loading}
       error={error}
       config={playersTableConfig}
-      onRetry={refetch}
+      onRetry={onRetry}
+      onRowClick={onPlayerClick}
       emptyMessage="No players found."
     />
   );

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import type { TableState } from "../types/table.types.js";
 import { loadTableData } from "./tableDataState.js";
 
@@ -35,8 +36,19 @@ export function useTableData<T>(fetchFn: () => Promise<T[]>) {
     };
   }, [fetchFn]);
 
+  const setData: Dispatch<SetStateAction<T[]>> = useCallback((nextData) => {
+    setState((currentState) => ({
+      ...currentState,
+      data:
+        typeof nextData === "function"
+          ? (nextData as (currentData: T[]) => T[])(currentState.data)
+          : nextData,
+    }));
+  }, []);
+
   return {
     ...state,
     refetch: fetchData,
+    setData,
   };
 }

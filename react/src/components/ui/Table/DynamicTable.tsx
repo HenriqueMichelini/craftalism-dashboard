@@ -1,6 +1,6 @@
 import type { TableConfig, ColumnDefinition } from "../../../types/table.types.js";
 import { LoadingState, ErrorState, EmptyState } from "./TableStates.js";
-import type { ReactNode } from "react";
+import type { KeyboardEvent, MouseEvent, ReactNode } from "react";
 
 type DynamicTableProps<T> = {
   data: T[];
@@ -8,6 +8,7 @@ type DynamicTableProps<T> = {
   error: string | null;
   config: TableConfig<T>;
   onRetry?: () => void;
+  onRowClick?: (row: T) => void;
   emptyMessage?: string;
   caption?: string;
   className?: string;
@@ -19,6 +20,7 @@ export function DynamicTable<T extends Record<string, unknown>>({
   error,
   config,
   onRetry,
+  onRowClick,
   emptyMessage = "No data available.",
   caption,
   className = "",
@@ -39,6 +41,36 @@ export function DynamicTable<T extends Record<string, unknown>>({
     }
 
     return String(value);
+  };
+
+  const handleRowClick = (
+    row: T,
+    event: MouseEvent<HTMLTableRowElement>,
+  ) => {
+    const target = event.target;
+
+    if (
+      target instanceof HTMLElement &&
+      target.closest(
+        'a, button, input, select, textarea, [role="button"], [data-row-click-ignore="true"]',
+      )
+    ) {
+      return;
+    }
+
+    onRowClick?.(row);
+  };
+
+  const handleRowKeyDown = (
+    row: T,
+    event: KeyboardEvent<HTMLTableRowElement>,
+  ) => {
+    if (!onRowClick || (event.key !== "Enter" && event.key !== " ")) {
+      return;
+    }
+
+    event.preventDefault();
+    onRowClick(row);
   };
 
   return (
@@ -66,7 +98,12 @@ export function DynamicTable<T extends Record<string, unknown>>({
           {data.map((row) => (
             <tr
               key={String(row[config.rowKey])}
-              className="transition-colors hover:bg-primary-400/60"
+              className={`transition-colors hover:bg-primary-400/60 ${
+                onRowClick ? "cursor-pointer" : ""
+              }`}
+              tabIndex={onRowClick ? 0 : undefined}
+              onClick={(event) => handleRowClick(row, event)}
+              onKeyDown={(event) => handleRowKeyDown(row, event)}
             >
               {config.columns.map((column) => (
                 <td
