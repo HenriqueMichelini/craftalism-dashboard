@@ -4,5 +4,7 @@ export { BalancesView } from "./BalancesView/BalancesView";
 export { BalanceTable } from "./BalancesView/components/BalanceTable";
 export { TransactionsView } from "./TransactionsView/TransactionsView";
 export { TransactionTable } from "./TransactionsView/components/TransactionTable";
+export { MarketItemsView } from "./MarketItemsView/MarketItemsView";
+export { MarketItemTable } from "./MarketItemsView/components/MarketItemTable";
 export { MarketTradesView } from "./MarketTradesView/MarketTradesView";
 export { MarketTradeTable } from "./MarketTradesView/components/MarketTradeTable";

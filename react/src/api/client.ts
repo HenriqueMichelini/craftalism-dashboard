@@ -60,6 +60,34 @@ async function parseJsonResponse<T>(response: Response): Promise<T> {
   }
 }
 
+function getProblemDetailMessage(body: unknown): string | null {
+  if (!body || typeof body !== "object") {
+    return null;
+  }
+
+  const record = body as Record<string, unknown>;
+  const detail = typeof record.detail === "string" ? record.detail : null;
+  const title = typeof record.title === "string" ? record.title : null;
+
+  return detail || title;
+}
+
+async function readErrorMessage(response: Response): Promise<string> {
+  const fallback = `HTTP error! status: ${response.status}`;
+  const responseText = await response.text();
+
+  if (!responseText.trim()) {
+    return fallback;
+  }
+
+  try {
+    const body = JSON.parse(responseText) as unknown;
+    return getProblemDetailMessage(body) || fallback;
+  } catch {
+    return responseText.trim() || fallback;
+  }
+}
+
 export class ApiError extends Error {
   public status: number;
   public statusText: string;
@@ -88,8 +116,10 @@ export async function apiClient<T>(
     });
 
     if (!response.ok) {
+      const message = await readErrorMessage(response);
+
       throw new ApiError(
-        `HTTP error! status: ${response.status}`,
+        message,
         response.status,
         response.statusText,
       );

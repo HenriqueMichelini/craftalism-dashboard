@@ -34,10 +34,16 @@ export const formatters = {
   currency: (value: number, currency = "USD") => {
     if (value == null) return "-";
 
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency,
-    }).format(value / AMOUNT_SCALE);
+    const normalizedValue = value / AMOUNT_SCALE;
+
+    try {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency,
+      }).format(normalizedValue);
+    } catch {
+      return `${new Intl.NumberFormat("en-US").format(normalizedValue)} ${currency}`;
+    }
   },
 
   number: (value: number) => {
