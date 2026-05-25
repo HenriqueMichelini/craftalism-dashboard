@@ -47,6 +47,7 @@ The dashboard exposes a top-level `Market Items` tab that fetches `GET /api/dash
 - [ ] Create mode allows editing identity fields and pre-fills the defaulted tuning controls.
 - [ ] Edit mode makes `itemId`, `categoryId`, and `displayName` read-only.
 - [ ] The dashboard never sends `lastUpdatedAt` in create or update requests.
+- [ ] The dashboard never sends API-recomputed projection fields `buyUnitEstimate`, `sellUnitEstimate`, `currentStock`, `variationPercent`, or `marketMomentum` in create or update requests.
 - [ ] Dashboard validation blocks the obvious constraint violations listed in the feature contract before submit.
 - [ ] Delete shows confirmation, waits for API success, removes the row on success, and keeps the row plus shows the API error on rejection.
 - [ ] Tests cover route construction, dashboard tab/view wiring, modal validation, create/update request payloads, and delete success/rejection behavior.
@@ -96,4 +97,3 @@ If the full validation path is unavailable, run the largest available subset and
 - Browser persistence
 
 ## Completion Notes
-

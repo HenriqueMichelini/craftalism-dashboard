@@ -1,7 +1,7 @@
 ---
 id: CARD-001
 feature: market-items
-status: planned
+status: reverified
 depends_on: []
 parallel_safe: false
 ---
@@ -10,7 +10,7 @@ parallel_safe: false
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -78,3 +78,23 @@ If upstream validation is unavailable, record the missing validation evidence be
 
 ## Completion Notes
 
+Confirmed in `craftalism-api` through `docs/features/dashboard-crud-api/cards/CARD-002-implement-dashboard-market-item-crud-api.md`.
+
+Implemented and validated API behavior:
+
+- `GET /api/dashboard/market/items`
+- `POST /api/dashboard/market/items`
+- `PATCH /api/dashboard/market/items/{itemId}`
+- `DELETE /api/dashboard/market/items/{itemId}`
+
+The API contract confirms `lastUpdatedAt` is API-owned; `itemId`, `categoryId`, and `displayName` are immutable after creation; default catalog or referenced item deletes reject with `409 ProblemDetail`; and pressure constraint failures reject with validation `ProblemDetail`.
+
+Important dashboard consumption note: `buyUnitEstimate`, `sellUnitEstimate`, `currentStock`, `variationPercent`, and `marketMomentum` are response fields recomputed by the API, not editable request fields, because the API market pressure-ladder contract treats them as derived projections.
+
+API validation evidence:
+
+```bash
+cd ../craftalism-api/java
+./gradlew test --tests '*DashboardMarketItemCrudApiIntegrationTest' --tests '*DashboardCrudApiIntegrationTest' --tests '*Market*'
+./gradlew test
+```

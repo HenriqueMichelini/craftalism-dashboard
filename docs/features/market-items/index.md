@@ -11,7 +11,7 @@ This index summarizes execution order for market item dashboard implementation c
 
 ## Dependency Summary
 
-- `CARD-001` is blocked until `craftalism-api` defines and validates dashboard market item CRUD route semantics and schemas.
+- `CARD-001` is reverified after `craftalism-api` defined and validated dashboard market item CRUD route semantics and schemas.
 - `CARD-002` consumes the confirmed API contract in this dashboard repository.
 
 ## Parallelization

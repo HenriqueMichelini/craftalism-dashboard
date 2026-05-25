@@ -87,17 +87,12 @@ Create mode must let operators provide:
 - `categoryDisplayName`
 - `displayName`
 - `iconKey`
-- `buyUnitEstimate`
-- `sellUnitEstimate`
 - `currency`
-- `currentStock`
-- `variationPercent`
 - `blocked`
 - `operating`
 
 Create mode must also show these defaulted controls in the form:
 
-- `marketMomentum`: `0`
 - `baseUnitPrice`: `1`
 - `minUnitPrice`: `1`
 - `maxUnitPrice`: `1`
@@ -111,6 +106,8 @@ Create mode must also show these defaulted controls in the form:
 
 `lastUpdatedAt` is API-owned and must not be sent by the dashboard.
 
+`buyUnitEstimate`, `sellUnitEstimate`, `currentStock`, `variationPercent`, and `marketMomentum` are API-recomputed response projections and must not be sent by the dashboard.
+
 ## Edit Behavior
 
 Edit mode must make these fields read-only:
@@ -123,14 +120,9 @@ Edit mode may update:
 
 - `categoryDisplayName`
 - `iconKey`
-- `buyUnitEstimate`
-- `sellUnitEstimate`
 - `currency`
-- `currentStock`
-- `variationPercent`
 - `blocked`
 - `operating`
-- `marketMomentum`
 - `baseUnitPrice`
 - `minUnitPrice`
 - `maxUnitPrice`
@@ -143,6 +135,8 @@ Edit mode may update:
 - `maxNetPosition`
 
 `lastUpdatedAt` remains API-owned and must not be sent by the dashboard.
+
+`buyUnitEstimate`, `sellUnitEstimate`, `currentStock`, `variationPercent`, and `marketMomentum` remain API-recomputed response projections and must not be sent by the dashboard.
 
 ## Delete Behavior
 
