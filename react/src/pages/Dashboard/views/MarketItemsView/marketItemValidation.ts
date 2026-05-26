@@ -17,6 +17,7 @@ export type MarketItemFormValues = {
   maxUnitPrice: string;
   segmentSize: string;
   priceSensitivity: string;
+  sellPricePercentage: string;
   baseRegenQuantity: string;
   regenIntervalSeconds: string;
   netPosition: string;
@@ -50,6 +51,7 @@ export const marketItemCreateDefaults: MarketItemFormValues = {
   maxUnitPrice: "1",
   segmentSize: "50",
   priceSensitivity: "0.0800",
+  sellPricePercentage: "0.7000",
   baseRegenQuantity: "1",
   regenIntervalSeconds: "60",
   netPosition: "0",
@@ -158,6 +160,11 @@ export function validateMarketItemForm(
   const maxUnitPrice = parseNumber(values, "maxUnitPrice", errors);
   const segmentSize = parseNumber(values, "segmentSize", errors);
   const priceSensitivity = parseNumber(values, "priceSensitivity", errors);
+  const sellPricePercentage = parseNumber(
+    values,
+    "sellPricePercentage",
+    errors,
+  );
   const baseRegenQuantity = parseNumber(values, "baseRegenQuantity", errors);
   const regenIntervalSeconds = parseNumber(
     values,
@@ -214,6 +221,20 @@ export function validateMarketItemForm(
       "Must be greater than 0.",
     );
   }
+  if (sellPricePercentage !== null && sellPricePercentage <= 0) {
+    assignConstraintError(
+      errors,
+      "sellPricePercentage",
+      "Must be greater than 0.",
+    );
+  }
+  if (sellPricePercentage !== null && sellPricePercentage >= 1) {
+    assignConstraintError(
+      errors,
+      "sellPricePercentage",
+      "Must be less than 1.",
+    );
+  }
   if (baseRegenQuantity !== null && baseRegenQuantity < 0) {
     assignConstraintError(
       errors,
@@ -261,6 +282,7 @@ export function validateMarketItemForm(
     maxUnitPrice === null ||
     segmentSize === null ||
     priceSensitivity === null ||
+    sellPricePercentage === null ||
     baseRegenQuantity === null ||
     regenIntervalSeconds === null ||
     netPosition === null
@@ -279,6 +301,7 @@ export function validateMarketItemForm(
     maxUnitPrice,
     segmentSize,
     priceSensitivity,
+    sellPricePercentage,
     baseRegenQuantity,
     regenIntervalSeconds,
     netPosition,

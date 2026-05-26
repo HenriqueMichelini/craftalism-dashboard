@@ -47,6 +47,7 @@ function toFormValues(item?: MarketItem): MarketItemFormValues {
     maxUnitPrice: String(item.maxUnitPrice),
     segmentSize: String(item.segmentSize),
     priceSensitivity: String(item.priceSensitivity),
+    sellPricePercentage: String(item.sellPricePercentage),
     baseRegenQuantity: String(item.baseRegenQuantity),
     regenIntervalSeconds: String(item.regenIntervalSeconds),
     netPosition: String(item.netPosition),
@@ -264,6 +265,15 @@ export function MarketItemModalForm({
           <TextField
             name="priceSensitivity"
             label="Price Sensitivity"
+            type="number"
+            step="any"
+            values={values}
+            errors={errors}
+            onChange={updateValue}
+          />
+          <TextField
+            name="sellPricePercentage"
+            label="Sell Price Percentage"
             type="number"
             step="any"
             values={values}

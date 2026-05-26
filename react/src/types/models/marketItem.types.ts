@@ -18,6 +18,7 @@ export type MarketItem = {
   maxUnitPrice: number;
   segmentSize: number;
   priceSensitivity: number;
+  sellPricePercentage: number;
   baseRegenQuantity: number;
   regenIntervalSeconds: number;
   netPosition: number;
@@ -39,6 +40,7 @@ export type MarketItemCreateRequest = {
   maxUnitPrice: number;
   segmentSize: number;
   priceSensitivity: number;
+  sellPricePercentage: number;
   baseRegenQuantity: number;
   regenIntervalSeconds: number;
   netPosition: number;

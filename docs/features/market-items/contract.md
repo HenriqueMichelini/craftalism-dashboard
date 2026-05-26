@@ -68,6 +68,7 @@ type MarketItem = {
   maxUnitPrice: number;
   segmentSize: number;
   priceSensitivity: number;
+  sellPricePercentage: number;
   baseRegenQuantity: number;
   regenIntervalSeconds: number;
   netPosition: number;
@@ -98,6 +99,7 @@ Create mode must also show these defaulted controls in the form:
 - `maxUnitPrice`: `1`
 - `segmentSize`: `50`
 - `priceSensitivity`: `0.0800`
+- `sellPricePercentage`: `0.7000`
 - `baseRegenQuantity`: `1`
 - `regenIntervalSeconds`: `60`
 - `netPosition`: `0`
@@ -128,6 +130,7 @@ Edit mode may update:
 - `maxUnitPrice`
 - `segmentSize`
 - `priceSensitivity`
+- `sellPricePercentage`
 - `baseRegenQuantity`
 - `regenIntervalSeconds`
 - `netPosition`
@@ -160,6 +163,8 @@ Dashboard validation rules:
 - `maxUnitPrice >= baseUnitPrice`
 - `segmentSize > 0`
 - `priceSensitivity > 0`
+- `sellPricePercentage > 0`
+- `sellPricePercentage < 1`
 - `baseRegenQuantity >= 0`
 - `regenIntervalSeconds > 0`
 - `minNetPosition <= 0` when present

@@ -33,6 +33,7 @@ const item: MarketItem = {
   maxUnitPrice: 200,
   segmentSize: 50,
   priceSensitivity: 0.08,
+  sellPricePercentage: 0.7,
   baseRegenQuantity: 1,
   regenIntervalSeconds: 60,
   netPosition: 0,
@@ -66,6 +67,7 @@ test("MarketItemModalForm renders grouped create defaults and edit read-only ide
   assert.match(createMarkup, /name="baseUnitPrice"[^>]*value="1"/);
   assert.match(createMarkup, /name="segmentSize"[^>]*value="50"/);
   assert.match(createMarkup, /name="priceSensitivity"[^>]*value="0\.0800"/);
+  assert.match(createMarkup, /name="sellPricePercentage"[^>]*value="0\.7000"/);
   assert.doesNotMatch(createMarkup, /Remove/);
 
   assert.match(editMarkup, /Edit Market Item/);
@@ -123,6 +125,7 @@ test("validateMarketItemForm blocks dashboard constraint failures", () => {
     maxUnitPrice: "-1",
     segmentSize: "0",
     priceSensitivity: "0",
+    sellPricePercentage: "1",
     baseRegenQuantity: "-1",
     regenIntervalSeconds: "0",
     minNetPosition: "1",
@@ -149,6 +152,10 @@ test("validateMarketItemForm blocks dashboard constraint failures", () => {
   assert.equal(
     result.valid ? undefined : result.errors.priceSensitivity,
     "Must be greater than 0.",
+  );
+  assert.equal(
+    result.valid ? undefined : result.errors.sellPricePercentage,
+    "Must be less than 1.",
   );
   assert.equal(
     result.valid ? undefined : result.errors.baseRegenQuantity,
@@ -198,6 +205,7 @@ test("validateMarketItemForm emits create and update payloads without projection
     maxUnitPrice: 1,
     segmentSize: 50,
     priceSensitivity: 0.08,
+    sellPricePercentage: 0.7,
     baseRegenQuantity: 1,
     regenIntervalSeconds: 60,
     netPosition: 0,
