@@ -39,7 +39,6 @@ const marketItem: MarketItem = {
 const createRequest: MarketItemCreateRequest = {
   itemId: marketItem.itemId,
   categoryId: marketItem.categoryId,
-  categoryDisplayName: marketItem.categoryDisplayName,
   displayName: marketItem.displayName,
   iconKey: marketItem.iconKey,
   currency: marketItem.currency,
@@ -59,7 +58,6 @@ const createRequest: MarketItemCreateRequest = {
 };
 
 const updateRequest: MarketItemUpdateRequest = {
-  categoryDisplayName: "Staple Crops",
   iconKey: "wheat-bundle",
   currency: "CRAFT",
   blocked: true,

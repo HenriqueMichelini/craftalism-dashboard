@@ -6,7 +6,6 @@ import type {
 export type MarketItemFormValues = {
   itemId: string;
   categoryId: string;
-  categoryDisplayName: string;
   displayName: string;
   iconKey: string;
   currency: string;
@@ -40,7 +39,6 @@ export type MarketItemValidationResult =
 export const marketItemCreateDefaults: MarketItemFormValues = {
   itemId: "",
   categoryId: "",
-  categoryDisplayName: "",
   displayName: "",
   iconKey: "",
   currency: "",
@@ -62,7 +60,6 @@ export const marketItemCreateDefaults: MarketItemFormValues = {
 const requiredTextFields: Array<keyof MarketItemFormValues> = [
   "itemId",
   "categoryId",
-  "categoryDisplayName",
   "displayName",
   "iconKey",
   "currency",
@@ -143,7 +140,6 @@ export function validateMarketItemForm(
   const trimmed = {
     itemId: values.itemId.trim(),
     categoryId: values.categoryId.trim(),
-    categoryDisplayName: values.categoryDisplayName.trim(),
     displayName: values.displayName.trim(),
     iconKey: values.iconKey.trim(),
     currency: values.currency.trim(),
@@ -291,7 +287,6 @@ export function validateMarketItemForm(
   }
 
   const updateRequest: MarketItemUpdateRequest = {
-    categoryDisplayName: trimmed.categoryDisplayName,
     iconKey: trimmed.iconKey,
     currency: trimmed.currency,
     blocked: values.blocked,

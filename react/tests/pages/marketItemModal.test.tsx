@@ -12,6 +12,7 @@ import {
   upsertMarketItemRow,
 } from "../../src/pages/Dashboard/views/MarketItemsView/marketItemRows.js";
 import type { MarketItem } from "../../src/types/models/marketItem.types.js";
+import type { MarketCategory } from "../../src/types/models/marketCategory.types.js";
 
 const item: MarketItem = {
   itemId: "wheat",
@@ -41,10 +42,22 @@ const item: MarketItem = {
   maxNetPosition: null,
 };
 
+const categories: MarketCategory[] = [
+  {
+    categoryId: "crops",
+    displayName: "Crops",
+    iconKey: "WHEAT",
+    displayOrder: 0,
+    createdAt: "2026-05-01T00:00:00.000Z",
+    updatedAt: "2026-05-01T00:00:00.000Z",
+  },
+];
+
 test("MarketItemModalForm renders grouped create defaults and edit read-only identity", () => {
   const createMarkup = renderToStaticMarkup(
     <MarketItemModalForm
       mode="create"
+      categories={categories}
       onCancel={() => {}}
       onSave={() => {}}
     />,
@@ -53,6 +66,7 @@ test("MarketItemModalForm renders grouped create defaults and edit read-only ide
     <MarketItemModalForm
       mode="edit"
       item={item}
+      categories={categories}
       onCancel={() => {}}
       onSave={() => {}}
     />,
@@ -73,7 +87,7 @@ test("MarketItemModalForm renders grouped create defaults and edit read-only ide
   assert.match(editMarkup, /Edit Market Item/);
   assert.match(editMarkup, /Remove/);
   assert.match(editMarkup, /readOnly=""[^>]*name="itemId"/);
-  assert.match(editMarkup, /readOnly=""[^>]*name="categoryId"/);
+  assert.match(editMarkup, /disabled=""[^>]*name="categoryId"/);
   assert.match(editMarkup, /readOnly=""[^>]*name="displayName"/);
   assert.match(editMarkup, /value="wheat"/);
 });
@@ -116,7 +130,6 @@ test("validateMarketItemForm blocks dashboard constraint failures", () => {
     ...marketItemCreateDefaults,
     itemId: "wheat",
     categoryId: "crops",
-    categoryDisplayName: "Crops",
     displayName: "Wheat",
     iconKey: "wheat",
     currency: "CRAFT",
@@ -180,7 +193,6 @@ test("validateMarketItemForm emits create and update payloads without projection
     ...marketItemCreateDefaults,
     itemId: "wheat",
     categoryId: "crops",
-    categoryDisplayName: "Crops",
     displayName: "Wheat",
     iconKey: "wheat",
     currency: "CRAFT",
@@ -194,7 +206,6 @@ test("validateMarketItemForm emits create and update payloads without projection
   assert.deepEqual(result.values.createRequest, {
     itemId: "wheat",
     categoryId: "crops",
-    categoryDisplayName: "Crops",
     displayName: "Wheat",
     iconKey: "wheat",
     currency: "CRAFT",

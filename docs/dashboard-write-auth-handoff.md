@@ -143,6 +143,9 @@ DELETE /api/dashboard/players/{uuid}
 POST /api/dashboard/balances
 PATCH /api/dashboard/balances/{uuid}
 DELETE /api/dashboard/balances/{uuid}
+POST /api/dashboard/market/categories
+PATCH /api/dashboard/market/categories/{categoryId}
+DELETE /api/dashboard/market/categories/{categoryId}
 ```
 
 - Obtain a token from the authorization server using:
@@ -163,6 +166,9 @@ DELETE /api/players/{uuid}
 POST /api/balances
 PATCH /api/balances/{uuid}
 DELETE /api/balances/{uuid}
+POST /api/dashboard/market/categories
+PATCH /api/dashboard/market/categories/{categoryId}
+DELETE /api/dashboard/market/categories/{categoryId}
 ```
 
 - Preserve API status codes and response bodies where practical so the dashboard can surface failures coherently.

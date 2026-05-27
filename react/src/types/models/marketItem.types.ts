@@ -29,7 +29,6 @@ export type MarketItem = {
 export type MarketItemCreateRequest = {
   itemId: string;
   categoryId: string;
-  categoryDisplayName: string;
   displayName: string;
   iconKey: string;
   currency: string;

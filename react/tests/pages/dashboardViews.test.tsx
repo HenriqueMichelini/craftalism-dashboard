@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { DashboardPage } from "../../src/pages/Dashboard/DashboardPage.js";
 import { BalancesView } from "../../src/pages/Dashboard/views/BalancesView/BalancesView.js";
+import { MarketCategoriesView } from "../../src/pages/Dashboard/views/MarketCategoriesView/MarketCategoriesView.js";
 import { MarketItemsView } from "../../src/pages/Dashboard/views/MarketItemsView/MarketItemsView.js";
 import { MarketTradesView } from "../../src/pages/Dashboard/views/MarketTradesView/MarketTradesView.js";
 import {
@@ -23,6 +24,7 @@ test("DashboardPage defaults to the players view and exposes all tabs", () => {
 
   assert.match(markup, /Players/);
   assert.match(markup, /Transactions/);
+  assert.match(markup, /Market Categories/);
   assert.match(markup, /Market Items/);
   assert.match(markup, /Market Trades/);
   assert.match(markup, /Balances/);
@@ -86,6 +88,16 @@ test("MarketItemsView renders its header and loading table state", () => {
   assert.match(
     markup,
     /Manage market item pricing, stock, regeneration, and state controls\./,
+  );
+  assert.match(markup, /Loading data\.\.\./);
+});
+
+test("MarketCategoriesView renders its header and loading table state", () => {
+  const markup = renderToStaticMarkup(<MarketCategoriesView />);
+
+  assert.match(
+    markup,
+    /Manage API-owned market categories used by market items\./,
   );
   assert.match(markup, /Loading data\.\.\./);
 });

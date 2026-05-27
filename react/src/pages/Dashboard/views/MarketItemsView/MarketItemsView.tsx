@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { marketCategoriesApi } from "../../../../api/endpoints/marketCategories.js";
 import { marketItemsApi } from "../../../../api/endpoints/marketItems.js";
 import { PageHeader } from "../../../../components/shared/PageHeader/PageHeader.js";
 import { useTableData } from "../../../../hooks/useTableData.js";
@@ -16,6 +17,12 @@ export function MarketItemsView() {
   const { data, loading, error, refetch, setData } = useTableData(
     marketItemsApi.getAll,
   );
+  const {
+    data: categories,
+    loading: categoriesLoading,
+    error: categoriesError,
+    refetch: refetchCategories,
+  } = useTableData(marketCategoriesApi.getAll);
   const [modalState, setModalState] = useState<MarketItemModalState | null>(
     null,
   );
@@ -85,6 +92,7 @@ export function MarketItemsView() {
         action={
           <button
             className="rounded-md bg-primary-400 px-4 py-2 text-sm font-medium text-default hover:bg-primary-300"
+            disabled={categories.length === 0 || Boolean(categoriesError)}
             type="button"
             onClick={() => setModalState({ mode: "create" })}
           >
@@ -92,9 +100,21 @@ export function MarketItemsView() {
           </button>
         }
       />
+      {categoriesError ? (
+        <div className="rounded-md border border-red-400/50 bg-red-500/10 p-4 text-sm text-red-200">
+          <p>{categoriesError}</p>
+          <button
+            className="mt-3 rounded-md border border-red-300 px-3 py-1 text-xs font-medium"
+            type="button"
+            onClick={refetchCategories}
+          >
+            Retry Categories
+          </button>
+        </div>
+      ) : null}
       <MarketItemTable
         data={data}
-        loading={loading}
+        loading={loading || categoriesLoading}
         error={error}
         onRetry={refetch}
         onMarketItemClick={(item) => setModalState({ mode: "edit", item })}
@@ -103,6 +123,7 @@ export function MarketItemsView() {
         <MarketItemModalForm
           mode={modalState.mode}
           item={modalState.item}
+          categories={categories}
           actionError={mutationError}
           submitting={submitting}
           onCancel={closeModal}

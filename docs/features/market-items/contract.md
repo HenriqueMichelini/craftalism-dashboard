@@ -85,7 +85,6 @@ Create mode must let operators provide:
 
 - `itemId`
 - `categoryId`
-- `categoryDisplayName`
 - `displayName`
 - `iconKey`
 - `currency`
@@ -108,6 +107,8 @@ Create mode must also show these defaulted controls in the form:
 
 `lastUpdatedAt` is API-owned and must not be sent by the dashboard.
 
+`categoryId` must be selected from API-owned market categories returned by `GET /api/dashboard/market/categories`. Category rows include `categoryId`, `displayName`, `iconKey`, and `displayOrder`. The dashboard must not create or edit category display names or category icon keys through the market item form.
+
 `buyUnitEstimate`, `sellUnitEstimate`, `currentStock`, `variationPercent`, and `marketMomentum` are API-recomputed response projections and must not be sent by the dashboard.
 
 ## Edit Behavior
@@ -120,7 +121,6 @@ Edit mode must make these fields read-only:
 
 Edit mode may update:
 
-- `categoryDisplayName`
 - `iconKey`
 - `currency`
 - `blocked`
@@ -138,6 +138,8 @@ Edit mode may update:
 - `maxNetPosition`
 
 `lastUpdatedAt` remains API-owned and must not be sent by the dashboard.
+
+Category display name changes belong to the Market Categories view, not the Market Items view.
 
 `buyUnitEstimate`, `sellUnitEstimate`, `currentStock`, `variationPercent`, and `marketMomentum` remain API-recomputed response projections and must not be sent by the dashboard.
 

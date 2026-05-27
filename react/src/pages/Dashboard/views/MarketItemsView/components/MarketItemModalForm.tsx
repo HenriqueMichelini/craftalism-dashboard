@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { ModalShell } from "../../../../../components/ui/ModalShell.js";
+import type { MarketCategory } from "../../../../../types/models/marketCategory.types.js";
 import type { MarketItem } from "../../../../../types/models/marketItem.types.js";
 import {
   marketItemCreateDefaults,
@@ -12,6 +13,7 @@ import {
 type MarketItemModalFormProps = {
   mode: "create" | "edit";
   item?: MarketItem;
+  categories: MarketCategory[];
   actionError?: string | null;
   submitting?: boolean;
   onCancel: () => void;
@@ -36,7 +38,6 @@ function toFormValues(item?: MarketItem): MarketItemFormValues {
   return {
     itemId: item.itemId,
     categoryId: item.categoryId,
-    categoryDisplayName: item.categoryDisplayName,
     displayName: item.displayName,
     iconKey: item.iconKey,
     currency: item.currency,
@@ -94,6 +95,47 @@ function TextField({
   );
 }
 
+type SelectFieldProps = {
+  name: "categoryId";
+  label: string;
+  readOnly?: boolean;
+  categories: MarketCategory[];
+  values: MarketItemFormValues;
+  errors: Partial<Record<keyof MarketItemFormValues, string>>;
+  onChange: (key: keyof MarketItemFormValues, value: string) => void;
+};
+
+function SelectField({
+  name,
+  label,
+  readOnly = false,
+  categories,
+  values,
+  errors,
+  onChange,
+}: SelectFieldProps) {
+  return (
+    <label className={labelClass}>
+      {label}
+      <select
+        className={fieldClass}
+        disabled={readOnly}
+        name={name}
+        value={values[name]}
+        onChange={(event) => onChange(name, event.target.value)}
+      >
+        <option value="">Select category</option>
+        {categories.map((category) => (
+          <option key={category.categoryId} value={category.categoryId}>
+            {category.displayName}
+          </option>
+        ))}
+      </select>
+      {errors[name] ? <span className={errorClass}>{errors[name]}</span> : null}
+    </label>
+  );
+}
+
 type SectionProps = {
   title: string;
   children: ReactNode;
@@ -111,6 +153,7 @@ function Section({ title, children }: SectionProps) {
 export function MarketItemModalForm({
   mode,
   item,
+  categories,
   actionError = null,
   submitting = false,
   onCancel,
@@ -199,10 +242,11 @@ export function MarketItemModalForm({
             errors={errors}
             onChange={updateValue}
           />
-          <TextField
+          <SelectField
             name="categoryId"
-            label="Category ID"
+            label="Category"
             readOnly={identityReadOnly}
+            categories={categories}
             values={values}
             errors={errors}
             onChange={updateValue}
@@ -211,13 +255,6 @@ export function MarketItemModalForm({
             name="displayName"
             label="Display Name"
             readOnly={identityReadOnly}
-            values={values}
-            errors={errors}
-            onChange={updateValue}
-          />
-          <TextField
-            name="categoryDisplayName"
-            label="Category Display Name"
             values={values}
             errors={errors}
             onChange={updateValue}

@@ -57,6 +57,9 @@ DELETE /api/players/{uuid}
 POST /api/balances
 PATCH /api/balances/{uuid}
 DELETE /api/balances/{uuid}
+POST /api/dashboard/market/categories
+PATCH /api/dashboard/market/categories/{categoryId}
+DELETE /api/dashboard/market/categories/{categoryId}
 ```
 
 Those are protected API routes. A browser request from the dashboard without a write-authorized Bearer token is not allowed to perform those mutations.
@@ -162,6 +165,9 @@ DELETE /api/dashboard/players/{uuid}
 POST /api/dashboard/balances
 PATCH /api/dashboard/balances/{uuid}
 DELETE /api/dashboard/balances/{uuid}
+POST /api/dashboard/market/categories
+PATCH /api/dashboard/market/categories/{categoryId}
+DELETE /api/dashboard/market/categories/{categoryId}
 ```
 
 It forwards them to canonical API routes:

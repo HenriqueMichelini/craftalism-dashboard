@@ -2,12 +2,14 @@ import { useState } from "react";
 import { PlayersView } from "./views/PlayersView/PlayersView.js";
 import { BalancesView } from "./views/BalancesView/BalancesView.js";
 import { TransactionsView } from "./views/TransactionsView/TransactionsView.js";
+import { MarketCategoriesView } from "./views/MarketCategoriesView/MarketCategoriesView.js";
 import { MarketItemsView } from "./views/MarketItemsView/MarketItemsView.js";
 import { MarketTradesView } from "./views/MarketTradesView/MarketTradesView.js";
 
 type ViewType =
   | "players"
   | "transactions"
+  | "market-categories"
   | "market-items"
   | "market-trades"
   | "balances";
@@ -15,6 +17,7 @@ type ViewType =
 const views: ReadonlyArray<{ key: ViewType; label: string }> = [
   { key: "players", label: "Players" },
   { key: "transactions", label: "Transactions" },
+  { key: "market-categories", label: "Market Categories" },
   { key: "market-items", label: "Market Items" },
   { key: "market-trades", label: "Market Trades" },
   { key: "balances", label: "Balances" },
@@ -29,6 +32,8 @@ export function DashboardPage() {
         return <PlayersView />;
       case "transactions":
         return <TransactionsView />;
+      case "market-categories":
+        return <MarketCategoriesView />;
       case "market-items":
         return <MarketItemsView />;
       case "market-trades":
