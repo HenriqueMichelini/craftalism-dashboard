@@ -75,7 +75,7 @@ export function DynamicTable<T extends Record<string, unknown>>({
 
   return (
     <div
-      className={`overflow-hidden rounded-lg border border-primary-400 ${className}`}
+      className={`overflow-x-auto rounded-lg border border-primary-400 ${className}`}
     >
       <table aria-busy={loading} className="w-full border-collapse text-left">
         {caption ? <caption className="sr-only">{caption}</caption> : null}

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 type ModalShellProps = {
   title: string;
@@ -13,8 +14,8 @@ export function ModalShell({
   onClose,
   footer,
 }: ModalShellProps) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  const modal = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <button
         aria-label="Close modal"
         className="absolute inset-0 cursor-default bg-black/50 backdrop-blur-sm"
@@ -49,4 +50,10 @@ export function ModalShell({
       </section>
     </div>
   );
+
+  if (typeof document === "undefined") {
+    return modal;
+  }
+
+  return createPortal(modal, document.body);
 }

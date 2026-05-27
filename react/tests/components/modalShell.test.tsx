@@ -17,6 +17,7 @@ test("ModalShell renders an accessible dialog with dimmed blurred backdrop", () 
   assert.match(markup, /role="dialog"/);
   assert.match(markup, /aria-modal="true"/);
   assert.match(markup, /Create Player/);
+  assert.match(markup, /z-\[100\]/);
   assert.match(markup, /bg-black\/50/);
   assert.match(markup, /backdrop-blur-sm/);
   assert.match(markup, /Close modal/);

@@ -74,6 +74,7 @@ test("DynamicTable renders rows when data is present", () => {
   );
 
   assert.match(markup, /Example table/);
+  assert.match(markup, /overflow-x-auto/);
   assert.match(markup, /Alex/);
   assert.match(markup, /row-1/);
 });

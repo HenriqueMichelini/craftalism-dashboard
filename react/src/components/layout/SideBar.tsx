@@ -13,7 +13,7 @@ type SideBarItemProps = {
 function SideBar({ isOpen }: SideBarState) {
   return (
     <nav
-      className={`flex h-full flex-col items-center
+      className={`flex h-full shrink-0 flex-col items-center
         gap-6
         bg-gradient-to-br from-primary-500 to-primary-400 px-1 py-6
         transition-all
