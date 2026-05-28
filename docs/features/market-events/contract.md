@@ -32,11 +32,18 @@ Expected consumed route for the table view:
 
 | Method | Route | Purpose |
 |---|---|---|
-| `GET` | `/api/dashboard/market/events` | List active and recent/internal market event instances for dashboard admin inspection. |
+| `GET` | `/api/dashboard/market/events` | List internal market event instances for dashboard admin inspection. |
 
 The route is protected by the backend event-admin authority, currently `SCOPE_market:admin`. The standalone dashboard container does not implement built-in authentication; dashboard auth rollout and token acquisition are outside this feature unless separately scoped. Unauthorized or forbidden responses should use the existing table error state.
 
 Admin mutation routes exist in the backend handoff, but this table-view feature does not implement manual start, update, cancel, or supersede controls.
+
+Confirmed backend evidence:
+
+- `DashboardMarketEventAdminController` maps `GET /api/dashboard/market/events` to `MarketEventAdminService.listEvents()`.
+- `MarketEventAdminResponseDTO` contains the fields and enum-backed values listed in `Market Event Row`.
+- `SecurityConfig` protects `/api/dashboard/market/events/**` with `SCOPE_market:admin`.
+- `MarketEventAdminService.listEvents()` currently returns all stored event instances sorted by `createdAt` descending. The dashboard must preserve API result order rather than define independent sort or recency semantics.
 
 ## Market Event Row
 
@@ -91,7 +98,7 @@ The dashboard uses camelCase model fields locally and treats `id` as a string fo
 
 ## Assumptions And Open Questions
 
-- Assumption: `GET /api/dashboard/market/events` returns the active and recent/internal event rows in the backend's intended display order.
+- Assumption: `GET /api/dashboard/market/events` result order is the backend's intended display order for the table.
 - Assumption: `auditMetadata` may be too verbose for the initial table and can remain omitted from table columns while still preserved in the local type for future detail views.
 - Open question: whether the dashboard should later add admin mutation controls for manual start, update, cancel, and supersede flows.
 - Open question: whether the backend will later add query parameters for status, source, date ranges, pagination, or sorting.

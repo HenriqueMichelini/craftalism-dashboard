@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { DashboardPage } from "../../src/pages/Dashboard/DashboardPage.js";
 import { BalancesView } from "../../src/pages/Dashboard/views/BalancesView/BalancesView.js";
 import { MarketCategoriesView } from "../../src/pages/Dashboard/views/MarketCategoriesView/MarketCategoriesView.js";
+import { MarketEventsView } from "../../src/pages/Dashboard/views/MarketEventsView/MarketEventsView.js";
 import { MarketItemsView } from "../../src/pages/Dashboard/views/MarketItemsView/MarketItemsView.js";
 import { MarketTradesView } from "../../src/pages/Dashboard/views/MarketTradesView/MarketTradesView.js";
 import {
@@ -27,6 +28,7 @@ test("DashboardPage defaults to the players view and exposes all tabs", () => {
   assert.match(markup, /Market Categories/);
   assert.match(markup, /Market Items/);
   assert.match(markup, /Market Trades/);
+  assert.match(markup, /Market Events/);
   assert.match(markup, /Balances/);
   assert.match(markup, /Manage and view all registered players in your system\./);
   assert.doesNotMatch(
@@ -114,6 +116,16 @@ test("MarketTradesView renders its header and loading table state", () => {
   assert.match(markup, /Item ID/);
   assert.match(markup, /Text Match/);
   assert.match(markup, /Total Price/);
+  assert.match(markup, /Loading data\.\.\./);
+});
+
+test("MarketEventsView renders its header and loading table state", () => {
+  const markup = renderToStaticMarkup(<MarketEventsView />);
+
+  assert.match(
+    markup,
+    /Inspect API-owned market event state for dashboard operations\./,
+  );
   assert.match(markup, /Loading data\.\.\./);
 });
 

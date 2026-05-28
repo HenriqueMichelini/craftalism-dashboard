@@ -1,7 +1,7 @@
 ---
 id: CARD-002
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-001
 parallel_safe: false
@@ -11,7 +11,7 @@ parallel_safe: false
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -19,7 +19,7 @@ Add a read-only dashboard Market Events table that lists API-owned market event 
 
 ## Context
 
-Market Events are backend-owned operational state. The dashboard table should make active and recent/internal event rows inspectable without recalculating pricing, drift, blocking, lifecycle, scheduler decisions, or quote behavior locally.
+Market Events are backend-owned operational state. The dashboard table should make internal event rows inspectable without recalculating pricing, drift, blocking, lifecycle, scheduler decisions, or quote behavior locally.
 
 This card depends on the API read contract confirmed by `CARD-001`.
 
@@ -35,18 +35,18 @@ The dashboard exposes a top-level `Market Events` tab that fetches `GET /api/das
 
 ## Acceptance Criteria
 
-- [ ] A `MarketEvent` model type exists with the confirmed response fields from `../contract.md`.
-- [ ] A market events API client exposes `getAll()` using `GET /api/dashboard/market/events`.
-- [ ] The dashboard includes a top-level tab labeled `Market Events`.
-- [ ] The Market Events view renders a read-only table using the existing table component and `useTableData` pattern.
-- [ ] The table columns are `Id`, `Template`, `Status`, `Scope`, `Targets`, `Effect`, `Blocking`, `Source`, `Started`, `Ends`, `End Reason`, and `Actor`, in that order.
-- [ ] The table preserves backend result order.
-- [ ] `startedAt` and `endsAt` use the existing date formatter.
-- [ ] Optional target, end reason, and actor values render clearly when absent without inventing values.
-- [ ] `effectBasisPoints` is presented as an admin-visible effect value without recalculating prices or event impact locally.
-- [ ] The empty state says `No market events found.`
-- [ ] API failures, including missing event-admin authority, use the existing table error and retry behavior.
-- [ ] Tests cover the market events route assumption and dashboard tab/view wiring.
+- [x] A `MarketEvent` model type exists with the confirmed response fields from `../contract.md`.
+- [x] A market events API client exposes `getAll()` using `GET /api/dashboard/market/events`.
+- [x] The dashboard includes a top-level tab labeled `Market Events`.
+- [x] The Market Events view renders a read-only table using the existing table component and `useTableData` pattern.
+- [x] The table columns are `Id`, `Template`, `Status`, `Scope`, `Targets`, `Effect`, `Blocking`, `Source`, `Started`, `Ends`, `End Reason`, and `Actor`, in that order.
+- [x] The table preserves backend result order.
+- [x] `startedAt` and `endsAt` use the existing date formatter.
+- [x] Optional target, end reason, and actor values render clearly when absent without inventing values.
+- [x] `effectBasisPoints` is presented as an admin-visible effect value without recalculating prices or event impact locally.
+- [x] The empty state says `No market events found.`
+- [x] API failures, including missing event-admin authority, use the existing table error and retry behavior.
+- [x] Tests cover the market events route assumption and dashboard tab/view wiring.
 
 ## Expected Files to Change
 
@@ -94,3 +94,9 @@ If the full validation path is unavailable, run the largest available subset and
 
 ## Completion Notes
 
+- Added `MarketEvent` and `ApiMarketEvent` dashboard model types from the confirmed admin read contract.
+- Added `marketEventsApi.getAll()` with centralized route usage for `GET /api/dashboard/market/events`.
+- Added a top-level `Market Events` dashboard tab and read-only view using `DynamicTable` and `useTableData`.
+- Added table columns in the contract-defined order, preserving API result order and using existing date/error/retry/empty table behavior.
+- Added API route/mapping tests and dashboard tab/view wiring coverage.
+- Validation passed: `npm run lint` exited 0 with pre-existing Tailwind warnings, `npm run test` passed 17 tests, and `npm run build` completed successfully.

@@ -5,6 +5,7 @@ import { TransactionsView } from "./views/TransactionsView/TransactionsView.js";
 import { MarketCategoriesView } from "./views/MarketCategoriesView/MarketCategoriesView.js";
 import { MarketItemsView } from "./views/MarketItemsView/MarketItemsView.js";
 import { MarketTradesView } from "./views/MarketTradesView/MarketTradesView.js";
+import { MarketEventsView } from "./views/MarketEventsView/MarketEventsView.js";
 
 type ViewType =
   | "players"
@@ -12,6 +13,7 @@ type ViewType =
   | "market-categories"
   | "market-items"
   | "market-trades"
+  | "market-events"
   | "balances";
 
 const views: ReadonlyArray<{ key: ViewType; label: string }> = [
@@ -20,6 +22,7 @@ const views: ReadonlyArray<{ key: ViewType; label: string }> = [
   { key: "market-categories", label: "Market Categories" },
   { key: "market-items", label: "Market Items" },
   { key: "market-trades", label: "Market Trades" },
+  { key: "market-events", label: "Market Events" },
   { key: "balances", label: "Balances" },
 ];
 
@@ -38,6 +41,8 @@ export function DashboardPage() {
         return <MarketItemsView />;
       case "market-trades":
         return <MarketTradesView />;
+      case "market-events":
+        return <MarketEventsView />;
       case "balances":
         return <BalancesView />;
       default:

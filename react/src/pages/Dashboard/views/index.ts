@@ -10,3 +10,5 @@ export { MarketItemsView } from "./MarketItemsView/MarketItemsView";
 export { MarketItemTable } from "./MarketItemsView/components/MarketItemTable";
 export { MarketTradesView } from "./MarketTradesView/MarketTradesView";
 export { MarketTradeTable } from "./MarketTradesView/components/MarketTradeTable";
+export { MarketEventsView } from "./MarketEventsView/MarketEventsView";
+export { MarketEventTable } from "./MarketEventsView/components/MarketEventTable";
