@@ -170,3 +170,41 @@ test("marketItemsApi.delete uses DELETE and surfaces structured rejection messag
   assert.equal(requests[1]?.url, "/api/dashboard/market/items/wheat");
   assert.equal(requests[1]?.init?.method, "DELETE");
 });
+
+test("marketItemsApi.resetDrift uses the confirmed dashboard drift reset route", async () => {
+  const originalFetch = globalThis.fetch;
+  const requests: Array<{ url: string; init?: RequestInit }> = [];
+
+  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    requests.push({ url: String(input), init });
+
+    return Promise.resolve(
+      new Response(
+        JSON.stringify({
+          resetItemCount: 2,
+          driftMultiplierBasisPoints: 10000,
+          driftEvaluatedAt: "2026-05-28T12:00:00.000Z",
+        }),
+        {
+          headers: { "content-type": "application/json" },
+          status: 200,
+        },
+      ),
+    );
+  }) as typeof fetch;
+
+  try {
+    const response = await marketItemsApi.resetDrift();
+
+    assert.deepEqual(response, {
+      resetItemCount: 2,
+      driftMultiplierBasisPoints: 10000,
+      driftEvaluatedAt: "2026-05-28T12:00:00.000Z",
+    });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  assert.equal(requests[0]?.url, "/api/dashboard/market/drift/reset");
+  assert.equal(requests[0]?.init?.method, "POST");
+});

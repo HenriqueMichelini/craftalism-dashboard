@@ -91,6 +91,7 @@ test("MarketItemsView renders its header and loading table state", () => {
     markup,
     /Manage market item pricing, stock, regeneration, and state controls\./,
   );
+  assert.match(markup, /Reset Drift/);
   assert.match(markup, /Loading data\.\.\./);
 });
 

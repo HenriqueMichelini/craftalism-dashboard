@@ -1,7 +1,7 @@
 ---
 id: CARD-003
 feature: market-items
-status: planned
+status: implemented
 depends_on: ["CARD-002"]
 parallel_safe: false
 ---
@@ -10,7 +10,7 @@ parallel_safe: false
 
 ## Status
 
-planned
+implemented
 
 ## Objective
 
@@ -35,16 +35,16 @@ The Market Items dashboard view exposes a market-admin drift reset control near 
 
 ## Acceptance Criteria
 
-- [ ] A dashboard-local response type exists for `MarketDriftResetResponse` with `resetItemCount`, `driftMultiplierBasisPoints`, and `driftEvaluatedAt`.
-- [ ] The centralized market API client exposes a drift reset function that calls `POST /api/dashboard/market/drift/reset`.
-- [ ] The Market Items view includes a guarded reset action near existing table-level actions.
-- [ ] The reset action requires explicit confirmation before submitting.
-- [ ] While reset is submitting, the UI prevents duplicate reset submissions and shows a loading state.
-- [ ] On success, the UI shows the number of reset items returned by the API.
-- [ ] On success, the Market Items view refreshes rows from `GET /api/dashboard/market/items` rather than recalculating drift locally.
-- [ ] API errors are shown through the existing dashboard error/action feedback pattern.
-- [ ] `401` and `403` responses are treated as the existing admin-auth boundary and are not presented as public market API failures.
-- [ ] Tests cover route construction, confirmation behavior, duplicate-submit prevention, success feedback with reset count, row refresh after success, and error handling.
+- [x] A dashboard-local response type exists for `MarketDriftResetResponse` with `resetItemCount`, `driftMultiplierBasisPoints`, and `driftEvaluatedAt`.
+- [x] The centralized market API client exposes a drift reset function that calls `POST /api/dashboard/market/drift/reset`.
+- [x] The Market Items view includes a guarded reset action near existing table-level actions.
+- [x] The reset action requires explicit confirmation before submitting.
+- [x] While reset is submitting, the UI prevents duplicate reset submissions and shows a loading state.
+- [x] On success, the UI shows the number of reset items returned by the API.
+- [x] On success, the Market Items view refreshes rows from `GET /api/dashboard/market/items` rather than recalculating drift locally.
+- [x] API errors are shown through the existing dashboard error/action feedback pattern.
+- [x] `401` and `403` responses are treated as the existing admin-auth boundary and are not presented as public market API failures.
+- [x] Tests cover route construction, confirmation behavior, duplicate-submit prevention, success feedback with reset count, row refresh after success, and error handling.
 
 ## Expected Files to Change
 
@@ -94,3 +94,22 @@ If the full validation path is unavailable, run the largest available subset and
 
 ## Completion Notes
 
+Implemented the dashboard-owned Market Items drift reset action against the confirmed API-owned reset route.
+
+- Added `MarketDriftResetResponse` and centralized `marketItemsApi.resetDrift()` for `POST /api/dashboard/market/drift/reset`.
+- Added a guarded `Reset Drift` action beside the Market Items create action.
+- The reset action requires confirmation, blocks duplicate submissions with a ref-backed submitting guard, shows `Resetting...` while active, and reports the API reset item count on success.
+- On success, the action refreshes rows through the existing Market Items `refetch` path for `GET /api/dashboard/market/items`.
+- API failures use dashboard action feedback; `401` and `403` are shown as an admin authorization boundary.
+- Added tests for reset route construction, confirmation cancellation, duplicate-submit prevention, success feedback, row refresh ordering, API error handling, and auth-boundary messaging.
+
+Validation:
+
+```bash
+cd react
+npm run lint
+npm run test
+npm run build
+```
+
+`npm run lint` completed with the existing Tailwind warnings in unrelated table components and no errors. `npm run test` passed 18 tests. `npm run build` completed successfully.

@@ -1,7 +1,7 @@
 ---
 id: CARD-002
 feature: market-items
-status: implemented
+status: reverified
 depends_on: ["CARD-001"]
 parallel_safe: false
 ---
@@ -10,7 +10,7 @@ parallel_safe: false
 
 ## Status
 
-implemented
+reverified
 
 ## Objective
 

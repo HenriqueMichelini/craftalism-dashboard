@@ -51,3 +51,9 @@ export type MarketItemUpdateRequest = Omit<
   MarketItemCreateRequest,
   "itemId" | "categoryId" | "displayName"
 >;
+
+export type MarketDriftResetResponse = {
+  resetItemCount: number;
+  driftMultiplierBasisPoints: number;
+  driftEvaluatedAt: string;
+};
