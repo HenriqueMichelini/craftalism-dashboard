@@ -1,7 +1,7 @@
 ---
 id: CARD-004
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-003
 parallel_safe: true
@@ -11,7 +11,7 @@ parallel_safe: true
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -36,13 +36,13 @@ The market-events API module exposes typed methods for `create`, `update`, `canc
 
 ## Acceptance Criteria
 
-- [ ] Market event create/update/cancel request types are defined in the local model types without changing the existing response row shape.
-- [ ] `marketEventsApi.create(request)` calls `POST /api/dashboard/market/events`.
-- [ ] `marketEventsApi.update(id, request)` calls `PATCH /api/dashboard/market/events/{id}` with `id` URL-encoded.
-- [ ] `marketEventsApi.cancel(id, request)` calls `POST /api/dashboard/market/events/{id}/cancel` with `id` URL-encoded.
-- [ ] `marketEventsApi.supersede(request)` calls `POST /api/dashboard/market/events/supersede`.
-- [ ] All mutation methods return a `MarketEvent` with `id` normalized to string, matching `getAll()`.
-- [ ] API tests cover route construction, HTTP methods, request bodies, URL encoding, and response id normalization.
+- [x] Market event create/update/cancel request types are defined in the local model types without changing the existing response row shape.
+- [x] `marketEventsApi.create(request)` calls `POST /api/dashboard/market/events`.
+- [x] `marketEventsApi.update(id, request)` calls `PATCH /api/dashboard/market/events/{id}` with `id` URL-encoded.
+- [x] `marketEventsApi.cancel(id, request)` calls `POST /api/dashboard/market/events/{id}/cancel` with `id` URL-encoded.
+- [x] `marketEventsApi.supersede(request)` calls `POST /api/dashboard/market/events/supersede`.
+- [x] All mutation methods return a `MarketEvent` with `id` normalized to string, matching `getAll()`.
+- [x] API tests cover route construction, HTTP methods, request bodies, URL encoding, and response id normalization.
 
 ## Expected Files to Change
 
@@ -80,3 +80,7 @@ cd react && npm test
 
 ## Completion Notes
 
+- Added local create, update, and cancel request types while preserving the existing `MarketEvent` response row shape.
+- Added centralized `create`, `update`, `cancel`, and `supersede` methods with encoded event IDs and shared response normalization.
+- Added API coverage for mutation routes, methods, request bodies, URL encoding, and string-normalized response IDs.
+- Validation passed: `cd react && npm test -- --test-name-pattern=marketEvents` completed with 18 passing tests.

@@ -4,5 +4,6 @@ export * from "./endpoints/balances";
 export * from "./endpoints/transactions";
 export * from "./endpoints/marketTrades";
 export * from "./endpoints/marketEvents";
+export * from "./endpoints/marketEventTemplates";
 export * from "./endpoints/marketItems";
 export * from "./endpoints/marketCategories";

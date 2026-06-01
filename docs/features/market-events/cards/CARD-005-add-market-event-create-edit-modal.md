@@ -1,7 +1,7 @@
 ---
 id: CARD-005
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-004
 parallel_safe: false
@@ -11,7 +11,7 @@ parallel_safe: false
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -36,15 +36,15 @@ The Market Events view exposes an `Add Market Event` action and row-click edit b
 
 ## Acceptance Criteria
 
-- [ ] The Market Events header includes an `Add Market Event` action that opens a create modal.
-- [ ] Clicking a market event row opens an edit modal for that row.
-- [ ] The modal captures start fields: `templateId`, `scope`, `selectedCategoryId`, `selectedItemIds`, `effectBasisPoints`, `blocking`, `durationSeconds`, and `reason`.
-- [ ] The modal captures edit fields: `effectBasisPoints`, `blocking`, `durationSeconds`, `endsAt`, and `reason`; immutable row identity and backend-owned lifecycle fields are not submitted as editable values.
-- [ ] Create submits `marketEventsApi.create()` and inserts or updates the returned row in the existing table data.
-- [ ] Edit submits `marketEventsApi.update()` and replaces the matching row with the returned row.
-- [ ] The modal prevents duplicate submissions while saving and displays API errors without closing.
-- [ ] Obvious local validation blocks blank `templateId`, missing `scope`, non-positive `durationSeconds` when present, and malformed date input before submit; the API remains authoritative for all constraints.
-- [ ] Tests cover header action rendering, create/edit modal rendering, validation behavior, duplicate-submit prevention, success row update, and API error display.
+- [x] The Market Events header includes an `Add Market Event` action that opens a create modal.
+- [x] Clicking a market event row opens an edit modal for that row.
+- [x] The modal captures start fields: `templateId`, `scope`, `selectedCategoryId`, `selectedItemIds`, `effectBasisPoints`, `blocking`, `durationSeconds`, and `reason`.
+- [x] The modal captures edit fields: `effectBasisPoints`, `blocking`, `durationSeconds`, `endsAt`, and `reason`; immutable row identity and backend-owned lifecycle fields are not submitted as editable values.
+- [x] Create submits `marketEventsApi.create()` and inserts or updates the returned row in the existing table data.
+- [x] Edit submits `marketEventsApi.update()` and replaces the matching row with the returned row.
+- [x] The modal prevents duplicate submissions while saving and displays API errors without closing.
+- [x] Obvious local validation blocks blank `templateId`, missing `scope`, non-positive `durationSeconds` when present, and malformed date input before submit; the API remains authoritative for all constraints.
+- [x] Tests cover header action rendering, create/edit modal rendering, validation behavior, duplicate-submit prevention, success row update, and API error display.
 
 ## Expected Files to Change
 
@@ -86,3 +86,8 @@ cd react && npm test
 
 ## Completion Notes
 
+- Lifted Market Events row state into the view so create and edit mutations update table rows only after API success.
+- Added the `Add Market Event` header action, row-click edit behavior, create/edit modal, local obvious-input validation, and API error display.
+- Added a save helper that prevents duplicate in-flight submissions and a row upsert helper that preserves update order while prepending newly returned rows.
+- Added modal, validation, row-helper, save-helper, and dashboard header coverage.
+- Validation passed: `cd react && npm test -- --test-name-pattern="MarketEvents|marketEvent"` completed with 19 passing tests.

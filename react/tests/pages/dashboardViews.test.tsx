@@ -5,6 +5,7 @@ import { DashboardPage } from "../../src/pages/Dashboard/DashboardPage.js";
 import { BalancesView } from "../../src/pages/Dashboard/views/BalancesView/BalancesView.js";
 import { MarketCategoriesView } from "../../src/pages/Dashboard/views/MarketCategoriesView/MarketCategoriesView.js";
 import { MarketEventsView } from "../../src/pages/Dashboard/views/MarketEventsView/MarketEventsView.js";
+import { MarketEventTemplatesView } from "../../src/pages/Dashboard/views/MarketEventTemplatesView/MarketEventTemplatesView.js";
 import { MarketItemsView } from "../../src/pages/Dashboard/views/MarketItemsView/MarketItemsView.js";
 import { MarketTradesView } from "../../src/pages/Dashboard/views/MarketTradesView/MarketTradesView.js";
 import {
@@ -29,6 +30,7 @@ test("DashboardPage defaults to the players view and exposes all tabs", () => {
   assert.match(markup, /Market Items/);
   assert.match(markup, /Market Trades/);
   assert.match(markup, /Market Events/);
+  assert.match(markup, /Market Event Templates/);
   assert.match(markup, /Balances/);
   assert.match(markup, /Manage and view all registered players in your system\./);
   assert.doesNotMatch(
@@ -127,6 +129,15 @@ test("MarketEventsView renders its header and loading table state", () => {
     markup,
     /Inspect API-owned market event state for dashboard operations\./,
   );
+  assert.match(markup, /Add Market Event/);
+  assert.match(markup, /Loading data\.\.\./);
+});
+
+test("MarketEventTemplatesView renders its header and loading table state", () => {
+  const markup = renderToStaticMarkup(<MarketEventTemplatesView />);
+
+  assert.match(markup, /Inspect and author API-owned market event templates\./);
+  assert.match(markup, /Add Market Event Template/);
   assert.match(markup, /Loading data\.\.\./);
 });
 

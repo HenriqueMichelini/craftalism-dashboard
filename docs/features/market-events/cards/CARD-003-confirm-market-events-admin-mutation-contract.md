@@ -1,7 +1,7 @@
 ---
 id: CARD-003
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-002
 parallel_safe: false
@@ -11,7 +11,7 @@ parallel_safe: false
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -50,11 +50,11 @@ The market-events feature contract documents the dashboard-owned mutation UX sur
 
 ## Acceptance Criteria
 
-- [ ] `docs/features/market-events/contract.md` no longer states that all admin mutation UI is out of scope for the expanded feature.
-- [ ] The contract lists the consumed start, update, cancel, and supersede routes and keeps backend lifecycle, scheduling, pricing, drift, blocking, and audit semantics API-owned.
-- [ ] The contract documents request fields consumed by the dashboard: `templateId`, `scope`, `selectedCategoryId`, `selectedItemIds`, `effectBasisPoints`, `blocking`, `durationSeconds`, `endsAt`, and `reason` where applicable.
-- [ ] The contract states that hard delete is not available for events and dashboard removal must use the API-owned cancel route.
-- [ ] The contract preserves `SCOPE_market:admin` as a consumed authorization boundary and does not introduce dashboard authentication or token acquisition.
+- [x] `docs/features/market-events/contract.md` no longer states that all admin mutation UI is out of scope for the expanded feature.
+- [x] The contract lists the consumed start, update, cancel, and supersede routes and keeps backend lifecycle, scheduling, pricing, drift, blocking, and audit semantics API-owned.
+- [x] The contract documents request fields consumed by the dashboard: `templateId`, `scope`, `selectedCategoryId`, `selectedItemIds`, `effectBasisPoints`, `blocking`, `durationSeconds`, `endsAt`, and `reason` where applicable.
+- [x] The contract states that hard delete is not available for events and dashboard removal must use the API-owned cancel route.
+- [x] The contract preserves `SCOPE_market:admin` as a consumed authorization boundary and does not introduce dashboard authentication or token acquisition.
 
 ## Expected Files to Change
 
@@ -85,3 +85,7 @@ rg -n "POST  /api/dashboard/market/events|PATCH /api/dashboard/market/events/\\{
 
 ## Completion Notes
 
+- Expanded the dashboard-owned Market Events contract from read-only table behavior to include local admin mutation client and UI responsibilities.
+- Recorded the consumed API-owned create, update, cancel, and supersede routes, request fields, shared response row shape, and `SCOPE_market:admin` boundary.
+- Documented that event removal is audited cancellation and that no hard-delete or `DELETE` route is available.
+- Validation passed: the targeted `rg` command found the expected route, authorization, cancel, supersede, and hard-delete constraint documentation.

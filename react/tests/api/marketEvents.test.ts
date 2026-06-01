@@ -4,6 +4,11 @@ import {
   MARKET_EVENTS_ENDPOINT,
   marketEventsApi,
 } from "../../src/api/endpoints/marketEvents.js";
+import type {
+  MarketEventCancelRequest,
+  MarketEventCreateRequest,
+  MarketEventUpdateRequest,
+} from "../../src/types/models/marketEvent.types.js";
 
 test("MARKET_EVENTS_ENDPOINT uses canonical dashboard market events route", () => {
   assert.equal(MARKET_EVENTS_ENDPOINT, "/api/dashboard/market/events");
@@ -99,4 +104,104 @@ test("marketEventsApi.getAll maps API event rows while preserving order", async 
   } finally {
     globalThis.fetch = originalFetch;
   }
+});
+
+test("marketEventsApi exposes normalized admin mutation routes", async () => {
+  const originalFetch = globalThis.fetch;
+  const requests: Array<{ url: string; init?: RequestInit }> = [];
+  const createRequest: MarketEventCreateRequest = {
+    templateId: "manual-diamond-block",
+    scope: "ITEM",
+    selectedItemIds: "diamond",
+    effectBasisPoints: -1000,
+    blocking: true,
+    durationSeconds: 600,
+    reason: "Manual incident response",
+  };
+  const updateRequest: MarketEventUpdateRequest = {
+    blocking: false,
+    endsAt: "2026-05-28T14:00:00Z",
+    reason: "Resume trading",
+  };
+  const cancelRequest: MarketEventCancelRequest = {
+    reason: "Operator cancelled",
+  };
+
+  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    requests.push({ url: String(input), init });
+
+    return Promise.resolve(
+      new Response(
+        JSON.stringify({
+          id: 42,
+          templateId: createRequest.templateId,
+          source: "ADMIN",
+          rarity: "EXTRA_RARE",
+          scope: createRequest.scope,
+          selectedCategoryId: null,
+          selectedItemIds: createRequest.selectedItemIds,
+          effectBasisPoints: createRequest.effectBasisPoints,
+          effectVersion: 1,
+          blocking: createRequest.blocking,
+          startedAt: "2026-05-28T12:00:00Z",
+          endsAt: "2026-05-28T13:00:00Z",
+          status: "ACTIVE",
+          endReason: null,
+          actor: "operator@example.com",
+          auditMetadata: null,
+          createdAt: "2026-05-28T12:00:00Z",
+          updatedAt: "2026-05-28T12:00:00Z",
+        }),
+        {
+          headers: { "content-type": "application/json" },
+          status: init?.method === "POST" ? 201 : 200,
+        },
+      ),
+    );
+  }) as typeof fetch;
+
+  try {
+    assert.equal((await marketEventsApi.create(createRequest)).id, "42");
+    assert.equal(
+      (await marketEventsApi.update("event/id", updateRequest)).id,
+      "42",
+    );
+    assert.equal(
+      (await marketEventsApi.cancel("event/id", cancelRequest)).id,
+      "42",
+    );
+    assert.equal((await marketEventsApi.supersede(createRequest)).id, "42");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  assert.deepEqual(
+    requests.map(({ url, init }) => ({
+      url,
+      method: init?.method,
+      body: init?.body,
+    })),
+    [
+      {
+        url: "/api/dashboard/market/events",
+        method: "POST",
+        body: JSON.stringify(createRequest),
+      },
+      {
+        url: "/api/dashboard/market/events/event%2Fid",
+        method: "PATCH",
+        body: JSON.stringify(updateRequest),
+      },
+      {
+        url: "/api/dashboard/market/events/event%2Fid/cancel",
+        method: "POST",
+        body: JSON.stringify(cancelRequest),
+      },
+      {
+        url: "/api/dashboard/market/events/supersede",
+        method: "POST",
+        body: JSON.stringify(createRequest),
+      },
+    ],
+  );
 });

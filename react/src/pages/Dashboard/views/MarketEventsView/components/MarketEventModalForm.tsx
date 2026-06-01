@@ -1,0 +1,261 @@
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { ModalShell } from "../../../../../components/ui/ModalShell.js";
+import type {
+  MarketEvent,
+  MarketEventScope,
+} from "../../../../../types/models/marketEvent.types.js";
+import {
+  marketEventCreateDefaults,
+  validateMarketEventForm,
+  type MarketEventFormValues,
+  type ValidMarketEventValues,
+} from "../marketEventValidation.js";
+
+type MarketEventModalFormProps = {
+  mode: "create" | "edit";
+  event?: MarketEvent;
+  actionError?: string | null;
+  submitting?: boolean;
+  onCancel: () => void;
+  onSave: (values: ValidMarketEventValues) => void;
+};
+
+const fieldClass =
+  "h-10 w-full rounded-md border border-primary-300 bg-primary-500 px-3 text-default outline-none focus:border-primary-100 disabled:cursor-not-allowed disabled:text-muted";
+const checkboxClass =
+  "h-4 w-4 rounded border-primary-300 bg-primary-500 text-primary-300";
+const labelClass = "flex flex-col gap-2 text-sm font-medium text-muted";
+const checkboxLabelClass =
+  "flex items-center gap-2 text-sm font-medium text-muted";
+const errorClass = "text-sm text-red-400";
+
+const scopes: MarketEventScope[] = [
+  "ITEM",
+  "ITEM_SET",
+  "CATEGORY",
+  "MARKET_WIDE",
+];
+
+function toDateTimeLocal(value: string): string {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return date.toISOString().slice(0, 16);
+}
+
+function toFormValues(event?: MarketEvent): MarketEventFormValues {
+  if (!event) {
+    return marketEventCreateDefaults;
+  }
+
+  return {
+    templateId: event.templateId,
+    scope: event.scope,
+    selectedCategoryId: event.selectedCategoryId ?? "",
+    selectedItemIds: event.selectedItemIds ?? "",
+    effectBasisPoints: String(event.effectBasisPoints),
+    blocking: event.blocking,
+    durationSeconds: "",
+    endsAt: toDateTimeLocal(event.endsAt),
+    reason: "",
+  };
+}
+
+type TextFieldProps = {
+  name: keyof MarketEventFormValues;
+  label: string;
+  type?: "text" | "number" | "datetime-local";
+  values: MarketEventFormValues;
+  errors: Partial<Record<keyof MarketEventFormValues, string>>;
+  onChange: (key: keyof MarketEventFormValues, value: string) => void;
+};
+
+function TextField({
+  name,
+  label,
+  type = "text",
+  values,
+  errors,
+  onChange,
+}: TextFieldProps) {
+  return (
+    <label className={labelClass}>
+      {label}
+      <input
+        className={fieldClass}
+        name={name}
+        type={type}
+        value={String(values[name])}
+        onChange={(event) => onChange(name, event.target.value)}
+      />
+      {errors[name] ? <span className={errorClass}>{errors[name]}</span> : null}
+    </label>
+  );
+}
+
+export function MarketEventModalForm({
+  mode,
+  event,
+  actionError = null,
+  submitting = false,
+  onCancel,
+  onSave,
+}: MarketEventModalFormProps) {
+  const [values, setValues] = useState<MarketEventFormValues>(() =>
+    toFormValues(event),
+  );
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof MarketEventFormValues, string>>
+  >({});
+
+  const updateValue = (key: keyof MarketEventFormValues, value: string) => {
+    setValues((current) => ({ ...current, [key]: value }));
+  };
+
+  const handleSubmit = (submitEvent: FormEvent<HTMLFormElement>) => {
+    submitEvent.preventDefault();
+
+    const result = validateMarketEventForm(values);
+
+    if (!result.valid) {
+      setErrors(result.errors);
+      return;
+    }
+
+    setErrors({});
+    onSave(result.values);
+  };
+
+  return (
+    <ModalShell
+      title={mode === "create" ? "Create Market Event" : "Edit Market Event"}
+      onClose={onCancel}
+      footer={
+        <>
+          <button
+            className="rounded-md border border-primary-300 px-4 py-2 text-sm font-medium text-default hover:bg-primary-400"
+            disabled={submitting}
+            type="button"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+          <button
+            className="rounded-md bg-primary-400 px-4 py-2 text-sm font-medium text-default hover:bg-primary-300"
+            disabled={submitting}
+            form="market-event-modal-form"
+            type="submit"
+          >
+            {submitting ? "Saving..." : "Save"}
+          </button>
+        </>
+      }
+    >
+      <form
+        className="max-h-[70vh] space-y-4 overflow-y-auto pr-1"
+        id="market-event-modal-form"
+        onSubmit={handleSubmit}
+      >
+        {actionError ? <p className={errorClass}>{actionError}</p> : null}
+        {mode === "create" ? (
+          <>
+            <TextField
+              name="templateId"
+              label="Template ID"
+              values={values}
+              errors={errors}
+              onChange={updateValue}
+            />
+            <label className={labelClass}>
+              Scope
+              <select
+                className={fieldClass}
+                name="scope"
+                value={values.scope}
+                onChange={(scopeEvent) =>
+                  updateValue("scope", scopeEvent.target.value)
+                }
+              >
+                <option value="">Select scope</option>
+                {scopes.map((scope) => (
+                  <option key={scope} value={scope}>
+                    {scope}
+                  </option>
+                ))}
+              </select>
+              {errors.scope ? (
+                <span className={errorClass}>{errors.scope}</span>
+              ) : null}
+            </label>
+            <TextField
+              name="selectedCategoryId"
+              label="Selected Category ID"
+              values={values}
+              errors={errors}
+              onChange={updateValue}
+            />
+            <TextField
+              name="selectedItemIds"
+              label="Selected Item IDs"
+              values={values}
+              errors={errors}
+              onChange={updateValue}
+            />
+          </>
+        ) : null}
+        <TextField
+          name="effectBasisPoints"
+          label="Effect Basis Points"
+          type="number"
+          values={values}
+          errors={errors}
+          onChange={updateValue}
+        />
+        <label className={checkboxLabelClass}>
+          <input
+            checked={values.blocking}
+            className={checkboxClass}
+            name="blocking"
+            type="checkbox"
+            onChange={(blockingEvent) =>
+              setValues((current) => ({
+                ...current,
+                blocking: blockingEvent.target.checked,
+              }))
+            }
+          />
+          Blocking
+        </label>
+        <TextField
+          name="durationSeconds"
+          label="Duration Seconds"
+          type="number"
+          values={values}
+          errors={errors}
+          onChange={updateValue}
+        />
+        {mode === "edit" ? (
+          <TextField
+            name="endsAt"
+            label="Ends At"
+            type="datetime-local"
+            values={values}
+            errors={errors}
+            onChange={updateValue}
+          />
+        ) : null}
+        <TextField
+          name="reason"
+          label="Reason"
+          values={values}
+          errors={errors}
+          onChange={updateValue}
+        />
+      </form>
+    </ModalShell>
+  );
+}

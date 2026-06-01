@@ -1,13 +1,22 @@
-import { useCallback } from "react";
 import { DynamicTable } from "../../../../../components/ui/Table/DynamicTable.js";
-import { useTableData } from "../../../../../hooks/useTableData.js";
-import { marketEventsApi } from "../../../../../api/endpoints/marketEvents.js";
+import type { MarketEvent } from "../../../../../types/models/marketEvent.types.js";
 import { marketEventsTableConfig } from "../config.js";
 
-export function MarketEventTable() {
-  const fetchMarketEvents = useCallback(() => marketEventsApi.getAll(), []);
-  const { data, loading, error, refetch } = useTableData(fetchMarketEvents);
+type MarketEventTableProps = {
+  data: MarketEvent[];
+  loading: boolean;
+  error: string | null;
+  onRetry: () => void;
+  onMarketEventClick: (event: MarketEvent) => void;
+};
 
+export function MarketEventTable({
+  data,
+  loading,
+  error,
+  onRetry,
+  onMarketEventClick,
+}: MarketEventTableProps) {
   return (
     <DynamicTable
       caption="Market events table"
@@ -15,7 +24,8 @@ export function MarketEventTable() {
       loading={loading}
       error={error}
       config={marketEventsTableConfig}
-      onRetry={refetch}
+      onRetry={onRetry}
+      onRowClick={onMarketEventClick}
       emptyMessage="No market events found."
     />
   );

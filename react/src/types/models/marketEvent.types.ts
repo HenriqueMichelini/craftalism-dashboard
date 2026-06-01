@@ -41,3 +41,26 @@ export type MarketEvent = {
 export type ApiMarketEvent = Omit<MarketEvent, "id"> & {
   id: number | string;
 };
+
+export type MarketEventCreateRequest = {
+  templateId: string;
+  scope: MarketEventScope;
+  selectedCategoryId?: string | null;
+  selectedItemIds?: string | null;
+  effectBasisPoints?: number | null;
+  blocking?: boolean | null;
+  durationSeconds?: number | null;
+  reason?: string | null;
+};
+
+export type MarketEventUpdateRequest = {
+  effectBasisPoints?: number | null;
+  blocking?: boolean | null;
+  durationSeconds?: number | null;
+  endsAt?: string | null;
+  reason?: string | null;
+};
+
+export type MarketEventCancelRequest = {
+  reason?: string | null;
+};
