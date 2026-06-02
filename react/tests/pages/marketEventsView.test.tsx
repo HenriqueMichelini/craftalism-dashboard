@@ -7,6 +7,7 @@ test("MarketEventsView keeps create unavailable while reference rows load", () =
   const markup = renderToStaticMarkup(<MarketEventsView />);
 
   assert.match(markup, /Add Market Event/);
+  assert.match(markup, /Supersede Active Event/);
   assert.match(markup, /disabled=""/);
   assert.match(markup, /Loading data\.\.\./);
 });

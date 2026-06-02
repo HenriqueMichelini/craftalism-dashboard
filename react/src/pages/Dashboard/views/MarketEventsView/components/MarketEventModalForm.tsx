@@ -14,15 +14,17 @@ import {
   type ValidMarketEventValues,
 } from "../marketEventValidation.js";
 import { toDateTimeLocal } from "../marketEventDateTime.js";
+import { getMarketEventAuditReason } from "../marketEventAudit.js";
 
 type MarketEventModalFormProps = {
-  mode: "create" | "edit";
+  mode: "create" | "edit" | "supersede";
   event?: MarketEvent;
   templates: MarketEventTemplate[];
   categories: MarketCategory[];
   actionError?: string | null;
   submitting?: boolean;
   onCancel: () => void;
+  onCancelEvent?: (reason: string) => void;
   onSave: (values: ValidMarketEventValues) => void;
 };
 
@@ -100,6 +102,7 @@ export function MarketEventModalForm({
   actionError = null,
   submitting = false,
   onCancel,
+  onCancelEvent,
   onSave,
 }: MarketEventModalFormProps) {
   const [values, setValues] = useState<MarketEventFormValues>(() =>
@@ -129,10 +132,26 @@ export function MarketEventModalForm({
 
   return (
     <ModalShell
-      title={mode === "create" ? "Create Market Event" : "Edit Market Event"}
+      title={
+        mode === "edit"
+          ? "Edit Market Event"
+          : mode === "supersede"
+            ? "Supersede Active Event"
+            : "Create Market Event"
+      }
       onClose={onCancel}
       footer={
         <>
+          {mode === "edit" && event?.status === "ACTIVE" && onCancelEvent ? (
+            <button
+              className="rounded-md border border-red-400 px-4 py-2 text-sm font-medium text-red-200 hover:bg-red-500/10"
+              disabled={submitting}
+              type="button"
+              onClick={() => onCancelEvent(values.reason)}
+            >
+              Cancel Market Event
+            </button>
+          ) : null}
           <button
             className="rounded-md border border-primary-300 px-4 py-2 text-sm font-medium text-default hover:bg-primary-400"
             disabled={submitting}
@@ -158,7 +177,13 @@ export function MarketEventModalForm({
         onSubmit={handleSubmit}
       >
         {actionError ? <p className={errorClass}>{actionError}</p> : null}
-        {mode === "create" ? (
+        {mode === "supersede" ? (
+          <p className="rounded-md border border-amber-300/50 bg-amber-400/10 p-3 text-sm text-amber-100">
+            This ends the active event with API-owned SUPERSEDED semantics and
+            starts the replacement event. The API selects the active event.
+          </p>
+        ) : null}
+        {mode !== "edit" ? (
           <>
             <label className={labelClass}>
               Template ID
@@ -261,14 +286,22 @@ export function MarketEventModalForm({
           onChange={updateValue}
         />
         {mode === "edit" ? (
-          <TextField
-            name="endsAt"
-            label="Ends At"
-            type="datetime-local"
-            values={values}
-            errors={errors}
-            onChange={updateValue}
-          />
+          <>
+            <TextField
+              name="endsAt"
+              label="Ends At"
+              type="datetime-local"
+              values={values}
+              errors={errors}
+              onChange={updateValue}
+            />
+            <p className={labelClass}>
+              Latest Audit Reason
+              <span className="rounded-md border border-primary-300 bg-primary-500 px-3 py-2 text-default">
+                {getMarketEventAuditReason(event?.auditMetadata ?? null)}
+              </span>
+            </p>
+          </>
         ) : null}
         <TextField
           name="reason"

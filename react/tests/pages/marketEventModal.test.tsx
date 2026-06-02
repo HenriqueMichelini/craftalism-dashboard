@@ -2,8 +2,13 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MarketEventModalForm } from "../../src/pages/Dashboard/views/MarketEventsView/components/MarketEventModalForm.js";
-import { submitMarketEventSave } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventActions.js";
+import {
+  submitMarketEventCancel,
+  submitMarketEventSave,
+  submitMarketEventSupersede,
+} from "../../src/pages/Dashboard/views/MarketEventsView/marketEventActions.js";
 import { toDateTimeLocal } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventDateTime.js";
+import { getMarketEventAuditReason } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventAudit.js";
 import { upsertMarketEventRow } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventRows.js";
 import {
   marketEventCreateDefaults,
@@ -85,6 +90,7 @@ test("MarketEventModalForm renders create and editable event fields", () => {
       templates={templates}
       categories={categories}
       onCancel={() => {}}
+      onCancelEvent={() => {}}
       onSave={() => {}}
     />,
   );
@@ -105,8 +111,72 @@ test("MarketEventModalForm renders create and editable event fields", () => {
 
   assert.match(editMarkup, /Edit Market Event/);
   assert.match(editMarkup, /Ends At/);
+  assert.match(editMarkup, /Latest Audit Reason/);
+  assert.match(editMarkup, /Not provided/);
+  assert.match(editMarkup, /Cancel Market Event/);
   assert.doesNotMatch(editMarkup, /Template ID/);
   assert.doesNotMatch(editMarkup, /Selected Item IDs/);
+});
+
+test("MarketEventModalForm displays the saved audit reason only in edit mode", () => {
+  const savedReasonEvent = {
+    ...event,
+    auditMetadata: '{"reason":"operator correction"}',
+  };
+  const editMarkup = renderToStaticMarkup(
+    <MarketEventModalForm
+      mode="edit"
+      event={savedReasonEvent}
+      templates={templates}
+      categories={categories}
+      onCancel={() => {}}
+      onSave={() => {}}
+    />,
+  );
+  const createMarkup = renderToStaticMarkup(
+    <MarketEventModalForm
+      mode="create"
+      templates={templates}
+      categories={categories}
+      onCancel={() => {}}
+      onSave={() => {}}
+    />,
+  );
+
+  assert.match(editMarkup, /Latest Audit Reason/);
+  assert.match(editMarkup, /operator correction/);
+  assert.match(editMarkup, /name="reason" value=""/);
+  assert.doesNotMatch(createMarkup, /Latest Audit Reason/);
+});
+
+test("getMarketEventAuditReason falls back for malformed or reason-less metadata", () => {
+  assert.equal(getMarketEventAuditReason(null), "Not provided");
+  assert.equal(getMarketEventAuditReason("{not-json"), "Not provided");
+  assert.equal(getMarketEventAuditReason("{}"), "Not provided");
+  assert.equal(getMarketEventAuditReason('{"reason":""}'), "Not provided");
+  assert.equal(getMarketEventAuditReason('{"reason":42}'), "Not provided");
+  assert.equal(
+    getMarketEventAuditReason('{"reason":" saved update "}'),
+    "saved update",
+  );
+});
+
+test("MarketEventModalForm renders supersede warning and create fields", () => {
+  const markup = renderToStaticMarkup(
+    <MarketEventModalForm
+      mode="supersede"
+      templates={templates}
+      categories={categories}
+      onCancel={() => {}}
+      onSave={() => {}}
+    />,
+  );
+
+  assert.match(markup, /Supersede Active Event/);
+  assert.match(markup, /API-owned SUPERSEDED semantics/);
+  assert.match(markup, /The API selects the active event/);
+  assert.match(markup, /Template ID/);
+  assert.doesNotMatch(markup, /Cancel Market Event/);
 });
 
 test("MarketEventModalForm keeps action errors visible and disables duplicate saves", () => {
@@ -300,4 +370,152 @@ test("submitMarketEventSave displays API errors without updating rows", async ()
 
   assert.deepEqual(updates, []);
   assert.deepEqual(errors, [null, "API rejected event update."]);
+});
+
+test("submitMarketEventCancel requires confirmation and submits the trimmed reason", async () => {
+  const cancelledEvents: MarketEvent[] = [];
+  const requests: Array<{ id: string; reason?: string | null }> = [];
+  let closed = 0;
+
+  await submitMarketEventCancel({
+    isSubmitting: () => false,
+    eventId: event.id,
+    reason: " maintenance ",
+    confirm: () => false,
+    cancel: async (id, request) => {
+      requests.push({ id, ...request });
+      return { ...event, status: "CANCELLED" };
+    },
+    updateRows: (cancelledEvent) => cancelledEvents.push(cancelledEvent),
+    closeModal: () => {
+      closed += 1;
+    },
+    setSubmitting: () => {},
+    setError: () => {},
+  });
+
+  assert.equal(requests.length, 0);
+
+  await submitMarketEventCancel({
+    isSubmitting: () => false,
+    eventId: event.id,
+    reason: " maintenance ",
+    confirm: () => true,
+    cancel: async (id, request) => {
+      requests.push({ id, ...request });
+      return { ...event, status: "CANCELLED" };
+    },
+    updateRows: (cancelledEvent) => cancelledEvents.push(cancelledEvent),
+    closeModal: () => {
+      closed += 1;
+    },
+    setSubmitting: () => {},
+    setError: () => {},
+  });
+
+  assert.deepEqual(requests, [{ id: "42", reason: "maintenance" }]);
+  assert.deepEqual(cancelledEvents, [{ ...event, status: "CANCELLED" }]);
+  assert.equal(closed, 1);
+});
+
+test("submitMarketEventCancel prevents duplicate submissions and keeps errors visible", async () => {
+  const errors: Array<string | null> = [];
+  let cancelCalls = 0;
+
+  await submitMarketEventCancel({
+    isSubmitting: () => true,
+    eventId: event.id,
+    reason: "",
+    confirm: () => {
+      throw new Error("confirmation should not run while submitting");
+    },
+    cancel: async () => {
+      cancelCalls += 1;
+      return event;
+    },
+    updateRows: () => {},
+    closeModal: () => {},
+    setSubmitting: () => {},
+    setError: (message) => errors.push(message),
+  });
+
+  await submitMarketEventCancel({
+    isSubmitting: () => false,
+    eventId: event.id,
+    reason: "",
+    confirm: () => true,
+    cancel: async () => {
+      cancelCalls += 1;
+      throw new Error("API rejected event cancellation.");
+    },
+    updateRows: () => {
+      throw new Error("Rows should remain unchanged.");
+    },
+    closeModal: () => {
+      throw new Error("Modal should remain open.");
+    },
+    setSubmitting: () => {},
+    setError: (message) => errors.push(message),
+  });
+
+  assert.equal(cancelCalls, 1);
+  assert.deepEqual(errors, [null, "API rejected event cancellation."]);
+});
+
+test("submitMarketEventSupersede submits the replacement and refreshes backend rows", async () => {
+  const replacement = { ...event, id: "43" };
+  const events: string[] = [];
+  const request = {
+    templateId: "manual-diamond-block",
+    scope: "ITEM" as const,
+    selectedItemIds: "diamond",
+    reason: "replacement",
+  };
+
+  await submitMarketEventSupersede({
+    isSubmitting: () => false,
+    request,
+    supersede: async (submittedRequest) => {
+      assert.deepEqual(submittedRequest, request);
+      events.push("supersede");
+      return replacement;
+    },
+    updateRows: (savedEvent) => {
+      assert.equal(savedEvent, replacement);
+      events.push("upsert");
+    },
+    refreshRows: async () => {
+      events.push("refresh");
+    },
+    closeModal: () => {
+      events.push("close");
+    },
+    setSubmitting: () => {},
+    setError: () => {},
+  });
+
+  assert.deepEqual(events, ["supersede", "upsert", "refresh", "close"]);
+});
+
+test("submitMarketEventSupersede prevents duplicate submissions", async () => {
+  let supersedeCalls = 0;
+
+  await submitMarketEventSupersede({
+    isSubmitting: () => true,
+    request: {
+      templateId: "manual-diamond-block",
+      scope: "ITEM",
+    },
+    supersede: async () => {
+      supersedeCalls += 1;
+      return event;
+    },
+    updateRows: () => {},
+    refreshRows: async () => {},
+    closeModal: () => {},
+    setSubmitting: () => {},
+    setError: () => {},
+  });
+
+  assert.equal(supersedeCalls, 0);
 });
