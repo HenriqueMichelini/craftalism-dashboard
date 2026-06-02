@@ -5,6 +5,8 @@ import type {
   MarketEvent,
   MarketEventScope,
 } from "../../../../../types/models/marketEvent.types.js";
+import type { MarketCategory } from "../../../../../types/models/marketCategory.types.js";
+import type { MarketEventTemplate } from "../../../../../types/models/marketEventTemplate.types.js";
 import {
   marketEventCreateDefaults,
   validateMarketEventForm,
@@ -15,6 +17,8 @@ import {
 type MarketEventModalFormProps = {
   mode: "create" | "edit";
   event?: MarketEvent;
+  templates: MarketEventTemplate[];
+  categories: MarketCategory[];
   actionError?: string | null;
   submitting?: boolean;
   onCancel: () => void;
@@ -100,6 +104,8 @@ function TextField({
 export function MarketEventModalForm({
   mode,
   event,
+  templates,
+  categories,
   actionError = null,
   submitting = false,
   onCancel,
@@ -163,13 +169,27 @@ export function MarketEventModalForm({
         {actionError ? <p className={errorClass}>{actionError}</p> : null}
         {mode === "create" ? (
           <>
-            <TextField
-              name="templateId"
-              label="Template ID"
-              values={values}
-              errors={errors}
-              onChange={updateValue}
-            />
+            <label className={labelClass}>
+              Template ID
+              <select
+                className={fieldClass}
+                name="templateId"
+                value={values.templateId}
+                onChange={(templateEvent) =>
+                  updateValue("templateId", templateEvent.target.value)
+                }
+              >
+                <option value="">Select template</option>
+                {templates.map((template) => (
+                  <option key={template.templateId} value={template.templateId}>
+                    {template.playerFacingName} ({template.templateId})
+                  </option>
+                ))}
+              </select>
+              {errors.templateId ? (
+                <span className={errorClass}>{errors.templateId}</span>
+              ) : null}
+            </label>
             <label className={labelClass}>
               Scope
               <select
@@ -191,13 +211,24 @@ export function MarketEventModalForm({
                 <span className={errorClass}>{errors.scope}</span>
               ) : null}
             </label>
-            <TextField
-              name="selectedCategoryId"
-              label="Selected Category ID"
-              values={values}
-              errors={errors}
-              onChange={updateValue}
-            />
+            <label className={labelClass}>
+              Selected Category ID
+              <select
+                className={fieldClass}
+                name="selectedCategoryId"
+                value={values.selectedCategoryId}
+                onChange={(categoryEvent) =>
+                  updateValue("selectedCategoryId", categoryEvent.target.value)
+                }
+              >
+                <option value="">No category</option>
+                {categories.map((category) => (
+                  <option key={category.categoryId} value={category.categoryId}>
+                    {category.displayName}
+                  </option>
+                ))}
+              </select>
+            </label>
             <TextField
               name="selectedItemIds"
               label="Selected Item IDs"

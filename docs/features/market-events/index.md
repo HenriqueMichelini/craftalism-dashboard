@@ -15,6 +15,8 @@ This index summarizes execution order for Market Events dashboard implementation
 7. `CARD-007-confirm-market-event-template-admin-contract.md`
 8. `CARD-008-add-market-event-template-admin-client.md`
 9. `CARD-009-add-market-event-template-management-view.md`
+10. `CARD-010-replace-template-effect-direction-input-with-select.md`
+11. `CARD-011-add-market-event-reference-selectors.md`
 
 ## Dependency Summary
 
@@ -27,7 +29,9 @@ This index summarizes execution order for Market Events dashboard implementation
 - `CARD-007` records the confirmed API-owned template list/create contract and can proceed independently from the remaining event-instance controls.
 - `CARD-008` depends on the confirmed template contract and adds the typed template API client.
 - `CARD-009` depends on the template client and adds the dedicated template table and create modal.
+- `CARD-010` depends on the template management view and replaces free-text effect-direction entry with an API-confirmed selector.
+- `CARD-011` depends on the template client and adds API-backed template and category selectors to the market event create modal.
 
 ## Parallelization
 
-`CARD-001`, `CARD-002`, `CARD-003`, `CARD-005`, `CARD-006`, `CARD-007`, and `CARD-009` are not parallel-safe with their listed dependencies. `CARD-004` and `CARD-008` are implementation-parallel-safe only after their prerequisite contract cards are reverified because they are limited to local API client and type coverage.
+`CARD-001`, `CARD-002`, `CARD-003`, `CARD-005`, `CARD-006`, `CARD-007`, and `CARD-009` are not parallel-safe with their listed dependencies. `CARD-004`, `CARD-008`, `CARD-010`, and `CARD-011` are implementation-parallel-safe only after their prerequisite cards are reverified because their source changes do not overlap.

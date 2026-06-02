@@ -22,7 +22,7 @@ const template: MarketEventTemplate = {
   maxDurationSeconds: 900,
   minEffectBasisPoints: 250,
   maxEffectBasisPoints: 750,
-  effectDirection: "INCREASE",
+  effectDirection: "UP",
   cooldownSeconds: 1800,
   playerFacingName: "Wheat Pressure",
   playerFacingDescription: "Wheat prices are temporarily elevated.",
@@ -49,7 +49,7 @@ test("MarketEventTemplateTable renders loading, empty, and scan-friendly row sta
   assert.match(rowMarkup, /Rare/);
   assert.match(rowMarkup, /Category/);
   assert.match(rowMarkup, /Yes \(4\)/);
-  assert.match(rowMarkup, /Increase 250-750 bp/);
+  assert.match(rowMarkup, /Up 250-750 bp/);
   assert.match(rowMarkup, /Farming category/);
 });
 
@@ -84,6 +84,10 @@ test("MarketEventTemplateModalForm renders every authored field and action error
   assert.match(markup, /API rejected template\./);
   assert.match(markup, /Saving\.\.\./);
   assert.match(markup, /disabled=""/);
+  assert.match(markup, /Select effect direction/);
+  assert.match(markup, /<option>UP<\/option>/);
+  assert.match(markup, /<option>DOWN<\/option>/);
+  assert.match(markup, /<option>BLOCK<\/option>/);
 });
 
 test("validateMarketEventTemplateForm blocks obvious local failures", () => {
@@ -102,6 +106,7 @@ test("validateMarketEventTemplateForm blocks obvious local failures", () => {
   if (result.valid) return;
 
   assert.equal(result.errors.templateId, "This field is required.");
+  assert.equal(result.errors.effectDirection, "This field is required.");
   assert.equal(result.errors.automaticWeight, "Must be 0 or greater.");
   assert.equal(result.errors.minDurationSeconds, "Must be greater than 0.");
   assert.equal(result.errors.minEffectBasisPoints, "Must be greater than 0.");
@@ -121,7 +126,7 @@ test("validateMarketEventTemplateForm emits the complete authored request", () =
     maxDurationSeconds: "900",
     minEffectBasisPoints: "250",
     maxEffectBasisPoints: "750",
-    effectDirection: " INCREASE ",
+    effectDirection: " UP ",
     cooldownSeconds: "1800",
     playerFacingName: " Wheat Pressure ",
     playerFacingDescription: " Elevated prices. ",
@@ -143,7 +148,7 @@ test("validateMarketEventTemplateForm emits the complete authored request", () =
     maxDurationSeconds: 900,
     minEffectBasisPoints: 250,
     maxEffectBasisPoints: 750,
-    effectDirection: "INCREASE",
+    effectDirection: "UP",
     cooldownSeconds: 1800,
     playerFacingName: "Wheat Pressure",
     playerFacingDescription: "Elevated prices.",

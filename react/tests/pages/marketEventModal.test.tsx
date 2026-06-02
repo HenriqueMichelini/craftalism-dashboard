@@ -9,6 +9,8 @@ import {
   validateMarketEventForm,
 } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventValidation.js";
 import type { MarketEvent } from "../../src/types/models/marketEvent.types.js";
+import type { MarketCategory } from "../../src/types/models/marketCategory.types.js";
+import type { MarketEventTemplate } from "../../src/types/models/marketEventTemplate.types.js";
 
 const event: MarketEvent = {
   id: "42",
@@ -31,10 +33,46 @@ const event: MarketEvent = {
   updatedAt: "2026-05-28T12:00:00Z",
 };
 
+const templates: MarketEventTemplate[] = [
+  {
+    templateId: "manual-diamond-block",
+    rarity: "EXTRA_RARE",
+    scope: "ITEM",
+    automaticWeight: 0,
+    automaticEnabled: false,
+    blockingAllowed: true,
+    minDurationSeconds: 600,
+    maxDurationSeconds: 600,
+    minEffectBasisPoints: 10000,
+    maxEffectBasisPoints: 10000,
+    effectDirection: "BLOCK",
+    cooldownSeconds: 3600,
+    playerFacingName: "Diamond Block",
+    playerFacingDescription: "Diamond purchases are blocked.",
+    broadScopeHint: "Diamond",
+    eligibleTargetMetadata: '{"itemIds":["diamond"]}',
+    createdAt: "2026-05-28T12:00:00Z",
+    updatedAt: "2026-05-28T12:00:00Z",
+  },
+];
+
+const categories: MarketCategory[] = [
+  {
+    categoryId: "gems",
+    displayName: "Gems",
+    iconKey: "diamond",
+    displayOrder: 1,
+    createdAt: "2026-05-28T12:00:00Z",
+    updatedAt: "2026-05-28T12:00:00Z",
+  },
+];
+
 test("MarketEventModalForm renders create and editable event fields", () => {
   const createMarkup = renderToStaticMarkup(
     <MarketEventModalForm
       mode="create"
+      templates={templates}
+      categories={categories}
       onCancel={() => {}}
       onSave={() => {}}
     />,
@@ -43,6 +81,8 @@ test("MarketEventModalForm renders create and editable event fields", () => {
     <MarketEventModalForm
       mode="edit"
       event={event}
+      templates={templates}
+      categories={categories}
       onCancel={() => {}}
       onSave={() => {}}
     />,
@@ -53,6 +93,10 @@ test("MarketEventModalForm renders create and editable event fields", () => {
   assert.match(createMarkup, /Scope/);
   assert.match(createMarkup, /Selected Category ID/);
   assert.match(createMarkup, /Selected Item IDs/);
+  assert.match(createMarkup, /Select template/);
+  assert.match(createMarkup, /Diamond Block \(manual-diamond-block\)/);
+  assert.match(createMarkup, /No category/);
+  assert.match(createMarkup, /Gems/);
   assert.match(createMarkup, /Effect Basis Points/);
   assert.match(createMarkup, /Duration Seconds/);
   assert.match(createMarkup, /Reason/);
@@ -69,6 +113,8 @@ test("MarketEventModalForm keeps action errors visible and disables duplicate sa
     <MarketEventModalForm
       mode="edit"
       event={event}
+      templates={templates}
+      categories={categories}
       actionError="API rejected event update."
       submitting
       onCancel={() => {}}
@@ -112,6 +158,7 @@ test("validateMarketEventForm emits separate create and update payloads", () => 
     ...marketEventCreateDefaults,
     templateId: " manual-diamond-block ",
     scope: "ITEM",
+    selectedCategoryId: " gems ",
     selectedItemIds: " diamond ",
     effectBasisPoints: "-1000",
     blocking: true,
@@ -126,7 +173,7 @@ test("validateMarketEventForm emits separate create and update payloads", () => 
   assert.deepEqual(result.values.createRequest, {
     templateId: "manual-diamond-block",
     scope: "ITEM",
-    selectedCategoryId: undefined,
+    selectedCategoryId: "gems",
     selectedItemIds: "diamond",
     effectBasisPoints: -1000,
     blocking: true,

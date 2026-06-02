@@ -28,6 +28,7 @@ const checkboxLabelClass = "flex items-center gap-2 text-sm font-medium text-mut
 const errorClass = "text-sm text-red-400";
 const rarities: MarketEventRarity[] = ["MEDIUM", "RARE", "EXTRA_RARE"];
 const scopes: MarketEventScope[] = ["ITEM", "ITEM_SET", "CATEGORY", "MARKET_WIDE"];
+const effectDirections = ["UP", "DOWN", "BLOCK"];
 
 type TextFieldProps = {
   name: keyof MarketEventTemplateFormValues;
@@ -123,7 +124,14 @@ export function MarketEventTemplateModalForm({
         <TextField name="maxDurationSeconds" label="Maximum Duration Seconds" type="number" values={values} errors={errors} onChange={updateValue} />
         <TextField name="minEffectBasisPoints" label="Minimum Effect Basis Points" type="number" values={values} errors={errors} onChange={updateValue} />
         <TextField name="maxEffectBasisPoints" label="Maximum Effect Basis Points" type="number" values={values} errors={errors} onChange={updateValue} />
-        <TextField name="effectDirection" label="Effect Direction" values={values} errors={errors} onChange={updateValue} />
+        <label className={labelClass}>
+          Effect Direction
+          <select className={fieldClass} name="effectDirection" value={values.effectDirection} onChange={(event) => updateValue("effectDirection", event.target.value)}>
+            <option value="">Select effect direction</option>
+            {effectDirections.map((effectDirection) => <option key={effectDirection}>{effectDirection}</option>)}
+          </select>
+          {errors.effectDirection ? <span className={errorClass}>{errors.effectDirection}</span> : null}
+        </label>
         <TextField name="cooldownSeconds" label="Cooldown Seconds" type="number" values={values} errors={errors} onChange={updateValue} />
         <TextField name="playerFacingName" label="Player-Facing Name" values={values} errors={errors} onChange={updateValue} />
         <label className={labelClass}>Player-Facing Description<textarea className={areaClass} name="playerFacingDescription" value={values.playerFacingDescription} onChange={(event) => updateValue("playerFacingDescription", event.target.value)} />{errors.playerFacingDescription ? <span className={errorClass}>{errors.playerFacingDescription}</span> : null}</label>
