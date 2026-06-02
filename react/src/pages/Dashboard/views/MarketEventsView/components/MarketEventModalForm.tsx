@@ -13,6 +13,7 @@ import {
   type MarketEventFormValues,
   type ValidMarketEventValues,
 } from "../marketEventValidation.js";
+import { toDateTimeLocal } from "../marketEventDateTime.js";
 
 type MarketEventModalFormProps = {
   mode: "create" | "edit";
@@ -40,16 +41,6 @@ const scopes: MarketEventScope[] = [
   "CATEGORY",
   "MARKET_WIDE",
 ];
-
-function toDateTimeLocal(value: string): string {
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return "";
-  }
-
-  return date.toISOString().slice(0, 16);
-}
 
 function toFormValues(event?: MarketEvent): MarketEventFormValues {
   if (!event) {

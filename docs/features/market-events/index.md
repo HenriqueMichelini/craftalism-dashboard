@@ -17,6 +17,7 @@ This index summarizes execution order for Market Events dashboard implementation
 9. `CARD-009-add-market-event-template-management-view.md`
 10. `CARD-010-replace-template-effect-direction-input-with-select.md`
 11. `CARD-011-add-market-event-reference-selectors.md`
+12. `CARD-012-preserve-local-time-in-market-event-edit-modal.md`
 
 ## Dependency Summary
 
@@ -31,7 +32,8 @@ This index summarizes execution order for Market Events dashboard implementation
 - `CARD-009` depends on the template client and adds the dedicated template table and create modal.
 - `CARD-010` depends on the template management view and replaces free-text effect-direction entry with an API-confirmed selector.
 - `CARD-011` depends on the template client and adds API-backed template and category selectors to the market event create modal.
+- `CARD-012` depends on the create/edit modal foundation and preserves browser-local `endsAt` hours when editing market events.
 
 ## Parallelization
 
-`CARD-001`, `CARD-002`, `CARD-003`, `CARD-005`, `CARD-006`, `CARD-007`, and `CARD-009` are not parallel-safe with their listed dependencies. `CARD-004`, `CARD-008`, `CARD-010`, and `CARD-011` are implementation-parallel-safe only after their prerequisite cards are reverified because their source changes do not overlap.
+`CARD-001`, `CARD-002`, `CARD-003`, `CARD-005`, `CARD-006`, `CARD-007`, `CARD-009`, and `CARD-012` are not parallel-safe with their listed dependencies. `CARD-004`, `CARD-008`, `CARD-010`, and `CARD-011` are implementation-parallel-safe only after their prerequisite cards are reverified because their source changes do not overlap.

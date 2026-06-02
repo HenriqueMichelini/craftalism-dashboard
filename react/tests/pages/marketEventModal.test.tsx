@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MarketEventModalForm } from "../../src/pages/Dashboard/views/MarketEventsView/components/MarketEventModalForm.js";
 import { submitMarketEventSave } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventActions.js";
+import { toDateTimeLocal } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventDateTime.js";
 import { upsertMarketEventRow } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventRows.js";
 import {
   marketEventCreateDefaults,
@@ -125,6 +126,39 @@ test("MarketEventModalForm keeps action errors visible and disables duplicate sa
   assert.match(markup, /API rejected event update\./);
   assert.match(markup, /Saving\.\.\./);
   assert.match(markup, /disabled=""/);
+});
+
+test("toDateTimeLocal preserves local time and round trips unchanged instants", () => {
+  const originalTimezone = process.env.TZ;
+
+  process.env.TZ = "America/Sao_Paulo";
+
+  try {
+    const localValue = toDateTimeLocal(event.endsAt);
+    const result = validateMarketEventForm({
+      ...marketEventCreateDefaults,
+      templateId: event.templateId,
+      scope: event.scope,
+      endsAt: localValue,
+    });
+
+    assert.equal(localValue, "2026-05-28T10:00");
+    assert.equal(result.valid, true);
+    assert.equal(
+      result.valid ? result.values.updateRequest.endsAt : undefined,
+      new Date(event.endsAt).toISOString(),
+    );
+  } finally {
+    if (originalTimezone === undefined) {
+      delete process.env.TZ;
+    } else {
+      process.env.TZ = originalTimezone;
+    }
+  }
+});
+
+test("toDateTimeLocal returns an empty value for invalid API dates", () => {
+  assert.equal(toDateTimeLocal("not-a-date"), "");
 });
 
 test("validateMarketEventForm blocks obvious local failures", () => {
