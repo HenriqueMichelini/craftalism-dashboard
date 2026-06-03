@@ -19,6 +19,9 @@ This index summarizes execution order for Market Events dashboard implementation
 11. `CARD-011-add-market-event-reference-selectors.md`
 12. `CARD-012-preserve-local-time-in-market-event-edit-modal.md`
 13. `CARD-013-display-market-event-audit-reason.md`
+14. `CARD-014-confirm-market-event-template-update-contract.md`
+15. `CARD-015-add-market-event-template-update-client.md`
+16. `CARD-016-add-market-event-template-edit-modal.md`
 
 ## Dependency Summary
 
@@ -35,7 +38,10 @@ This index summarizes execution order for Market Events dashboard implementation
 - `CARD-011` depends on the template client and adds API-backed template and category selectors to the market event create modal.
 - `CARD-012` depends on the create/edit modal foundation and preserves browser-local `endsAt` hours when editing market events.
 - `CARD-013` depends on the create/edit modal foundation and exposes the API-returned audit reason for operator inspection without redefining lifecycle end reasons.
+- `CARD-014` depends on the template management view and is blocked until `craftalism-api` owns and documents a template update route.
+- `CARD-015` depends on the confirmed template update contract and adds the typed update client.
+- `CARD-016` depends on the update client and adds row-level template edit modal behavior.
 
 ## Parallelization
 
-`CARD-001`, `CARD-002`, `CARD-003`, `CARD-005`, `CARD-006`, `CARD-007`, `CARD-009`, `CARD-012`, and `CARD-013` are not parallel-safe with their listed dependencies. `CARD-004`, `CARD-008`, `CARD-010`, and `CARD-011` are implementation-parallel-safe only after their prerequisite cards are reverified because their source changes do not overlap.
+`CARD-001`, `CARD-002`, `CARD-003`, `CARD-005`, `CARD-006`, `CARD-007`, `CARD-009`, `CARD-012`, `CARD-013`, and `CARD-016` are not parallel-safe with their listed dependencies. `CARD-004`, `CARD-008`, `CARD-010`, `CARD-011`, `CARD-014`, and `CARD-015` are implementation-parallel-safe only after their prerequisite cards are reverified because their source changes do not overlap.
