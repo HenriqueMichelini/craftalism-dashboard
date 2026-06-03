@@ -19,7 +19,6 @@ export type MarketEventTemplateFormValues = {
   maxDurationSeconds: string;
   minEffectBasisPoints: string;
   maxEffectBasisPoints: string;
-  effectDirection: string;
   cooldownSeconds: string;
   playerFacingName: string;
   playerFacingDescription: string;
@@ -48,7 +47,6 @@ export const marketEventTemplateCreateDefaults: MarketEventTemplateFormValues = 
   maxDurationSeconds: "",
   minEffectBasisPoints: "",
   maxEffectBasisPoints: "",
-  effectDirection: "",
   cooldownSeconds: "",
   playerFacingName: "",
   playerFacingDescription: "",
@@ -70,42 +68,12 @@ export function toMarketEventTemplateFormValues(
     maxDurationSeconds: String(template.maxDurationSeconds),
     minEffectBasisPoints: String(template.minEffectBasisPoints),
     maxEffectBasisPoints: String(template.maxEffectBasisPoints),
-    effectDirection: template.effectDirection,
     cooldownSeconds: String(template.cooldownSeconds),
     playerFacingName: template.playerFacingName,
     playerFacingDescription: template.playerFacingDescription,
     broadScopeHint: template.broadScopeHint,
     eligibleTargetMetadata: template.eligibleTargetMetadata,
   };
-}
-
-export function deriveMarketEventTemplateEffectDirectionPreview(
-  values: Pick<
-    MarketEventTemplateFormValues,
-    "minEffectBasisPoints" | "maxEffectBasisPoints"
-  >,
-): string {
-  const rawMinEffectBasisPoints = String(values.minEffectBasisPoints).trim();
-  const rawMaxEffectBasisPoints = String(values.maxEffectBasisPoints).trim();
-  const minEffectBasisPoints = Number(rawMinEffectBasisPoints);
-  const maxEffectBasisPoints = Number(rawMaxEffectBasisPoints);
-
-  if (
-    !rawMinEffectBasisPoints ||
-    !rawMaxEffectBasisPoints ||
-    !Number.isFinite(minEffectBasisPoints) ||
-    !Number.isFinite(maxEffectBasisPoints)
-  ) {
-    return "Pending basis points";
-  }
-
-  if (minEffectBasisPoints > 10000) return "UP";
-  if (maxEffectBasisPoints < 10000) return "DOWN";
-  if (minEffectBasisPoints === 10000 && maxEffectBasisPoints === 10000) {
-    return "BLOCK";
-  }
-
-  return "API validation";
 }
 
 function requireText(

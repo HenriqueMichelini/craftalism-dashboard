@@ -86,7 +86,6 @@ test("MarketEventTemplateModalForm renders template fields and action errors", (
     "Maximum Duration Seconds",
     "Minimum Effect Basis Points",
     "Maximum Effect Basis Points",
-    "Effect Direction",
     "Cooldown Seconds",
     "Player-Facing Name",
     "Player-Facing Description",
@@ -96,10 +95,8 @@ test("MarketEventTemplateModalForm renders template fields and action errors", (
   assert.match(markup, /API rejected template\./);
   assert.match(markup, /Saving\.\.\./);
   assert.match(markup, /disabled=""/);
-  assert.match(markup, /Derived Effect Direction/);
-  assert.match(markup, /Pending basis points/);
-  assert.match(markup, /Returned direction is confirmed by the API after save\./);
-  assert.doesNotMatch(markup, /Select effect direction/);
+  assert.doesNotMatch(markup, /Effect Direction/);
+  assert.doesNotMatch(markup, /effectDirection/);
 });
 
 test("MarketEventTemplateModalForm distinguishes edit mode and pre-fills API row values", () => {
@@ -155,7 +152,6 @@ test("validateMarketEventTemplateForm emits the complete authored request", () =
     maxDurationSeconds: "900",
     minEffectBasisPoints: "10250",
     maxEffectBasisPoints: "10750",
-    effectDirection: "",
     cooldownSeconds: "1800",
     playerFacingName: " Wheat Pressure ",
     playerFacingDescription: " Elevated prices. ",

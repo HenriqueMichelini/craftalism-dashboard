@@ -11,7 +11,6 @@ import type {
   MarketEventTemplateUpdateRequest,
 } from "../../../../../types/models/marketEventTemplate.types.js";
 import {
-  deriveMarketEventTemplateEffectDirectionPreview,
   marketEventTemplateCreateDefaults,
   toMarketEventTemplateFormValues,
   validateMarketEventTemplateForm,
@@ -38,7 +37,6 @@ const areaClass =
 const labelClass = "flex flex-col gap-2 text-sm font-medium text-muted";
 const checkboxLabelClass = "flex items-center gap-2 text-sm font-medium text-muted";
 const errorClass = "text-sm text-red-400";
-const helperClass = "text-xs font-normal text-muted";
 const rarities: MarketEventRarity[] = ["MEDIUM", "RARE", "EXTRA_RARE"];
 const scopes: MarketEventScope[] = ["ITEM", "ITEM_SET", "CATEGORY", "MARKET_WIDE"];
 
@@ -155,18 +153,6 @@ export function MarketEventTemplateModalForm({
         <TextField name="maxDurationSeconds" label="Maximum Duration Seconds" type="number" values={values} errors={errors} onChange={updateValue} />
         <TextField name="minEffectBasisPoints" label="Minimum Effect Basis Points" type="number" values={values} errors={errors} onChange={updateValue} />
         <TextField name="maxEffectBasisPoints" label="Maximum Effect Basis Points" type="number" values={values} errors={errors} onChange={updateValue} />
-        <label className={labelClass}>
-          Derived Effect Direction
-          <input
-            className={fieldClass}
-            disabled
-            name="effectDirection"
-            type="text"
-            value={deriveMarketEventTemplateEffectDirectionPreview(values)}
-            readOnly
-          />
-          <span className={helperClass}>Returned direction is confirmed by the API after save.</span>
-        </label>
         <TextField name="cooldownSeconds" label="Cooldown Seconds" type="number" values={values} errors={errors} onChange={updateValue} />
         <TextField name="playerFacingName" label="Player-Facing Name" values={values} errors={errors} onChange={updateValue} />
         <label className={labelClass}>Player-Facing Description<textarea className={areaClass} name="playerFacingDescription" value={values.playerFacingDescription} onChange={(event) => updateValue("playerFacingDescription", event.target.value)} />{errors.playerFacingDescription ? <span className={errorClass}>{errors.playerFacingDescription}</span> : null}</label>
