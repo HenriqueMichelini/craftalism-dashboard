@@ -19,9 +19,8 @@ const createRequest: MarketEventTemplateCreateRequest = {
   blockingAllowed: false,
   minDurationSeconds: 300,
   maxDurationSeconds: 900,
-  minEffectBasisPoints: 250,
-  maxEffectBasisPoints: 750,
-  effectDirection: "UP",
+  minEffectBasisPoints: 10250,
+  maxEffectBasisPoints: 10750,
   cooldownSeconds: 1800,
   playerFacingName: "Wheat Pressure",
   playerFacingDescription: "Wheat prices are temporarily elevated.",
@@ -39,7 +38,6 @@ const updateRequest: MarketEventTemplateUpdateRequest = {
   maxDurationSeconds: 1200,
   minEffectBasisPoints: 10250,
   maxEffectBasisPoints: 10750,
-  effectDirection: "UP",
   cooldownSeconds: 2400,
   playerFacingName: "Wheat Pressure",
   playerFacingDescription: "Wheat prices are temporarily elevated.",
@@ -49,6 +47,7 @@ const updateRequest: MarketEventTemplateUpdateRequest = {
 
 const firstTemplate: MarketEventTemplate = {
   ...createRequest,
+  effectDirection: "UP",
   createdAt: "2026-05-31T12:00:00Z",
   updatedAt: "2026-05-31T12:00:00Z",
 };
@@ -57,6 +56,7 @@ const secondTemplate: MarketEventTemplate = {
   ...createRequest,
   templateId: "market-wide-surge",
   scope: "MARKET_WIDE",
+  effectDirection: "UP",
   eligibleTargetMetadata: "{}",
   createdAt: "2026-05-30T12:00:00Z",
   updatedAt: "2026-05-30T12:00:00Z",

@@ -24,8 +24,8 @@ const template: MarketEventTemplate = {
   blockingAllowed: false,
   minDurationSeconds: 300,
   maxDurationSeconds: 900,
-  minEffectBasisPoints: 250,
-  maxEffectBasisPoints: 750,
+  minEffectBasisPoints: 10250,
+  maxEffectBasisPoints: 10750,
   effectDirection: "UP",
   cooldownSeconds: 1800,
   playerFacingName: "Wheat Pressure",
@@ -59,12 +59,13 @@ test("MarketEventTemplateTable renders loading, empty, and scan-friendly row sta
   assert.match(rowMarkup, /Rare/);
   assert.match(rowMarkup, /Category/);
   assert.match(rowMarkup, /Yes \(4\)/);
-  assert.match(rowMarkup, /Up 250-750 bp/);
+  assert.match(rowMarkup, /Up 10250-10750 bp/);
   assert.match(rowMarkup, /Farming category/);
-  assert.match(rowMarkup, /Edit/);
+  assert.doesNotMatch(rowMarkup, /Actions/);
+  assert.doesNotMatch(rowMarkup, />Edit</);
 });
 
-test("MarketEventTemplateModalForm renders every authored field and action errors", () => {
+test("MarketEventTemplateModalForm renders template fields and action errors", () => {
   const markup = renderToStaticMarkup(
     <MarketEventTemplateModalForm
       actionError="API rejected template."
@@ -95,10 +96,10 @@ test("MarketEventTemplateModalForm renders every authored field and action error
   assert.match(markup, /API rejected template\./);
   assert.match(markup, /Saving\.\.\./);
   assert.match(markup, /disabled=""/);
-  assert.match(markup, /Select effect direction/);
-  assert.match(markup, /<option>UP<\/option>/);
-  assert.match(markup, /<option>DOWN<\/option>/);
-  assert.match(markup, /<option>BLOCK<\/option>/);
+  assert.match(markup, /Derived Effect Direction/);
+  assert.match(markup, /Pending basis points/);
+  assert.match(markup, /Returned direction is confirmed by the API after save\./);
+  assert.doesNotMatch(markup, /Select effect direction/);
 });
 
 test("MarketEventTemplateModalForm distinguishes edit mode and pre-fills API row values", () => {
@@ -135,7 +136,6 @@ test("validateMarketEventTemplateForm blocks obvious local failures", () => {
   if (result.valid) return;
 
   assert.equal(result.errors.templateId, "This field is required.");
-  assert.equal(result.errors.effectDirection, "This field is required.");
   assert.equal(result.errors.automaticWeight, "Must be 0 or greater.");
   assert.equal(result.errors.minDurationSeconds, "Must be greater than 0.");
   assert.equal(result.errors.minEffectBasisPoints, "Must be greater than 0.");
@@ -153,9 +153,9 @@ test("validateMarketEventTemplateForm emits the complete authored request", () =
     blockingAllowed: false,
     minDurationSeconds: "300",
     maxDurationSeconds: "900",
-    minEffectBasisPoints: "250",
-    maxEffectBasisPoints: "750",
-    effectDirection: " UP ",
+    minEffectBasisPoints: "10250",
+    maxEffectBasisPoints: "10750",
+    effectDirection: "",
     cooldownSeconds: "1800",
     playerFacingName: " Wheat Pressure ",
     playerFacingDescription: " Elevated prices. ",
@@ -175,9 +175,8 @@ test("validateMarketEventTemplateForm emits the complete authored request", () =
     blockingAllowed: false,
     minDurationSeconds: 300,
     maxDurationSeconds: 900,
-    minEffectBasisPoints: 250,
-    maxEffectBasisPoints: 750,
-    effectDirection: "UP",
+    minEffectBasisPoints: 10250,
+    maxEffectBasisPoints: 10750,
     cooldownSeconds: 1800,
     playerFacingName: "Wheat Pressure",
     playerFacingDescription: "Elevated prices.",
@@ -204,9 +203,8 @@ test("validateMarketEventTemplateForm emits immutable-templateId update requests
     blockingAllowed: false,
     minDurationSeconds: 300,
     maxDurationSeconds: 900,
-    minEffectBasisPoints: 250,
-    maxEffectBasisPoints: 750,
-    effectDirection: "UP",
+    minEffectBasisPoints: 10250,
+    maxEffectBasisPoints: 10750,
     cooldownSeconds: 1800,
     playerFacingName: "Wheat Pressure",
     playerFacingDescription: "Wheat prices are temporarily elevated.",

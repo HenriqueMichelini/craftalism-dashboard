@@ -117,7 +117,6 @@ type MarketEventTemplateCreateRequest = {
   maxDurationSeconds: number;
   minEffectBasisPoints: number;
   maxEffectBasisPoints: number;
-  effectDirection: string;
   cooldownSeconds: number;
   playerFacingName: string;
   playerFacingDescription: string;
@@ -137,18 +136,21 @@ type MarketEventTemplateUpdateRequest = Omit<
 
 For updates, `templateId` is path-bound and immutable. The update request body does not define template identity, and the API does not perform template rename or upsert behavior.
 
-`effectDirection` is an independently authored API-owned field and must remain in create and update requests. The API validates it against the authored effect basis-point range:
+`effectDirection` is not an authored field in create or update requests. The dashboard must omit it from request payloads. The API derives the persisted response value from the authored effect basis-point range:
 
-- `UP` templates require `minEffectBasisPoints` greater than `10000`.
-- `DOWN` templates require `maxEffectBasisPoints` less than `10000`.
-- `BLOCK` templates require neutral `10000` minimum and maximum effect basis points, `blockingAllowed`, item scope, manual scheduling, and rare or extra-rare rarity.
+- `minEffectBasisPoints` greater than `10000` derives `UP`.
+- `maxEffectBasisPoints` less than `10000` derives `DOWN`.
+- neutral `10000` minimum and maximum effect basis points derive `BLOCK`.
 
-The dashboard should keep the explicit `Effect Direction` selector and submit the selected API-confirmed value. It must not derive, remove, disable, or locally consistency-validate `effectDirection` from basis-point fields beyond obvious form completeness and numeric input checks.
+Mixed ranges that cross or include `10000` are rejected unless both bounds are exactly `10000`. Neutral `10000` ranges remain valid only for API-approved blocking templates.
+
+The dashboard may show a derived direction preview while editing, but API validation and the returned `effectDirection` remain authoritative. The dashboard must not locally redefine blocking eligibility or mixed-range validation beyond obvious form completeness and numeric input checks.
 
 Template list, create, and update responses use this API-owned row shape:
 
 ```ts
 type MarketEventTemplate = MarketEventTemplateCreateRequest & {
+  effectDirection: string;
   createdAt: string;
   updatedAt: string;
 };

@@ -11,6 +11,7 @@ import type {
   MarketEventTemplateUpdateRequest,
 } from "../../../../../types/models/marketEventTemplate.types.js";
 import {
+  deriveMarketEventTemplateEffectDirectionPreview,
   marketEventTemplateCreateDefaults,
   toMarketEventTemplateFormValues,
   validateMarketEventTemplateForm,
@@ -37,9 +38,9 @@ const areaClass =
 const labelClass = "flex flex-col gap-2 text-sm font-medium text-muted";
 const checkboxLabelClass = "flex items-center gap-2 text-sm font-medium text-muted";
 const errorClass = "text-sm text-red-400";
+const helperClass = "text-xs font-normal text-muted";
 const rarities: MarketEventRarity[] = ["MEDIUM", "RARE", "EXTRA_RARE"];
 const scopes: MarketEventScope[] = ["ITEM", "ITEM_SET", "CATEGORY", "MARKET_WIDE"];
-const effectDirections = ["UP", "DOWN", "BLOCK"];
 
 type TextFieldProps = {
   name: keyof MarketEventTemplateFormValues;
@@ -155,12 +156,16 @@ export function MarketEventTemplateModalForm({
         <TextField name="minEffectBasisPoints" label="Minimum Effect Basis Points" type="number" values={values} errors={errors} onChange={updateValue} />
         <TextField name="maxEffectBasisPoints" label="Maximum Effect Basis Points" type="number" values={values} errors={errors} onChange={updateValue} />
         <label className={labelClass}>
-          Effect Direction
-          <select className={fieldClass} name="effectDirection" value={values.effectDirection} onChange={(event) => updateValue("effectDirection", event.target.value)}>
-            <option value="">Select effect direction</option>
-            {effectDirections.map((effectDirection) => <option key={effectDirection}>{effectDirection}</option>)}
-          </select>
-          {errors.effectDirection ? <span className={errorClass}>{errors.effectDirection}</span> : null}
+          Derived Effect Direction
+          <input
+            className={fieldClass}
+            disabled
+            name="effectDirection"
+            type="text"
+            value={deriveMarketEventTemplateEffectDirectionPreview(values)}
+            readOnly
+          />
+          <span className={helperClass}>Returned direction is confirmed by the API after save.</span>
         </label>
         <TextField name="cooldownSeconds" label="Cooldown Seconds" type="number" values={values} errors={errors} onChange={updateValue} />
         <TextField name="playerFacingName" label="Player-Facing Name" values={values} errors={errors} onChange={updateValue} />

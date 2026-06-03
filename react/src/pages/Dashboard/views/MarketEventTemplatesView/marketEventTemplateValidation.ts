@@ -79,6 +79,35 @@ export function toMarketEventTemplateFormValues(
   };
 }
 
+export function deriveMarketEventTemplateEffectDirectionPreview(
+  values: Pick<
+    MarketEventTemplateFormValues,
+    "minEffectBasisPoints" | "maxEffectBasisPoints"
+  >,
+): string {
+  const rawMinEffectBasisPoints = String(values.minEffectBasisPoints).trim();
+  const rawMaxEffectBasisPoints = String(values.maxEffectBasisPoints).trim();
+  const minEffectBasisPoints = Number(rawMinEffectBasisPoints);
+  const maxEffectBasisPoints = Number(rawMaxEffectBasisPoints);
+
+  if (
+    !rawMinEffectBasisPoints ||
+    !rawMaxEffectBasisPoints ||
+    !Number.isFinite(minEffectBasisPoints) ||
+    !Number.isFinite(maxEffectBasisPoints)
+  ) {
+    return "Pending basis points";
+  }
+
+  if (minEffectBasisPoints > 10000) return "UP";
+  if (maxEffectBasisPoints < 10000) return "DOWN";
+  if (minEffectBasisPoints === 10000 && maxEffectBasisPoints === 10000) {
+    return "BLOCK";
+  }
+
+  return "API validation";
+}
+
 function requireText(
   values: MarketEventTemplateFormValues,
   key: keyof MarketEventTemplateFormValues,
@@ -121,7 +150,6 @@ export function validateMarketEventTemplateForm(
   const templateId = includeTemplateId
     ? requireText(values, "templateId", errors)
     : String(values.templateId).trim();
-  const effectDirection = requireText(values, "effectDirection", errors);
   const playerFacingName = requireText(values, "playerFacingName", errors);
   const playerFacingDescription = requireText(
     values,
@@ -167,7 +195,6 @@ export function validateMarketEventTemplateForm(
     maxDurationSeconds,
     minEffectBasisPoints,
     maxEffectBasisPoints,
-    effectDirection,
     cooldownSeconds,
     playerFacingName,
     playerFacingDescription,

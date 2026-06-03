@@ -14,7 +14,6 @@ export type MarketEventTemplateCreateRequest = {
   maxDurationSeconds: number;
   minEffectBasisPoints: number;
   maxEffectBasisPoints: number;
-  effectDirection: string;
   cooldownSeconds: number;
   playerFacingName: string;
   playerFacingDescription: string;
@@ -28,6 +27,7 @@ export type MarketEventTemplateUpdateRequest = Omit<
 >;
 
 export type MarketEventTemplate = MarketEventTemplateCreateRequest & {
+  effectDirection: string;
   createdAt: string;
   updatedAt: string;
 };
