@@ -11,6 +11,7 @@ import { toDateTimeLocal } from "../../src/pages/Dashboard/views/MarketEventsVie
 import { getMarketEventAuditReason } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventAudit.js";
 import { upsertMarketEventRow } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventRows.js";
 import {
+  applyTemplateScopeToMarketEventValues,
   marketEventCreateDefaults,
   validateMarketEventForm,
 } from "../../src/pages/Dashboard/views/MarketEventsView/marketEventValidation.js";
@@ -62,6 +63,28 @@ const templates: MarketEventTemplate[] = [
   },
 ];
 
+const scopedTemplates: MarketEventTemplate[] = [
+  templates[0],
+  {
+    ...templates[0],
+    templateId: "category-gem-surge",
+    scope: "CATEGORY",
+    playerFacingName: "Gem Surge",
+  },
+  {
+    ...templates[0],
+    templateId: "item-set-tools-sale",
+    scope: "ITEM_SET",
+    playerFacingName: "Tools Sale",
+  },
+  {
+    ...templates[0],
+    templateId: "market-wide-surge",
+    scope: "MARKET_WIDE",
+    playerFacingName: "Market Surge",
+  },
+];
+
 const categories: MarketCategory[] = [
   {
     categoryId: "gems",
@@ -98,12 +121,10 @@ test("MarketEventModalForm renders create and editable event fields", () => {
   assert.match(createMarkup, /Create Market Event/);
   assert.match(createMarkup, /Template ID/);
   assert.match(createMarkup, /Scope/);
-  assert.match(createMarkup, /Selected Category ID/);
-  assert.match(createMarkup, /Selected Item IDs/);
   assert.match(createMarkup, /Select template/);
   assert.match(createMarkup, /Diamond Block \(manual-diamond-block\)/);
-  assert.match(createMarkup, /No category/);
-  assert.match(createMarkup, /Gems/);
+  assert.doesNotMatch(createMarkup, /Selected Category ID/);
+  assert.doesNotMatch(createMarkup, /Selected Item IDs/);
   assert.match(createMarkup, /Effect Basis Points/);
   assert.match(createMarkup, /Duration Seconds/);
   assert.match(createMarkup, /Reason/);
@@ -176,7 +197,111 @@ test("MarketEventModalForm renders supersede warning and create fields", () => {
   assert.match(markup, /API-owned SUPERSEDED semantics/);
   assert.match(markup, /The API selects the active event/);
   assert.match(markup, /Template ID/);
+  assert.doesNotMatch(markup, /Selected Category ID/);
+  assert.doesNotMatch(markup, /Selected Item IDs/);
   assert.doesNotMatch(markup, /Cancel Market Event/);
+});
+
+test("template scope normalization keeps only category targets for category templates", () => {
+  const scopedValues = applyTemplateScopeToMarketEventValues(
+    {
+      ...marketEventCreateDefaults,
+      templateId: "category-gem-surge",
+      scope: "ITEM",
+      selectedCategoryId: " gems ",
+      selectedItemIds: "diamond",
+    },
+    scopedTemplates,
+  );
+  const result = validateMarketEventForm(scopedValues);
+
+  assert.equal(scopedValues.scope, "CATEGORY");
+  assert.equal(scopedValues.selectedItemIds, "");
+  assert.equal(result.valid, true);
+  if (!result.valid) return;
+
+  assert.equal(result.values.createRequest.scope, "CATEGORY");
+  assert.equal(result.values.createRequest.selectedCategoryId, "gems");
+  assert.equal(result.values.createRequest.selectedItemIds, undefined);
+});
+
+test("template scope normalization keeps only item targets for item and item-set templates", () => {
+  const itemValues = applyTemplateScopeToMarketEventValues(
+    {
+      ...marketEventCreateDefaults,
+      templateId: "manual-diamond-block",
+      scope: "CATEGORY",
+      selectedCategoryId: "gems",
+      selectedItemIds: " diamond ",
+    },
+    scopedTemplates,
+  );
+  const itemSetValues = applyTemplateScopeToMarketEventValues(
+    {
+      ...marketEventCreateDefaults,
+      templateId: "item-set-tools-sale",
+      scope: "CATEGORY",
+      selectedCategoryId: "gems",
+      selectedItemIds: " pickaxe,axe ",
+    },
+    scopedTemplates,
+  );
+
+  assert.equal(itemValues.scope, "ITEM");
+  assert.equal(itemValues.selectedCategoryId, "");
+  assert.equal(itemSetValues.scope, "ITEM_SET");
+  assert.equal(itemSetValues.selectedCategoryId, "");
+
+  const itemSetResult = validateMarketEventForm(itemSetValues);
+  assert.equal(itemSetResult.valid, true);
+  if (!itemSetResult.valid) return;
+
+  assert.equal(itemSetResult.values.createRequest.scope, "ITEM_SET");
+  assert.equal(itemSetResult.values.createRequest.selectedCategoryId, undefined);
+  assert.equal(itemSetResult.values.createRequest.selectedItemIds, "pickaxe,axe");
+});
+
+test("template scope normalization clears all targets for market-wide templates", () => {
+  const scopedValues = applyTemplateScopeToMarketEventValues(
+    {
+      ...marketEventCreateDefaults,
+      templateId: "market-wide-surge",
+      scope: "ITEM",
+      selectedCategoryId: "gems",
+      selectedItemIds: "diamond",
+    },
+    scopedTemplates,
+  );
+  const result = validateMarketEventForm(scopedValues);
+
+  assert.equal(scopedValues.scope, "MARKET_WIDE");
+  assert.equal(scopedValues.selectedCategoryId, "");
+  assert.equal(scopedValues.selectedItemIds, "");
+  assert.equal(result.valid, true);
+  if (!result.valid) return;
+
+  assert.equal(result.values.createRequest.scope, "MARKET_WIDE");
+  assert.equal(result.values.createRequest.selectedCategoryId, undefined);
+  assert.equal(result.values.createRequest.selectedItemIds, undefined);
+});
+
+test("no selected template does not fabricate scope or target values", () => {
+  const scopedValues = applyTemplateScopeToMarketEventValues(
+    {
+      ...marketEventCreateDefaults,
+      selectedCategoryId: "gems",
+      selectedItemIds: "diamond",
+    },
+    scopedTemplates,
+  );
+  const result = validateMarketEventForm(scopedValues);
+
+  assert.equal(scopedValues.scope, "");
+  assert.equal(scopedValues.selectedCategoryId, "gems");
+  assert.equal(scopedValues.selectedItemIds, "diamond");
+  assert.equal(result.valid, false);
+  assert.equal(result.valid ? undefined : result.errors.templateId, "This field is required.");
+  assert.equal(result.valid ? undefined : result.errors.scope, "Select a scope.");
 });
 
 test("MarketEventModalForm keeps action errors visible and disables duplicate saves", () => {

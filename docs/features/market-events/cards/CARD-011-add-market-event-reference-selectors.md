@@ -1,7 +1,7 @@
 ---
 id: CARD-011
 feature: market-events
-status: implemented
+status: reverified
 depends_on:
   - CARD-008
 parallel_safe: true
@@ -11,7 +11,7 @@ parallel_safe: true
 
 ## Status
 
-implemented
+reverified
 
 ## Objective
 
@@ -89,3 +89,5 @@ cd react && npm run build
 - Validation: `cd react && npm test --
   --test-name-pattern="MarketEvents|marketEvent"` and `cd react && npm run
   build` passed.
+- Reverification: `npm test -- --test-name-pattern="MarketEvents|marketEvent"`
+  and `npm run build` passed from `react/` in the current tree.

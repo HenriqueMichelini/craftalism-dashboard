@@ -22,6 +22,11 @@ export type MarketEventTemplateCreateRequest = {
   eligibleTargetMetadata: string;
 };
 
+export type MarketEventTemplateUpdateRequest = Omit<
+  MarketEventTemplateCreateRequest,
+  "templateId"
+>;
+
 export type MarketEventTemplate = MarketEventTemplateCreateRequest & {
   createdAt: string;
   updatedAt: string;

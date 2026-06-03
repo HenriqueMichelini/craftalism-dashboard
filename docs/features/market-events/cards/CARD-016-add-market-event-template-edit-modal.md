@@ -1,7 +1,7 @@
 ---
 id: CARD-016
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-015
 parallel_safe: false
@@ -11,7 +11,7 @@ parallel_safe: false
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -93,3 +93,14 @@ cd react && npm run build
 
 ## Completion Notes
 
+- Added row-level edit actions for market event templates and an edit modal
+  mode that pre-fills API-returned template values.
+- Preserved path-bound immutable `templateId` behavior by disabling template ID
+  editing and submitting update requests without `templateId` in the body.
+- Routed edit saves through `marketEventTemplatesApi.update(...)`, kept
+  duplicate-submit prevention and API error visibility, and replaced the
+  visible row only with the API-returned updated row.
+- Preserved create-mode defaults, create submission, and row insertion
+  behavior.
+- Validation: `npm test -- --test-name-pattern="MarketEventTemplates|marketEventTemplate"`
+  and `npm run build` passed from `react/`.

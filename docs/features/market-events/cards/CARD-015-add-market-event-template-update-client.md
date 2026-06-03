@@ -1,7 +1,7 @@
 ---
 id: CARD-015
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-014
 parallel_safe: true
@@ -11,7 +11,7 @@ parallel_safe: true
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -77,3 +77,12 @@ cd react && npm run build
 
 ## Completion Notes
 
+- Added `MarketEventTemplateUpdateRequest` as the authored template fields
+  except immutable `templateId`.
+- Added `marketEventTemplatesApi.update(templateId, request)` using `PUT
+  /api/dashboard/market/event-templates/{templateId}` with URL-encoded
+  path-bound identity and the confirmed serialized request body.
+- Preserved existing list/create behavior and kept unsupported delete behavior
+  absent.
+- Validation: `npm test -- --test-name-pattern="marketEventTemplatesApi|MARKET_EVENT_TEMPLATES_ENDPOINT"`
+  and `npm run build` passed from `react/`.

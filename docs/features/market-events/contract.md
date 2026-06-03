@@ -99,8 +99,9 @@ The dashboard consumes these API-owned template administration routes:
 |---|---|---|
 | `GET` | `/api/dashboard/market/event-templates` | List persisted market event templates for dashboard admin inspection. |
 | `POST` | `/api/dashboard/market/event-templates` | Create an authored market event template and return the API-created template row. |
+| `PUT` | `/api/dashboard/market/event-templates/{templateId}` | Update an existing authored market event template and return the API-updated template row. |
 
-Both routes require the API-owned `SCOPE_market:admin` authority. Browser code must not hold dashboard BFF credentials or acquire admin tokens locally.
+All template administration routes require the API-owned `SCOPE_market:admin` authority. Browser code must not hold dashboard BFF credentials or acquire admin tokens locally.
 
 The dashboard consumes this API-owned create request shape:
 
@@ -125,7 +126,26 @@ type MarketEventTemplateCreateRequest = {
 };
 ```
 
-Template list and create responses use this API-owned row shape:
+The dashboard consumes this API-owned update request shape:
+
+```ts
+type MarketEventTemplateUpdateRequest = Omit<
+  MarketEventTemplateCreateRequest,
+  "templateId"
+>;
+```
+
+For updates, `templateId` is path-bound and immutable. The update request body does not define template identity, and the API does not perform template rename or upsert behavior.
+
+`effectDirection` is an independently authored API-owned field and must remain in create and update requests. The API validates it against the authored effect basis-point range:
+
+- `UP` templates require `minEffectBasisPoints` greater than `10000`.
+- `DOWN` templates require `maxEffectBasisPoints` less than `10000`.
+- `BLOCK` templates require neutral `10000` minimum and maximum effect basis points, `blockingAllowed`, item scope, manual scheduling, and rare or extra-rare rarity.
+
+The dashboard should keep the explicit `Effect Direction` selector and submit the selected API-confirmed value. It must not derive, remove, disable, or locally consistency-validate `effectDirection` from basis-point fields beyond obvious form completeness and numeric input checks.
+
+Template list, create, and update responses use this API-owned row shape:
 
 ```ts
 type MarketEventTemplate = MarketEventTemplateCreateRequest & {
@@ -134,7 +154,7 @@ type MarketEventTemplate = MarketEventTemplateCreateRequest & {
 };
 ```
 
-Dashboard code may visualize templates and submit authored create requests. It must not implement template validation, persistence, scheduler behavior, pricing behavior, or lifecycle semantics locally. Update and delete operations are out of scope because no confirmed API routes exist for them.
+Dashboard code may visualize templates and submit authored create and update requests. It must not implement template validation, persistence, scheduler behavior, pricing behavior, or lifecycle semantics locally. Delete operations remain out of scope because no confirmed API route exists for them.
 
 ## Market Event Row
 
@@ -188,7 +208,7 @@ The dashboard uses camelCase model fields locally and treats `id` as a string fo
 - Do not expose admin metadata through public `/api/market/**` routes.
 - Do not calculate mutation results or lifecycle transitions locally; use API responses and refreshes.
 - Do not introduce a hard-delete event control or `DELETE` route.
-- Do not introduce market event template update or delete controls or routes.
+- Do not introduce market event template delete controls or routes.
 - Do not introduce dashboard authentication, token acquisition, browser persistence, API-backed filters, sorting, pagination, or detail pages unless separately scoped.
 
 ## Assumptions And Open Questions
@@ -202,7 +222,7 @@ The dashboard uses camelCase model fields locally and treats `id` as a string fo
 - Backend event implementation or contract changes
 - Backend scheduler, pricing, drift, blocking, quote, or lifecycle semantics
 - Backend market event template validation, persistence, scheduler, pricing, or lifecycle semantics
-- Market event template update or deletion
+- Market event template deletion
 - Public active-event snapshot display
 - Public event history
 - API-backed filtering, sorting, or pagination

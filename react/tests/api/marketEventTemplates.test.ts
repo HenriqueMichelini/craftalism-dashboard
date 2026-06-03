@@ -7,6 +7,7 @@ import {
 import type {
   MarketEventTemplate,
   MarketEventTemplateCreateRequest,
+  MarketEventTemplateUpdateRequest,
 } from "../../src/types/models/marketEventTemplate.types.js";
 
 const createRequest: MarketEventTemplateCreateRequest = {
@@ -20,8 +21,26 @@ const createRequest: MarketEventTemplateCreateRequest = {
   maxDurationSeconds: 900,
   minEffectBasisPoints: 250,
   maxEffectBasisPoints: 750,
-  effectDirection: "INCREASE",
+  effectDirection: "UP",
   cooldownSeconds: 1800,
+  playerFacingName: "Wheat Pressure",
+  playerFacingDescription: "Wheat prices are temporarily elevated.",
+  broadScopeHint: "Farming category",
+  eligibleTargetMetadata: '{"categoryIds":["farming"]}',
+};
+
+const updateRequest: MarketEventTemplateUpdateRequest = {
+  rarity: "RARE",
+  scope: "CATEGORY",
+  automaticWeight: 6,
+  automaticEnabled: true,
+  blockingAllowed: false,
+  minDurationSeconds: 600,
+  maxDurationSeconds: 1200,
+  minEffectBasisPoints: 10250,
+  maxEffectBasisPoints: 10750,
+  effectDirection: "UP",
+  cooldownSeconds: 2400,
   playerFacingName: "Wheat Pressure",
   playerFacingDescription: "Wheat prices are temporarily elevated.",
   broadScopeHint: "Farming category",
@@ -101,7 +120,50 @@ test("marketEventTemplatesApi preserves list order and posts authored templates"
   ]);
 });
 
-test("marketEventTemplatesApi does not expose speculative mutation methods", () => {
-  assert.equal("update" in marketEventTemplatesApi, false);
+test("marketEventTemplatesApi updates authored templates through the confirmed route", async () => {
+  const originalFetch = globalThis.fetch;
+  const requests: Array<{ url: string; init?: RequestInit }> = [];
+  const updatedTemplate: MarketEventTemplate = {
+    ...firstTemplate,
+    ...updateRequest,
+    updatedAt: "2026-06-01T12:00:00Z",
+  };
+
+  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    requests.push({ url: String(input), init });
+
+    return Promise.resolve(
+      new Response(JSON.stringify(updatedTemplate), {
+        headers: { "content-type": "application/json" },
+        status: 200,
+      }),
+    );
+  }) as typeof fetch;
+
+  try {
+    assert.deepEqual(
+      await marketEventTemplatesApi.update(
+        "rare wheat/pressure",
+        updateRequest,
+      ),
+      updatedTemplate,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  assert.deepEqual(requests, [
+    {
+      url: "/api/dashboard/market/event-templates/rare%20wheat%2Fpressure",
+      init: {
+        method: "PUT",
+        body: JSON.stringify(updateRequest),
+        headers: { "Content-Type": "application/json" },
+      },
+    },
+  ]);
+});
+
+test("marketEventTemplatesApi does not expose speculative delete behavior", () => {
   assert.equal("delete" in marketEventTemplatesApi, false);
 });

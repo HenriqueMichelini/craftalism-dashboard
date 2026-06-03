@@ -8,6 +8,7 @@ import type {
 import type { MarketCategory } from "../../../../../types/models/marketCategory.types.js";
 import type { MarketEventTemplate } from "../../../../../types/models/marketEventTemplate.types.js";
 import {
+  applyTemplateScopeToMarketEventValues,
   marketEventCreateDefaults,
   validateMarketEventForm,
   type MarketEventFormValues,
@@ -37,12 +38,7 @@ const checkboxLabelClass =
   "flex items-center gap-2 text-sm font-medium text-muted";
 const errorClass = "text-sm text-red-400";
 
-const scopes: MarketEventScope[] = [
-  "ITEM",
-  "ITEM_SET",
-  "CATEGORY",
-  "MARKET_WIDE",
-];
+const scopes: MarketEventScope[] = ["ITEM", "ITEM_SET", "CATEGORY", "MARKET_WIDE"];
 
 function toFormValues(event?: MarketEvent): MarketEventFormValues {
   if (!event) {
@@ -116,10 +112,27 @@ export function MarketEventModalForm({
     setValues((current) => ({ ...current, [key]: value }));
   };
 
+  const updateTemplateId = (templateId: string) => {
+    setValues((current) =>
+      applyTemplateScopeToMarketEventValues(
+        {
+          ...current,
+          templateId,
+          scope: "",
+        },
+        templates,
+      ),
+    );
+  };
+
   const handleSubmit = (submitEvent: FormEvent<HTMLFormElement>) => {
     submitEvent.preventDefault();
 
-    const result = validateMarketEventForm(values);
+    const result = validateMarketEventForm(
+      mode === "edit"
+        ? values
+        : applyTemplateScopeToMarketEventValues(values, templates),
+    );
 
     if (!result.valid) {
       setErrors(result.errors);
@@ -129,6 +142,11 @@ export function MarketEventModalForm({
     setErrors({});
     onSave(result.values);
   };
+
+  const selectedTemplate = templates.find(
+    (template) => template.templateId === values.templateId,
+  );
+  const selectedScope = mode === "edit" ? values.scope : selectedTemplate?.scope ?? "";
 
   return (
     <ModalShell
@@ -191,9 +209,7 @@ export function MarketEventModalForm({
                 className={fieldClass}
                 name="templateId"
                 value={values.templateId}
-                onChange={(templateEvent) =>
-                  updateValue("templateId", templateEvent.target.value)
-                }
+                onChange={(templateEvent) => updateTemplateId(templateEvent.target.value)}
               >
                 <option value="">Select template</option>
                 {templates.map((template) => (
@@ -210,11 +226,9 @@ export function MarketEventModalForm({
               Scope
               <select
                 className={fieldClass}
+                disabled
                 name="scope"
-                value={values.scope}
-                onChange={(scopeEvent) =>
-                  updateValue("scope", scopeEvent.target.value)
-                }
+                value={selectedScope}
               >
                 <option value="">Select scope</option>
                 {scopes.map((scope) => (
@@ -227,31 +241,35 @@ export function MarketEventModalForm({
                 <span className={errorClass}>{errors.scope}</span>
               ) : null}
             </label>
-            <label className={labelClass}>
-              Selected Category ID
-              <select
-                className={fieldClass}
-                name="selectedCategoryId"
-                value={values.selectedCategoryId}
-                onChange={(categoryEvent) =>
-                  updateValue("selectedCategoryId", categoryEvent.target.value)
-                }
-              >
-                <option value="">No category</option>
-                {categories.map((category) => (
-                  <option key={category.categoryId} value={category.categoryId}>
-                    {category.displayName}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <TextField
-              name="selectedItemIds"
-              label="Selected Item IDs"
-              values={values}
-              errors={errors}
-              onChange={updateValue}
-            />
+            {selectedScope === "CATEGORY" ? (
+              <label className={labelClass}>
+                Selected Category ID
+                <select
+                  className={fieldClass}
+                  name="selectedCategoryId"
+                  value={values.selectedCategoryId}
+                  onChange={(categoryEvent) =>
+                    updateValue("selectedCategoryId", categoryEvent.target.value)
+                  }
+                >
+                  <option value="">No category</option>
+                  {categories.map((category) => (
+                    <option key={category.categoryId} value={category.categoryId}>
+                      {category.displayName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
+            {selectedScope === "ITEM" || selectedScope === "ITEM_SET" ? (
+              <TextField
+                name="selectedItemIds"
+                label="Selected Item IDs"
+                values={values}
+                errors={errors}
+                onChange={updateValue}
+              />
+            ) : null}
           </>
         ) : null}
         <TextField

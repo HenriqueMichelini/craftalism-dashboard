@@ -3,7 +3,7 @@ import type { MarketEventTemplate } from "../../../../types/models/marketEventTe
 type SubmitMarketEventTemplateSaveOptions = {
   isSubmitting: () => boolean;
   save: () => Promise<MarketEventTemplate>;
-  insertRow: (template: MarketEventTemplate) => void;
+  applyRow: (template: MarketEventTemplate) => void;
   closeModal: () => void;
   setSubmitting: (submitting: boolean) => void;
   setError: (message: string | null) => void;
@@ -12,7 +12,7 @@ type SubmitMarketEventTemplateSaveOptions = {
 export async function submitMarketEventTemplateSave({
   isSubmitting,
   save,
-  insertRow,
+  applyRow,
   closeModal,
   setSubmitting,
   setError,
@@ -25,7 +25,7 @@ export async function submitMarketEventTemplateSave({
   try {
     const savedTemplate = await save();
 
-    insertRow(savedTemplate);
+    applyRow(savedTemplate);
     closeModal();
   } catch (error) {
     setError(

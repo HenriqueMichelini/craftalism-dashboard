@@ -4,9 +4,13 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { MarketEventTemplateModalForm } from "../../src/pages/Dashboard/views/MarketEventTemplatesView/components/MarketEventTemplateModalForm.js";
 import { MarketEventTemplateTable } from "../../src/pages/Dashboard/views/MarketEventTemplatesView/components/MarketEventTemplateTable.js";
 import { submitMarketEventTemplateSave } from "../../src/pages/Dashboard/views/MarketEventTemplatesView/marketEventTemplateActions.js";
-import { prependMarketEventTemplateRow } from "../../src/pages/Dashboard/views/MarketEventTemplatesView/marketEventTemplateRows.js";
+import {
+  prependMarketEventTemplateRow,
+  replaceMarketEventTemplateRow,
+} from "../../src/pages/Dashboard/views/MarketEventTemplatesView/marketEventTemplateRows.js";
 import {
   marketEventTemplateCreateDefaults,
+  toMarketEventTemplateFormValues,
   validateMarketEventTemplateForm,
 } from "../../src/pages/Dashboard/views/MarketEventTemplatesView/marketEventTemplateValidation.js";
 import type { MarketEventTemplate } from "../../src/types/models/marketEventTemplate.types.js";
@@ -40,7 +44,13 @@ test("MarketEventTemplateTable renders loading, empty, and scan-friendly row sta
     <MarketEventTemplateTable data={[]} loading={false} error={null} onRetry={() => {}} />,
   );
   const rowMarkup = renderToStaticMarkup(
-    <MarketEventTemplateTable data={[template]} loading={false} error={null} onRetry={() => {}} />,
+    <MarketEventTemplateTable
+      data={[template]}
+      loading={false}
+      error={null}
+      onRetry={() => {}}
+      onEdit={() => {}}
+    />,
   );
 
   assert.match(loadingMarkup, /Loading data\.\.\./);
@@ -51,6 +61,7 @@ test("MarketEventTemplateTable renders loading, empty, and scan-friendly row sta
   assert.match(rowMarkup, /Yes \(4\)/);
   assert.match(rowMarkup, /Up 250-750 bp/);
   assert.match(rowMarkup, /Farming category/);
+  assert.match(rowMarkup, /Edit/);
 });
 
 test("MarketEventTemplateModalForm renders every authored field and action errors", () => {
@@ -88,6 +99,24 @@ test("MarketEventTemplateModalForm renders every authored field and action error
   assert.match(markup, /<option>UP<\/option>/);
   assert.match(markup, /<option>DOWN<\/option>/);
   assert.match(markup, /<option>BLOCK<\/option>/);
+});
+
+test("MarketEventTemplateModalForm distinguishes edit mode and pre-fills API row values", () => {
+  const markup = renderToStaticMarkup(
+    <MarketEventTemplateModalForm
+      initialTemplate={template}
+      mode="edit"
+      onCancel={() => {}}
+      onSave={() => {}}
+    />,
+  );
+
+  assert.match(markup, /Edit Market Event Template/);
+  assert.match(markup, /Save Changes/);
+  assert.match(markup, /value="rare-wheat-pressure"/);
+  assert.match(markup, /disabled=""/);
+  assert.match(markup, /Wheat prices are temporarily elevated\./);
+  assert.match(markup, /\{&quot;categoryIds&quot;:\[&quot;farming&quot;\]\}/);
 });
 
 test("validateMarketEventTemplateForm blocks obvious local failures", () => {
@@ -157,6 +186,35 @@ test("validateMarketEventTemplateForm emits the complete authored request", () =
   });
 });
 
+test("validateMarketEventTemplateForm emits immutable-templateId update requests", () => {
+  const result = validateMarketEventTemplateForm(
+    toMarketEventTemplateFormValues(template),
+    { includeTemplateId: false },
+  );
+
+  assert.equal(result.valid, true);
+  if (!result.valid) return;
+
+  assert.equal("templateId" in result.request, false);
+  assert.deepEqual(result.request, {
+    rarity: "RARE",
+    scope: "CATEGORY",
+    automaticWeight: 4,
+    automaticEnabled: true,
+    blockingAllowed: false,
+    minDurationSeconds: 300,
+    maxDurationSeconds: 900,
+    minEffectBasisPoints: 250,
+    maxEffectBasisPoints: 750,
+    effectDirection: "UP",
+    cooldownSeconds: 1800,
+    playerFacingName: "Wheat Pressure",
+    playerFacingDescription: "Wheat prices are temporarily elevated.",
+    broadScopeHint: "Farming category",
+    eligibleTargetMetadata: '{"categoryIds":["farming"]}',
+  });
+});
+
 test("template save inserts the API row only after success and prevents duplicates", async () => {
   const inserted: MarketEventTemplate[] = [];
   let saved = 0;
@@ -167,7 +225,7 @@ test("template save inserts the API row only after success and prevents duplicat
       saved += 1;
       return template;
     },
-    insertRow: (row) => inserted.push(row),
+    applyRow: (row) => inserted.push(row),
     closeModal: () => {},
     setSubmitting: () => {},
     setError: () => {},
@@ -177,7 +235,7 @@ test("template save inserts the API row only after success and prevents duplicat
   await submitMarketEventTemplateSave({
     isSubmitting: () => false,
     save: async () => template,
-    insertRow: (row) => inserted.push(row),
+    applyRow: (row) => inserted.push(row),
     closeModal: () => {},
     setSubmitting: () => {},
     setError: () => {},
@@ -185,6 +243,36 @@ test("template save inserts the API row only after success and prevents duplicat
 
   assert.deepEqual(inserted, [template]);
   assert.deepEqual(prependMarketEventTemplateRow([], template), [template]);
+});
+
+test("template edit replaces only the API-returned row", async () => {
+  const updatedTemplate: MarketEventTemplate = {
+    ...template,
+    playerFacingName: "Updated Wheat Pressure",
+    updatedAt: "2026-06-01T12:00:00Z",
+  };
+  let rows = [
+    template,
+    {
+      ...template,
+      templateId: "market-wide-surge",
+      playerFacingName: "Market Surge",
+    },
+  ];
+
+  await submitMarketEventTemplateSave({
+    isSubmitting: () => false,
+    save: async () => updatedTemplate,
+    applyRow: (row) => {
+      rows = replaceMarketEventTemplateRow(rows, row);
+    },
+    closeModal: () => {},
+    setSubmitting: () => {},
+    setError: () => {},
+  });
+
+  assert.equal(rows[0]?.playerFacingName, "Updated Wheat Pressure");
+  assert.equal(rows[1]?.playerFacingName, "Market Surge");
 });
 
 test("template save displays API errors without inserting or closing", async () => {
@@ -195,7 +283,7 @@ test("template save displays API errors without inserting or closing", async () 
     save: async () => {
       throw new Error("API rejected template.");
     },
-    insertRow: () => {
+    applyRow: () => {
       throw new Error("Row should not be inserted.");
     },
     closeModal: () => {

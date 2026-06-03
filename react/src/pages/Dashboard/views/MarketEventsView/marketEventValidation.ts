@@ -3,6 +3,7 @@ import type {
   MarketEventScope,
   MarketEventUpdateRequest,
 } from "../../../../types/models/marketEvent.types.js";
+import type { MarketEventTemplate } from "../../../../types/models/marketEventTemplate.types.js";
 
 export type MarketEventFormValues = {
   templateId: string;
@@ -39,6 +40,38 @@ export const marketEventCreateDefaults: MarketEventFormValues = {
   endsAt: "",
   reason: "",
 };
+
+export function applyTemplateScopeToMarketEventValues(
+  values: MarketEventFormValues,
+  templates: MarketEventTemplate[],
+): MarketEventFormValues {
+  const selectedTemplate = templates.find(
+    (template) => template.templateId === values.templateId,
+  );
+
+  if (!selectedTemplate) {
+    return values;
+  }
+
+  const scopedValues = {
+    ...values,
+    scope: selectedTemplate.scope,
+  };
+
+  switch (selectedTemplate.scope) {
+    case "CATEGORY":
+      return { ...scopedValues, selectedItemIds: "" };
+    case "ITEM":
+    case "ITEM_SET":
+      return { ...scopedValues, selectedCategoryId: "" };
+    case "MARKET_WIDE":
+      return {
+        ...scopedValues,
+        selectedCategoryId: "",
+        selectedItemIds: "",
+      };
+  }
+}
 
 function parseOptionalInteger(
   rawValue: string,

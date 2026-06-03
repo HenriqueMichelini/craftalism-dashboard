@@ -1,7 +1,7 @@
 ---
 id: CARD-017
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-011
 parallel_safe: false
@@ -11,7 +11,7 @@ parallel_safe: false
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -87,4 +87,15 @@ cd react && npm test
 
 ## Completion Notes
 
-Leave empty until implemented.
+- Derived create and supersede modal scope from the selected template row and
+  locked normal modal interaction to that template scope.
+- Rendered only the relevant target control for the selected template scope:
+  category selector for `CATEGORY`, item IDs for `ITEM`/`ITEM_SET`, and no
+  target controls for `MARKET_WIDE` or no selected template.
+- Normalized submitted create/supersede values so hidden target fields are not
+  sent for the selected template scope, while preserving the existing API
+  request shape and API-authoritative validation.
+- Preserved edit-mode behavior; template and target fields remain hidden there.
+- Validation: `npm test --
+  --test-name-pattern="MarketEventModalForm|validateMarketEventForm|MarketEvents"`
+  and `npm run build` passed from `react/`.

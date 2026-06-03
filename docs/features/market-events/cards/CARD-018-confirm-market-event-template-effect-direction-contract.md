@@ -1,7 +1,7 @@
 ---
 id: CARD-018
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-007
 parallel_safe: true
@@ -11,7 +11,7 @@ parallel_safe: true
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -80,4 +80,15 @@ grep -nE "effectDirection|Effect Direction|minEffectBasisPoints|maxEffectBasisPo
 
 ## Completion Notes
 
-Leave empty until implemented.
+- Confirmed from `MarketEventTemplateService` that `effectDirection` remains an
+  independently authored API-owned field in template create and update
+  requests.
+- Recorded the API-owned basis-point relationship: `UP` requires values above
+  `10000`, `DOWN` requires values below `10000`, and `BLOCK` requires neutral
+  `10000` basis points plus the API-owned blocking/manual/item/rarity
+  invariants.
+- Recorded the dashboard UI implication: keep the explicit `Effect Direction`
+  selector and submit the selected API-confirmed value without deriving,
+  disabling, or locally consistency-validating it from basis-point fields.
+- No follow-up dashboard implementation card is needed because the current
+  selector behavior remains the confirmed UI.

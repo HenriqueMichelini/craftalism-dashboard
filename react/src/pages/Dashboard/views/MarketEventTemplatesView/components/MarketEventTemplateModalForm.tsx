@@ -5,18 +5,29 @@ import type {
   MarketEventRarity,
   MarketEventScope,
 } from "../../../../../types/models/marketEvent.types.js";
-import type { MarketEventTemplateCreateRequest } from "../../../../../types/models/marketEventTemplate.types.js";
+import type {
+  MarketEventTemplate,
+  MarketEventTemplateCreateRequest,
+  MarketEventTemplateUpdateRequest,
+} from "../../../../../types/models/marketEventTemplate.types.js";
 import {
   marketEventTemplateCreateDefaults,
+  toMarketEventTemplateFormValues,
   validateMarketEventTemplateForm,
   type MarketEventTemplateFormValues,
 } from "../marketEventTemplateValidation.js";
 
+type MarketEventTemplateModalMode = "create" | "edit";
+
 type MarketEventTemplateModalFormProps = {
   actionError?: string | null;
+  initialTemplate?: MarketEventTemplate | null;
+  mode?: MarketEventTemplateModalMode;
   submitting?: boolean;
   onCancel: () => void;
-  onSave: (request: MarketEventTemplateCreateRequest) => void;
+  onSave: (
+    request: MarketEventTemplateCreateRequest | MarketEventTemplateUpdateRequest,
+  ) => void;
 };
 
 const fieldClass =
@@ -34,17 +45,27 @@ type TextFieldProps = {
   name: keyof MarketEventTemplateFormValues;
   label: string;
   type?: "text" | "number";
+  disabled?: boolean;
   values: MarketEventTemplateFormValues;
   errors: Partial<Record<keyof MarketEventTemplateFormValues, string>>;
   onChange: (key: keyof MarketEventTemplateFormValues, value: string) => void;
 };
 
-function TextField({ name, label, type = "text", values, errors, onChange }: TextFieldProps) {
+function TextField({
+  name,
+  label,
+  type = "text",
+  disabled = false,
+  values,
+  errors,
+  onChange,
+}: TextFieldProps) {
   return (
     <label className={labelClass}>
       {label}
       <input
         className={fieldClass}
+        disabled={disabled}
         name={name}
         type={type}
         value={String(values[name])}
@@ -57,11 +78,18 @@ function TextField({ name, label, type = "text", values, errors, onChange }: Tex
 
 export function MarketEventTemplateModalForm({
   actionError = null,
+  initialTemplate = null,
+  mode = "create",
   submitting = false,
   onCancel,
   onSave,
 }: MarketEventTemplateModalFormProps) {
-  const [values, setValues] = useState(marketEventTemplateCreateDefaults);
+  const isEditMode = mode === "edit";
+  const [values, setValues] = useState(() =>
+    initialTemplate
+      ? toMarketEventTemplateFormValues(initialTemplate)
+      : marketEventTemplateCreateDefaults,
+  );
   const [errors, setErrors] = useState<
     Partial<Record<keyof MarketEventTemplateFormValues, string>>
   >({});
@@ -72,7 +100,9 @@ export function MarketEventTemplateModalForm({
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const result = validateMarketEventTemplateForm(values);
+    const result = validateMarketEventTemplateForm(values, {
+      includeTemplateId: !isEditMode,
+    });
 
     if (!result.valid) {
       setErrors(result.errors);
@@ -85,7 +115,7 @@ export function MarketEventTemplateModalForm({
 
   return (
     <ModalShell
-      title="Create Market Event Template"
+      title={isEditMode ? "Edit Market Event Template" : "Create Market Event Template"}
       onClose={onCancel}
       footer={
         <>
@@ -93,14 +123,14 @@ export function MarketEventTemplateModalForm({
             Cancel
           </button>
           <button className="rounded-md bg-primary-400 px-4 py-2 text-sm font-medium text-default hover:bg-primary-300" disabled={submitting} form="market-event-template-modal-form" type="submit">
-            {submitting ? "Saving..." : "Save"}
+            {submitting ? "Saving..." : isEditMode ? "Save Changes" : "Save"}
           </button>
         </>
       }
     >
       <form className="max-h-[70vh] space-y-4 overflow-y-auto pr-1" id="market-event-template-modal-form" onSubmit={handleSubmit}>
         {actionError ? <p className={errorClass}>{actionError}</p> : null}
-        <TextField name="templateId" label="Template ID" values={values} errors={errors} onChange={updateValue} />
+        <TextField name="templateId" label="Template ID" disabled={isEditMode} values={values} errors={errors} onChange={updateValue} />
         <label className={labelClass}>
           Rarity
           <select className={fieldClass} name="rarity" value={values.rarity} onChange={(event) => updateValue("rarity", event.target.value)}>

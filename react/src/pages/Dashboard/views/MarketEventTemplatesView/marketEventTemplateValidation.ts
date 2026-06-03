@@ -1,5 +1,7 @@
 import type {
+  MarketEventTemplate,
   MarketEventTemplateCreateRequest,
+  MarketEventTemplateUpdateRequest,
 } from "../../../../types/models/marketEventTemplate.types.js";
 import type {
   MarketEventRarity,
@@ -26,7 +28,10 @@ export type MarketEventTemplateFormValues = {
 };
 
 export type MarketEventTemplateValidationResult =
-  | { valid: true; request: MarketEventTemplateCreateRequest }
+  | {
+      valid: true;
+      request: MarketEventTemplateCreateRequest | MarketEventTemplateUpdateRequest;
+    }
   | {
       valid: false;
       errors: Partial<Record<keyof MarketEventTemplateFormValues, string>>;
@@ -50,6 +55,29 @@ export const marketEventTemplateCreateDefaults: MarketEventTemplateFormValues = 
   broadScopeHint: "",
   eligibleTargetMetadata: "",
 };
+
+export function toMarketEventTemplateFormValues(
+  template: MarketEventTemplate,
+): MarketEventTemplateFormValues {
+  return {
+    templateId: template.templateId,
+    rarity: template.rarity,
+    scope: template.scope,
+    automaticWeight: String(template.automaticWeight),
+    automaticEnabled: template.automaticEnabled,
+    blockingAllowed: template.blockingAllowed,
+    minDurationSeconds: String(template.minDurationSeconds),
+    maxDurationSeconds: String(template.maxDurationSeconds),
+    minEffectBasisPoints: String(template.minEffectBasisPoints),
+    maxEffectBasisPoints: String(template.maxEffectBasisPoints),
+    effectDirection: template.effectDirection,
+    cooldownSeconds: String(template.cooldownSeconds),
+    playerFacingName: template.playerFacingName,
+    playerFacingDescription: template.playerFacingDescription,
+    broadScopeHint: template.broadScopeHint,
+    eligibleTargetMetadata: template.eligibleTargetMetadata,
+  };
+}
 
 function requireText(
   values: MarketEventTemplateFormValues,
@@ -86,9 +114,13 @@ function parseInteger(
 
 export function validateMarketEventTemplateForm(
   values: MarketEventTemplateFormValues,
+  options: { includeTemplateId?: boolean } = {},
 ): MarketEventTemplateValidationResult {
   const errors: Partial<Record<keyof MarketEventTemplateFormValues, string>> = {};
-  const templateId = requireText(values, "templateId", errors);
+  const includeTemplateId = options.includeTemplateId ?? true;
+  const templateId = includeTemplateId
+    ? requireText(values, "templateId", errors)
+    : String(values.templateId).trim();
   const effectDirection = requireText(values, "effectDirection", errors);
   const playerFacingName = requireText(values, "playerFacingName", errors);
   const playerFacingDescription = requireText(
@@ -125,25 +157,28 @@ export function validateMarketEventTemplateForm(
     return { valid: false, errors };
   }
 
+  const authoredFields: MarketEventTemplateUpdateRequest = {
+    rarity: values.rarity,
+    scope: values.scope,
+    automaticWeight,
+    automaticEnabled: values.automaticEnabled,
+    blockingAllowed: values.blockingAllowed,
+    minDurationSeconds,
+    maxDurationSeconds,
+    minEffectBasisPoints,
+    maxEffectBasisPoints,
+    effectDirection,
+    cooldownSeconds,
+    playerFacingName,
+    playerFacingDescription,
+    broadScopeHint,
+    eligibleTargetMetadata,
+  };
+
   return {
     valid: true,
-    request: {
-      templateId,
-      rarity: values.rarity,
-      scope: values.scope,
-      automaticWeight,
-      automaticEnabled: values.automaticEnabled,
-      blockingAllowed: values.blockingAllowed,
-      minDurationSeconds,
-      maxDurationSeconds,
-      minEffectBasisPoints,
-      maxEffectBasisPoints,
-      effectDirection,
-      cooldownSeconds,
-      playerFacingName,
-      playerFacingDescription,
-      broadScopeHint,
-      eligibleTargetMetadata,
-    },
+    request: includeTemplateId
+      ? { templateId, ...authoredFields }
+      : authoredFields,
   };
 }

@@ -9,6 +9,8 @@ type DynamicTableProps<T> = {
   config: TableConfig<T>;
   onRetry?: () => void;
   onRowClick?: (row: T) => void;
+  renderRowActions?: (row: T) => ReactNode;
+  actionsLabel?: string;
   emptyMessage?: string;
   caption?: string;
   className?: string;
@@ -21,6 +23,8 @@ export function DynamicTable<T extends Record<string, unknown>>({
   config,
   onRetry,
   onRowClick,
+  renderRowActions,
+  actionsLabel = "Actions",
   emptyMessage = "No data available.",
   caption,
   className = "",
@@ -92,6 +96,14 @@ export function DynamicTable<T extends Record<string, unknown>>({
                 {column.label}
               </th>
             ))}
+            {renderRowActions ? (
+              <th
+                scope="col"
+                className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted"
+              >
+                {actionsLabel}
+              </th>
+            ) : null}
           </tr>
         </thead>
         <tbody className="divide-y divide-primary-400 bg-primary-500">
@@ -113,6 +125,9 @@ export function DynamicTable<T extends Record<string, unknown>>({
                   {getCellValue(row, column)}
                 </td>
               ))}
+              {renderRowActions ? (
+                <td className="px-4 py-3">{renderRowActions(row)}</td>
+              ) : null}
             </tr>
           ))}
         </tbody>

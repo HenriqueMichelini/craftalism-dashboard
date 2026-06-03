@@ -1,7 +1,7 @@
 ---
 id: CARD-014
 feature: market-events
-status: blocked
+status: reverified
 depends_on:
   - CARD-009
 parallel_safe: true
@@ -11,7 +11,7 @@ parallel_safe: true
 
 ## Status
 
-blocked
+reverified
 
 ## Objective
 
@@ -21,7 +21,7 @@ Record the confirmed API-owned dashboard contract for updating market event temp
 
 Operators can list and create market event templates, but there is currently no confirmed update route for editing an existing template. Targeted API evidence shows `DashboardMarketEventTemplateController` exposes only `GET /api/dashboard/market/event-templates` and `POST /api/dashboard/market/event-templates`, and the current dashboard contract explicitly keeps template update controls out of scope.
 
-This card is blocked until `craftalism-api` owns and documents an update route, request shape, response shape, authorization boundary, and validation semantics.
+`craftalism-api` now owns and documents an update route, request shape, response shape, authorization boundary, and validation semantics.
 
 ## Required Reading
 
@@ -30,7 +30,8 @@ This card is blocked until `craftalism-api` owns and documents an update route, 
 - `../../../../../craftalism-api/java/src/main/java/io/github/HenriqueMichelini/craftalism/api/controller/DashboardMarketEventTemplateController.java`
 - `../../../../../craftalism-api/java/src/main/java/io/github/HenriqueMichelini/craftalism/api/market/application/admin/MarketEventTemplateService.java`
 
-Add the relevant upstream API implementation card once it exists.
+- `../../../../../craftalism-api/docs/features/market-events/cards/CARD-029-add-dashboard-market-event-template-update-api.md`
+- `../../../../../craftalism-api/docs/features/market-events/cards/CARD-030-document-dashboard-market-event-template-update-contract.md`
 
 ## Expected Behavior
 
@@ -81,3 +82,15 @@ grep -nE "event-templates|MarketEventTemplate|update|PATCH|PUT|delete" docs/feat
 
 ## Completion Notes
 
+- Confirmed the API-owned `PUT
+  /api/dashboard/market/event-templates/{templateId}` route and documented it
+  in the dashboard market-events contract.
+- Recorded the consumed update request shape as the authored template fields
+  except `templateId`, with `templateId` path-bound and immutable.
+- Recorded that list, create, and update responses use the API-owned template
+  row shape, that all template admin routes require `SCOPE_market:admin`, and
+  that delete behavior remains out of scope.
+- Preserved the dashboard boundary: dashboard code may submit authored create
+  and update requests but must not implement API-owned template validation,
+  persistence, scheduler behavior, pricing behavior, or lifecycle semantics
+  locally.
