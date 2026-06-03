@@ -91,7 +91,9 @@ test("marketEventTemplatesApi preserves list order and posts authored templates"
 
   try {
     assert.deepEqual(
-      (await marketEventTemplatesApi.getAll()).map(({ templateId }) => templateId),
+      (await marketEventTemplatesApi.getAll()).map(
+        ({ templateId }) => templateId,
+      ),
       ["rare-wheat-pressure", "market-wide-surge"],
     );
     assert.deepEqual(
@@ -162,6 +164,33 @@ test("marketEventTemplatesApi updates authored templates through the confirmed r
   ]);
 });
 
-test("marketEventTemplatesApi does not expose speculative delete behavior", () => {
-  assert.equal("delete" in marketEventTemplatesApi, false);
+test("marketEventTemplatesApi deletes authored templates through the confirmed route", async () => {
+  const originalFetch = globalThis.fetch;
+  const requests: Array<{ url: string; init?: RequestInit }> = [];
+
+  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    requests.push({ url: String(input), init });
+
+    return Promise.resolve(
+      new Response(null, {
+        status: 204,
+      }),
+    );
+  }) as typeof fetch;
+
+  try {
+    await marketEventTemplatesApi.delete("rare wheat/pressure");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  assert.deepEqual(requests, [
+    {
+      url: "/api/dashboard/market/event-templates/rare%20wheat%2Fpressure",
+      init: {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      },
+    },
+  ]);
 });
