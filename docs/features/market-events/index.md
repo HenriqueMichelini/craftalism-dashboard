@@ -22,6 +22,7 @@ This index summarizes execution order for Market Events dashboard implementation
 14. `CARD-014-confirm-market-event-template-update-contract.md`
 15. `CARD-015-add-market-event-template-update-client.md`
 16. `CARD-016-add-market-event-template-edit-modal.md`
+17. `CARD-017-derive-market-event-target-controls-from-template-scope.md`
 
 ## Dependency Summary
 
@@ -41,7 +42,8 @@ This index summarizes execution order for Market Events dashboard implementation
 - `CARD-014` depends on the template management view and is blocked until `craftalism-api` owns and documents a template update route.
 - `CARD-015` depends on the confirmed template update contract and adds the typed update client.
 - `CARD-016` depends on the update client and adds row-level template edit modal behavior.
+- `CARD-017` depends on the reference selector modal work and derives create/supersede target controls from the selected template scope without changing API request shapes.
 
 ## Parallelization
 
-`CARD-001`, `CARD-002`, `CARD-003`, `CARD-005`, `CARD-006`, `CARD-007`, `CARD-009`, `CARD-012`, `CARD-013`, and `CARD-016` are not parallel-safe with their listed dependencies. `CARD-004`, `CARD-008`, `CARD-010`, `CARD-011`, `CARD-014`, and `CARD-015` are implementation-parallel-safe only after their prerequisite cards are reverified because their source changes do not overlap.
+`CARD-001`, `CARD-002`, `CARD-003`, `CARD-005`, `CARD-006`, `CARD-007`, `CARD-009`, `CARD-012`, `CARD-013`, `CARD-016`, and `CARD-017` are not parallel-safe with their listed dependencies. `CARD-004`, `CARD-008`, `CARD-010`, `CARD-011`, `CARD-014`, and `CARD-015` are implementation-parallel-safe only after their prerequisite cards are reverified because their source changes do not overlap.
