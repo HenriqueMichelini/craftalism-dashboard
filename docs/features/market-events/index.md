@@ -24,6 +24,10 @@ This index summarizes execution order for Market Events dashboard implementation
 16. `CARD-016-add-market-event-template-edit-modal.md`
 17. `CARD-017-derive-market-event-target-controls-from-template-scope.md`
 18. `CARD-018-confirm-market-event-template-effect-direction-contract.md`
+19. `CARD-019-confirm-market-event-rarity-removal-contract.md`
+20. `CARD-020-remove-rarity-from-dashboard-market-event-models.md`
+21. `CARD-021-remove-rarity-from-market-event-template-ux.md`
+22. `CARD-022-remove-rarity-from-market-event-instance-ux.md`
 
 ## Dependency Summary
 
@@ -45,7 +49,11 @@ This index summarizes execution order for Market Events dashboard implementation
 - `CARD-016` depends on the update client and adds row-level template edit modal behavior.
 - `CARD-017` depends on the reference selector modal work and derives create/supersede target controls from the selected template scope without changing API request shapes.
 - `CARD-018` depends on the confirmed template admin contract and records whether template effect direction is independently authored or derived from effect basis-point ranges before any modal UX change.
+- `CARD-019` depends on the effect-direction contract and records the API-owned full rarity removal from template and event request/response/domain semantics before dashboard implementation begins.
+- `CARD-020` depends on the confirmed rarity-free contract and removes rarity from dashboard model types and API-level fixtures.
+- `CARD-021` depends on rarity-free dashboard models and removes rarity from the market event template management modal, validation, table, and focused tests.
+- `CARD-022` depends on rarity-free dashboard models and removes remaining market event instance view and fixture expectations for rarity.
 
 ## Parallelization
 
-`CARD-001`, `CARD-002`, `CARD-003`, `CARD-005`, `CARD-006`, `CARD-007`, `CARD-009`, `CARD-012`, `CARD-013`, `CARD-016`, and `CARD-017` are not parallel-safe with their listed dependencies. `CARD-004`, `CARD-008`, `CARD-010`, `CARD-011`, `CARD-014`, `CARD-015`, and `CARD-018` are implementation-parallel-safe only after their prerequisite cards are reverified because their source changes do not overlap.
+`CARD-001`, `CARD-002`, `CARD-003`, `CARD-005`, `CARD-006`, `CARD-007`, `CARD-009`, `CARD-012`, `CARD-013`, `CARD-016`, `CARD-017`, and `CARD-021` are not parallel-safe with their listed dependencies. `CARD-004`, `CARD-008`, `CARD-010`, `CARD-011`, `CARD-014`, `CARD-015`, `CARD-018`, `CARD-019`, `CARD-020`, and `CARD-022` are implementation-parallel-safe only after their prerequisite cards are reverified because their source changes do not overlap.
