@@ -24,4 +24,11 @@ export const marketEventTemplatesApi = {
         body: JSON.stringify(request),
       },
     ),
+  delete: (templateId: string) =>
+    apiClient<void>(
+      `${MARKET_EVENT_TEMPLATES_ENDPOINT}/${encodeURIComponent(templateId)}`,
+      {
+        method: "DELETE",
+      },
+    ),
 };

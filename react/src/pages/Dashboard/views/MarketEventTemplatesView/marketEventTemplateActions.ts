@@ -37,3 +37,43 @@ export async function submitMarketEventTemplateSave({
     setSubmitting(false);
   }
 }
+
+type SubmitMarketEventTemplateDeleteOptions = {
+  isSubmitting: () => boolean;
+  template: MarketEventTemplate;
+  remove: () => Promise<void>;
+  removeRow: (template: MarketEventTemplate) => void;
+  closeModal: () => void;
+  setSubmitting: (submitting: boolean) => void;
+  setError: (message: string | null) => void;
+};
+
+export async function submitMarketEventTemplateDelete({
+  isSubmitting,
+  template,
+  remove,
+  removeRow,
+  closeModal,
+  setSubmitting,
+  setError,
+}: SubmitMarketEventTemplateDeleteOptions) {
+  if (isSubmitting()) return;
+
+  setSubmitting(true);
+  setError(null);
+
+  try {
+    await remove();
+
+    removeRow(template);
+    closeModal();
+  } catch (error) {
+    setError(
+      error instanceof Error
+        ? error.message
+        : "Failed to delete market event template.",
+    );
+  } finally {
+    setSubmitting(false);
+  }
+}

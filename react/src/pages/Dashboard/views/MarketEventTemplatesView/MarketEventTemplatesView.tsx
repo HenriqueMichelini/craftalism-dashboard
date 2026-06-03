@@ -7,7 +7,10 @@ import type {
   MarketEventTemplateCreateRequest,
   MarketEventTemplateUpdateRequest,
 } from "../../../../types/models/marketEventTemplate.types.js";
-import { submitMarketEventTemplateSave } from "./marketEventTemplateActions.js";
+import {
+  submitMarketEventTemplateDelete,
+  submitMarketEventTemplateSave,
+} from "./marketEventTemplateActions.js";
 import {
   prependMarketEventTemplateRow,
   replaceMarketEventTemplateRow,
@@ -16,7 +19,9 @@ import { MarketEventTemplateModalForm } from "./components/MarketEventTemplateMo
 import { MarketEventTemplateTable } from "./components/MarketEventTemplateTable.js";
 
 export function MarketEventTemplatesView() {
-  const { data, loading, error, refetch, setData } = useTableData(marketEventTemplatesApi.getAll);
+  const { data, loading, error, refetch, setData } = useTableData(
+    marketEventTemplatesApi.getAll,
+  );
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTemplate, setEditingTemplate] =
     useState<MarketEventTemplate | null>(null);
@@ -28,23 +33,29 @@ export function MarketEventTemplatesView() {
     submittingRef.current = value;
     setSubmittingState(value);
   };
+
   const closeModal = () => {
     setMutationError(null);
     setEditingTemplate(null);
     setModalOpen(false);
   };
+
   const openCreateModal = () => {
     setMutationError(null);
     setEditingTemplate(null);
     setModalOpen(true);
   };
+
   const openEditModal = (template: MarketEventTemplate) => {
     setMutationError(null);
     setEditingTemplate(template);
     setModalOpen(true);
   };
+
   const handleSave = async (
-    request: MarketEventTemplateCreateRequest | MarketEventTemplateUpdateRequest,
+    request:
+      | MarketEventTemplateCreateRequest
+      | MarketEventTemplateUpdateRequest,
   ) => {
     const templateBeingEdited = editingTemplate;
 
@@ -60,10 +71,25 @@ export function MarketEventTemplatesView() {
               request as MarketEventTemplateCreateRequest,
             ),
       applyRow: (template) =>
-        setData((rows) =>
+        setData((rows: MarketEventTemplate[]) =>
           templateBeingEdited
             ? replaceMarketEventTemplateRow(rows, template)
             : prependMarketEventTemplateRow(rows, template),
+        ),
+      closeModal,
+      setSubmitting,
+      setError: setMutationError,
+    });
+  };
+
+  const handleDelete = async (template: MarketEventTemplate) => {
+    await submitMarketEventTemplateDelete({
+      isSubmitting: () => submittingRef.current,
+      template,
+      remove: () => marketEventTemplatesApi.delete(template.templateId),
+      removeRow: (deletedTemplate) =>
+        setData((rows: MarketEventTemplate[]) =>
+          rows.filter((row) => row.templateId !== deletedTemplate.templateId),
         ),
       closeModal,
       setSubmitting,
@@ -76,9 +102,25 @@ export function MarketEventTemplatesView() {
       <PageHeader
         title="Market Event Templates"
         description="Inspect and author API-owned market event templates."
-        action={<button className="rounded-md bg-primary-400 px-4 py-2 text-sm font-medium text-default hover:bg-primary-300" type="button" onClick={openCreateModal}>Add Market Event Template</button>}
+        action={
+          <button
+            className="rounded-md bg-primary-400 px-4 py-2 text-sm font-medium text-default hover:bg-primary-300"
+            type="button"
+            onClick={openCreateModal}
+          >
+            Add Market Event Template
+          </button>
+        }
       />
-      <MarketEventTemplateTable data={data} loading={loading} error={error} onRetry={refetch} onEdit={openEditModal} />
+
+      <MarketEventTemplateTable
+        data={data}
+        loading={loading}
+        error={error}
+        onRetry={refetch}
+        onEdit={openEditModal}
+      />
+
       {modalOpen ? (
         <MarketEventTemplateModalForm
           actionError={mutationError}
@@ -86,6 +128,7 @@ export function MarketEventTemplatesView() {
           mode={editingTemplate ? "edit" : "create"}
           submitting={submitting}
           onCancel={closeModal}
+          onDelete={handleDelete}
           onSave={handleSave}
         />
       ) : null}
