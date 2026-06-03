@@ -1,7 +1,7 @@
 ---
 id: CARD-020
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-019
 parallel_safe: true
@@ -11,7 +11,7 @@ parallel_safe: true
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -80,3 +80,10 @@ cd react && npm test
 
 ## Completion Notes
 
+- Removed `MarketEventRarity` and the `rarity` field from dashboard market
+  event and market event template model types.
+- Updated market event API tests to consume rarity-free event row fixtures while
+  preserving route usage, id normalization, mutation routes, request bodies, and
+  backend result order assertions.
+- Updated market event template API tests to use rarity-free create/update
+  requests and template response fixtures.

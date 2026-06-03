@@ -1,7 +1,7 @@
 ---
 id: CARD-021
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-020
 parallel_safe: false
@@ -11,7 +11,7 @@ parallel_safe: false
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -84,3 +84,9 @@ cd react && npm test
 
 ## Completion Notes
 
+- Removed the `Rarity` select, rarity form state, rarity validation, and rarity
+  request construction from the market event template modal flow.
+- Removed the template table `Rarity` column.
+- Updated focused template modal/table tests to use rarity-free fixtures and
+  request expectations while preserving existing text, JSON, automatic weight,
+  and positive numeric validation coverage.

@@ -3,14 +3,10 @@ import type {
   MarketEventTemplateCreateRequest,
   MarketEventTemplateUpdateRequest,
 } from "../../../../types/models/marketEventTemplate.types.js";
-import type {
-  MarketEventRarity,
-  MarketEventScope,
-} from "../../../../types/models/marketEvent.types.js";
+import type { MarketEventScope } from "../../../../types/models/marketEvent.types.js";
 
 export type MarketEventTemplateFormValues = {
   templateId: string;
-  rarity: MarketEventRarity | "";
   scope: MarketEventScope | "";
   automaticWeight: string;
   automaticEnabled: boolean;
@@ -38,7 +34,6 @@ export type MarketEventTemplateValidationResult =
 
 export const marketEventTemplateCreateDefaults: MarketEventTemplateFormValues = {
   templateId: "",
-  rarity: "",
   scope: "",
   automaticWeight: "0",
   automaticEnabled: false,
@@ -59,7 +54,6 @@ export function toMarketEventTemplateFormValues(
 ): MarketEventTemplateFormValues {
   return {
     templateId: template.templateId,
-    rarity: template.rarity,
     scope: template.scope,
     automaticWeight: String(template.automaticWeight),
     automaticEnabled: template.automaticEnabled,
@@ -131,7 +125,6 @@ export function validateMarketEventTemplateForm(
     errors,
   );
 
-  if (!values.rarity) errors.rarity = "Select a rarity.";
   if (!values.scope) errors.scope = "Select a scope.";
 
   const automaticWeight = parseInteger(values, "automaticWeight", 0, errors);
@@ -149,12 +142,11 @@ export function validateMarketEventTemplateForm(
     }
   }
 
-  if (Object.keys(errors).length > 0 || !values.rarity || !values.scope) {
+  if (Object.keys(errors).length > 0 || !values.scope) {
     return { valid: false, errors };
   }
 
   const authoredFields: MarketEventTemplateUpdateRequest = {
-    rarity: values.rarity,
     scope: values.scope,
     automaticWeight,
     automaticEnabled: values.automaticEnabled,

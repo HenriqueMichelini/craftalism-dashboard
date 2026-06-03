@@ -108,7 +108,6 @@ The dashboard consumes this API-owned create request shape:
 ```ts
 type MarketEventTemplateCreateRequest = {
   templateId: string;
-  rarity: "MEDIUM" | "RARE" | "EXTRA_RARE";
   scope: "ITEM" | "ITEM_SET" | "CATEGORY" | "MARKET_WIDE";
   automaticWeight: number;
   automaticEnabled: boolean;
@@ -156,6 +155,8 @@ type MarketEventTemplate = MarketEventTemplateCreateRequest & {
 };
 ```
 
+Template scheduling probability and eligibility are represented by explicit API-owned fields and rules, including `automaticEnabled`, `automaticWeight`, `blockingAllowed`, duration ranges, effect ranges, cooldowns, scopes, and eligible-target metadata. The API contract no longer exposes a rarity bucket for templates or event instances. Dashboard code must not derive, fabricate, or preserve display-only rarity from automatic weight, cooldown, scope, effect range, blocking rules, or any other field.
+
 Dashboard code may visualize templates and submit authored create and update requests. It must not implement template validation, persistence, scheduler behavior, pricing behavior, or lifecycle semantics locally. Delete operations remain out of scope because no confirmed API route exists for them.
 
 ## Market Event Row
@@ -167,7 +168,6 @@ type MarketEvent = {
   id: string;
   templateId: string;
   source: "SCHEDULER" | "ADMIN" | "SYSTEM";
-  rarity: "MEDIUM" | "RARE" | "EXTRA_RARE";
   scope: "ITEM" | "ITEM_SET" | "CATEGORY" | "MARKET_WIDE";
   selectedCategoryId: string | null;
   selectedItemIds: string | null;
@@ -193,7 +193,7 @@ The dashboard uses camelCase model fields locally and treats `id` as a string fo
 - The table preserves backend result order.
 - The table displays scan-friendly columns in this order: `Id`, `Template`, `Status`, `Scope`, `Targets`, `Effect`, `Blocking`, `Source`, `Started`, `Ends`, `End Reason`, and `Actor`.
 - `Id`, `templateId`, target IDs, and actor values use the same compact monospaced table style as existing dashboard resource identifiers.
-- `status`, `scope`, `source`, `rarity`, and `endReason` are displayed as readable labels without changing their backend meaning.
+- `status`, `scope`, `source`, and `endReason` are displayed as readable labels without changing their backend meaning.
 - `effectBasisPoints` is displayed as an admin-visible basis-point value or derived percent label without recalculating event pricing.
 - `startedAt` and `endsAt` use the dashboard date formatter.
 - Missing optional values display as empty or a neutral placeholder, not fabricated values.

@@ -1,11 +1,7 @@
-import type {
-  MarketEventRarity,
-  MarketEventScope,
-} from "./marketEvent.types.js";
+import type { MarketEventScope } from "./marketEvent.types.js";
 
 export type MarketEventTemplateCreateRequest = {
   templateId: string;
-  rarity: MarketEventRarity;
   scope: MarketEventScope;
   automaticWeight: number;
   automaticEnabled: boolean;

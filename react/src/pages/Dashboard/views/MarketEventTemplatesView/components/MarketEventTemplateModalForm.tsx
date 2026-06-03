@@ -1,10 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { ModalShell } from "../../../../../components/ui/ModalShell.js";
-import type {
-  MarketEventRarity,
-  MarketEventScope,
-} from "../../../../../types/models/marketEvent.types.js";
+import type { MarketEventScope } from "../../../../../types/models/marketEvent.types.js";
 import type {
   MarketEventTemplate,
   MarketEventTemplateCreateRequest,
@@ -37,7 +34,6 @@ const areaClass =
 const labelClass = "flex flex-col gap-2 text-sm font-medium text-muted";
 const checkboxLabelClass = "flex items-center gap-2 text-sm font-medium text-muted";
 const errorClass = "text-sm text-red-400";
-const rarities: MarketEventRarity[] = ["MEDIUM", "RARE", "EXTRA_RARE"];
 const scopes: MarketEventScope[] = ["ITEM", "ITEM_SET", "CATEGORY", "MARKET_WIDE"];
 
 type TextFieldProps = {
@@ -130,14 +126,6 @@ export function MarketEventTemplateModalForm({
       <form className="max-h-[70vh] space-y-4 overflow-y-auto pr-1" id="market-event-template-modal-form" onSubmit={handleSubmit}>
         {actionError ? <p className={errorClass}>{actionError}</p> : null}
         <TextField name="templateId" label="Template ID" disabled={isEditMode} values={values} errors={errors} onChange={updateValue} />
-        <label className={labelClass}>
-          Rarity
-          <select className={fieldClass} name="rarity" value={values.rarity} onChange={(event) => updateValue("rarity", event.target.value)}>
-            <option value="">Select rarity</option>
-            {rarities.map((rarity) => <option key={rarity}>{rarity}</option>)}
-          </select>
-          {errors.rarity ? <span className={errorClass}>{errors.rarity}</span> : null}
-        </label>
         <label className={labelClass}>
           Scope
           <select className={fieldClass} name="scope" value={values.scope} onChange={(event) => updateValue("scope", event.target.value)}>

@@ -23,7 +23,6 @@ const event: MarketEvent = {
   id: "42",
   templateId: "manual-diamond-block",
   source: "ADMIN",
-  rarity: "EXTRA_RARE",
   scope: "ITEM",
   selectedCategoryId: null,
   selectedItemIds: "diamond",
@@ -43,7 +42,6 @@ const event: MarketEvent = {
 const templates: MarketEventTemplate[] = [
   {
     templateId: "manual-diamond-block",
-    rarity: "EXTRA_RARE",
     scope: "ITEM",
     automaticWeight: 0,
     automaticEnabled: false,

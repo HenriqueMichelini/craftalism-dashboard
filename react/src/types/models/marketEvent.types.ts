@@ -1,7 +1,5 @@
 export type MarketEventSource = "SCHEDULER" | "ADMIN" | "SYSTEM";
 
-export type MarketEventRarity = "MEDIUM" | "RARE" | "EXTRA_RARE";
-
 export type MarketEventScope =
   | "ITEM"
   | "ITEM_SET"
@@ -21,7 +19,6 @@ export type MarketEvent = {
   id: string;
   templateId: string;
   source: MarketEventSource;
-  rarity: MarketEventRarity;
   scope: MarketEventScope;
   selectedCategoryId: string | null;
   selectedItemIds: string | null;

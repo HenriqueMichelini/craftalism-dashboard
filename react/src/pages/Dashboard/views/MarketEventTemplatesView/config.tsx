@@ -37,7 +37,6 @@ export const marketEventTemplatesTableConfig: TableConfig<MarketEventTemplate> =
   rowKey: "templateId",
   columns: [
     { key: "templateId", label: "Template ID", className: monoCellClassName },
-    { key: "rarity", label: "Rarity", render: (value) => toReadableLabel(String(value)) },
     { key: "scope", label: "Scope", render: (value) => toReadableLabel(String(value)) },
     { key: "automaticEnabled", label: "Automatic", render: renderAutomatic },
     { key: "blockingAllowed", label: "Blocking Allowed", render: (value) => value ? "Yes" : "No" },

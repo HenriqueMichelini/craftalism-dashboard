@@ -12,7 +12,6 @@ import type {
 
 const createRequest: MarketEventTemplateCreateRequest = {
   templateId: "rare-wheat-pressure",
-  rarity: "RARE",
   scope: "CATEGORY",
   automaticWeight: 4,
   automaticEnabled: true,
@@ -29,7 +28,6 @@ const createRequest: MarketEventTemplateCreateRequest = {
 };
 
 const updateRequest: MarketEventTemplateUpdateRequest = {
-  rarity: "RARE",
   scope: "CATEGORY",
   automaticWeight: 6,
   automaticEnabled: true,

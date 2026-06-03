@@ -17,7 +17,6 @@ import type { MarketEventTemplate } from "../../src/types/models/marketEventTemp
 
 const template: MarketEventTemplate = {
   templateId: "rare-wheat-pressure",
-  rarity: "RARE",
   scope: "CATEGORY",
   automaticWeight: 4,
   automaticEnabled: true,
@@ -56,7 +55,6 @@ test("MarketEventTemplateTable renders loading, empty, and scan-friendly row sta
   assert.match(loadingMarkup, /Loading data\.\.\./);
   assert.match(emptyMarkup, /No market event templates found\./);
   assert.match(rowMarkup, /rare-wheat-pressure/);
-  assert.match(rowMarkup, /Rare/);
   assert.match(rowMarkup, /Category/);
   assert.match(rowMarkup, /Yes \(4\)/);
   assert.match(rowMarkup, /Up 10250-10750 bp/);
@@ -77,7 +75,6 @@ test("MarketEventTemplateModalForm renders template fields and action errors", (
 
   [
     "Template ID",
-    "Rarity",
     "Scope",
     "Automatic Weight",
     "Automatic Enabled",
@@ -143,7 +140,6 @@ test("validateMarketEventTemplateForm blocks obvious local failures", () => {
 test("validateMarketEventTemplateForm emits the complete authored request", () => {
   const result = validateMarketEventTemplateForm({
     templateId: " rare-wheat-pressure ",
-    rarity: "RARE",
     scope: "CATEGORY",
     automaticWeight: "4",
     automaticEnabled: true,
@@ -164,7 +160,6 @@ test("validateMarketEventTemplateForm emits the complete authored request", () =
 
   assert.deepEqual(result.request, {
     templateId: "rare-wheat-pressure",
-    rarity: "RARE",
     scope: "CATEGORY",
     automaticWeight: 4,
     automaticEnabled: true,
@@ -192,7 +187,6 @@ test("validateMarketEventTemplateForm emits immutable-templateId update requests
 
   assert.equal("templateId" in result.request, false);
   assert.deepEqual(result.request, {
-    rarity: "RARE",
     scope: "CATEGORY",
     automaticWeight: 4,
     automaticEnabled: true,

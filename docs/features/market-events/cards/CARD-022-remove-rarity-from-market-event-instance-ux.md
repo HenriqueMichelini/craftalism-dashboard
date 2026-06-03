@@ -1,7 +1,7 @@
 ---
 id: CARD-022
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-020
 parallel_safe: true
@@ -11,7 +11,7 @@ parallel_safe: true
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -79,3 +79,7 @@ cd react && npm test
 
 ## Completion Notes
 
+- Removed rarity fields from market event instance and selected-template page
+  fixtures.
+- Confirmed the market event instance config and modal do not render rarity or
+  derive it from selected templates.

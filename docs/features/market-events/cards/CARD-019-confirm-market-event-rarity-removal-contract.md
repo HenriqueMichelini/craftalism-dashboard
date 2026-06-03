@@ -1,7 +1,7 @@
 ---
 id: CARD-019
 feature: market-events
-status: planned
+status: reverified
 depends_on:
   - CARD-018
 parallel_safe: true
@@ -11,7 +11,7 @@ parallel_safe: true
 
 ## Status
 
-planned
+reverified
 
 ## Objective
 
@@ -85,3 +85,17 @@ grep -nE "rarity|MarketEventRarity|automaticWeight|MarketEventTemplate|MarketEve
 
 ## Completion Notes
 
+- Confirmed from `MarketEventTemplateCreateRequestDTO`,
+  `MarketEventTemplateUpdateRequestDTO`, `MarketEventTemplateResponseDTO`, and
+  `MarketEventAdminResponseDTO` that API request and response DTOs no longer
+  expose `rarity`.
+- Confirmed from `MarketEventTemplate` and `MarketEventInstance` that the API
+  domain/persistence models no longer contain a rarity field.
+- Confirmed from `MarketEventSelectionPolicy` and
+  `MarketEventTemplateService` that automatic selection and template validation
+  use explicit fields such as `automaticEnabled`, `automaticWeight`,
+  `blockingAllowed`, cooldowns, scopes, and effect ranges rather than rarity.
+- Updated the market-events dashboard contract to remove rarity from consumed
+  template request/response and event row shapes, remove rarity display
+  requirements, and state that the dashboard must not derive or fabricate
+  rarity locally.
