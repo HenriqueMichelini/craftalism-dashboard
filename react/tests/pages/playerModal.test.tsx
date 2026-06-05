@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { PlayerModalForm } from "../../src/pages/Dashboard/views/PlayersView/components/PlayerModalForm.js";
 import {
-  isUuid7,
+  isUuid,
   validatePlayerForm,
 } from "../../src/pages/Dashboard/views/PlayersView/playerValidation.js";
 import type { Player } from "../../src/types/models/player.types.js";
@@ -14,10 +14,12 @@ const player: Player = {
   createdAt: "2026-05-01T00:00:00.000Z",
 };
 
-test("isUuid7 accepts only canonical UUID7 values", () => {
-  assert.equal(isUuid7("018f6b86-7a4b-7c1f-9a7c-2d7850425f21"), true);
-  assert.equal(isUuid7("550e8400-e29b-41d4-a716-446655440000"), false);
-  assert.equal(isUuid7("not-a-uuid"), false);
+test("isUuid accepts canonical UUID values regardless of version", () => {
+  assert.equal(isUuid("c06f8906-4c8a-3f9b-9e8c-2f3f95a4e3c4"), true);
+  assert.equal(isUuid("550e8400-e29b-41d4-a716-446655440000"), true);
+  assert.equal(isUuid("018f6b86-7a4b-7c1f-9a7c-2d7850425f21"), true);
+  assert.equal(isUuid("550e8400e29b41d4a716446655440000"), false);
+  assert.equal(isUuid("not-a-uuid"), false);
 });
 
 test("validatePlayerForm rejects duplicate player UUIDs on create", () => {
@@ -34,14 +36,14 @@ test("validatePlayerForm rejects duplicate player UUIDs on create", () => {
   );
 });
 
-test("validatePlayerForm rejects missing and non-UUID7 player UUIDs", () => {
+test("validatePlayerForm rejects missing and malformed player UUIDs", () => {
   const missingUuid = validatePlayerForm(
     { uuid: " ", name: "Grace" },
     [],
     { mode: "create" },
   );
   const invalidUuid = validatePlayerForm(
-    { uuid: "550e8400-e29b-41d4-a716-446655440000", name: "Grace" },
+    { uuid: "550e8400e29b41d4a716446655440000", name: "Grace" },
     [],
     { mode: "create" },
   );
@@ -54,7 +56,7 @@ test("validatePlayerForm rejects missing and non-UUID7 player UUIDs", () => {
   assert.equal(invalidUuid.valid, false);
   assert.equal(
     invalidUuid.valid ? undefined : invalidUuid.errors.uuid,
-    "Player UUID must be a valid UUID7 value.",
+    "Player UUID must be a valid UUID value.",
   );
 });
 

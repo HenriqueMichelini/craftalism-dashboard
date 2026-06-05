@@ -9,11 +9,11 @@ export type PlayerValidationResult =
   | { valid: true; values: PlayerFormValues }
   | { valid: false; errors: Partial<Record<keyof PlayerFormValues, string>> };
 
-const UUID7_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export function isUuid7(value: string): boolean {
-  return UUID7_PATTERN.test(value.trim());
+export function isUuid(value: string): boolean {
+  return UUID_PATTERN.test(value.trim());
 }
 
 export function validatePlayerForm(
@@ -27,8 +27,8 @@ export function validatePlayerForm(
 
   if (!uuid) {
     errors.uuid = "Player UUID is required.";
-  } else if (!isUuid7(uuid)) {
-    errors.uuid = "Player UUID must be a valid UUID7 value.";
+  } else if (!isUuid(uuid)) {
+    errors.uuid = "Player UUID must be a valid UUID value.";
   }
 
   const duplicatePlayer = existingPlayers.find(
